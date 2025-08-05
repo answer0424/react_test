@@ -11,7 +11,6 @@ const dummyPlates = [
 
 export default function PlateSearchPage() {
     const [searchTerm, setSearchTerm] = useState('');
-    const navigate = useNavigate();
 
     const filteredPlates = dummyPlates.filter(
         plate =>

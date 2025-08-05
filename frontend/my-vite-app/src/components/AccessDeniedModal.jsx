@@ -1,9 +1,7 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 
 export default function AccessDeniedModal({ open, onClose }) {
     if (!open) return null;
-
-    const closeButtonRef = useRef(null);
 
     return (
         <div style={{

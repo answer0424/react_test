@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 
-export default function LoginRequiredModal({ open, onMoveLogin }) {
+export default function LoginRequiredModal({ open }) {
     if (!open) return null;
 
     const navigate = useNavigate();
