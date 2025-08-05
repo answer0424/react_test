@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
-export default function PlateRegisterPage({ addPlate }) {
+export default function PlateRegisterPage({addPlate}) {
     const [plateNumber, setPlateNumber] = useState('');
     const [ownerName, setOwnerName] = useState('');
     const [vehicleType, setVehicleType] = useState('');
@@ -10,7 +10,7 @@ export default function PlateRegisterPage({ addPlate }) {
 
     const handleRegister = () => {
         if (!plateNumber || !ownerName || !vehicleType || !model) return;
-        addPlate({ number: plateNumber, owner: ownerName, type: vehicleType, model });
+        addPlate({number: plateNumber, owner: ownerName, type: vehicleType, model});
         setPlateNumber('');
         setOwnerName('');
         setVehicleType('');
@@ -32,7 +32,7 @@ export default function PlateRegisterPage({ addPlate }) {
                 background: '#23262f',
                 boxShadow: '0 2px 12px rgba(0,0,0,0.18)'
             }}>
-                <h1 style={{ color: '#00bcd4', textAlign: 'center', marginBottom: 24 }}>번호판 등록</h1>
+                <h1 style={{color: '#00bcd4', textAlign: 'center', marginBottom: 24}}>번호판 등록</h1>
                 <input
                     type="text"
                     placeholder="차량 번호"

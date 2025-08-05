@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 const dummyPlates = [
-    { id: 1, number: '12가 3456', model: 'Hyundai Sonata' },
-    { id: 2, number: '34나 7890', model: 'Kia K5' },
-    { id: 3, number: '56다 1234', model: 'Genesis GV80' },
-    { id: 4, number: '78라 5678', model: 'Porter II' },
-    { id: 5, number: '90마 4321', model: 'Avante' },
+    {id: 1, number: '12가 3456', model: 'Hyundai Sonata'},
+    {id: 2, number: '34나 7890', model: 'Kia K5'},
+    {id: 3, number: '56다 1234', model: 'Genesis GV80'},
+    {id: 4, number: '78라 5678', model: 'Porter II'},
+    {id: 5, number: '90마 4321', model: 'Avante'},
 ];
 
-export default function CarRegisterPage({ onRegister }) {
+export default function CarRegisterPage({onRegister}) {
     const [selectedPlateId, setSelectedPlateId] = useState('');
     const [carModel, setCarModel] = useState('');
     const [carColor, setCarColor] = useState('');
@@ -46,7 +46,7 @@ export default function CarRegisterPage({ onRegister }) {
                 background: '#23262f',
                 boxShadow: '0 2px 12px rgba(0,0,0,0.18)'
             }}>
-                <h1 style={{ color: '#00bcd4', textAlign: 'center', marginBottom: 24 }}>차량 등록</h1>
+                <h1 style={{color: '#00bcd4', textAlign: 'center', marginBottom: 24}}>차량 등록</h1>
                 <select
                     value={selectedPlateId}
                     onChange={e => setSelectedPlateId(e.target.value)}

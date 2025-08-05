@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import puppyImage from '../../assets/puppy.png';
 import {useUser} from "../../contexts/UserProvider.jsx";
 import {useEffect, useState} from "react";
@@ -6,7 +6,7 @@ import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx"; // 
 
 export default function CustomerMyPage() {
     const navigate = useNavigate();
-    const { user, setUser } = useUser(); // UserProvider에서 user 정보 가져오기
+    const {user, setUser} = useUser(); // UserProvider에서 user 정보 가져오기
     const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
 
     useEffect(() => {
@@ -16,7 +16,7 @@ export default function CustomerMyPage() {
     }, [user, navigate]);
 
     if (!user || !user.username) {
-        return <LoginRequiredModal open={userInfoRequiredModalOpen} />;
+        return <LoginRequiredModal open={userInfoRequiredModalOpen}/>;
     }
 
     const handleLogout = () => {
@@ -38,10 +38,10 @@ export default function CustomerMyPage() {
             <img
                 src={puppyImage}
                 alt="프로필"
-                style={{ width: 72, height: 72, borderRadius: '50%', marginBottom: 18 }}
+                style={{width: 72, height: 72, borderRadius: '50%', marginBottom: 18}}
             />
-            <div style={{ fontWeight: 'bold', fontSize: 22, color: '#fff', marginBottom: 8 }}>아이디: {user.username}</div>
-            <div style={{ color: '#aaa', marginBottom: 32 }}>이름: {user.name}</div>
+            <div style={{fontWeight: 'bold', fontSize: 22, color: '#fff', marginBottom: 8}}>아이디: {user.username}</div>
+            <div style={{color: '#aaa', marginBottom: 32}}>이름: {user.name}</div>
             <button
                 onClick={handleLogout}
                 style={{

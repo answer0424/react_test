@@ -1,15 +1,15 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 
 
-export default function LoginRequiredModal({ open }) {
+export default function LoginRequiredModal({open}) {
     if (!open) return null;
 
     const navigate = useNavigate();
     const location = useLocation();
 
     const handleMoveLogin = () => {
-        if(location.pathname.startsWith('/autoplus')) {
+        if (location.pathname.startsWith('/autoplus')) {
             navigate('/autoplus/login');
         } else {
             navigate('/customer/login');
@@ -34,8 +34,8 @@ export default function LoginRequiredModal({ open }) {
                 color: "#fff",
                 textAlign: "center"
             }}>
-                <h2 style={{ color: "#00bcd4", marginBottom: 18 }}>로그인이 필요합니다</h2>
-                <div style={{ marginBottom: 24 }}>이 페이지는 로그인이 필요합니다.</div>
+                <h2 style={{color: "#00bcd4", marginBottom: 18}}>로그인이 필요합니다</h2>
+                <div style={{marginBottom: 24}}>이 페이지는 로그인이 필요합니다.</div>
                 <button
                     onClick={handleMoveLogin}
                     style={{

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function AccessDeniedModal({ open, onClose }) {
+export default function AccessDeniedModal({open, onClose}) {
     if (!open) return null;
 
     return (
@@ -21,9 +21,9 @@ export default function AccessDeniedModal({ open, onClose }) {
                 minWidth: 320,
                 textAlign: 'center'
             }}>
-                <h2 style={{ color: '#00bcd4', marginBottom: 18 }}>접근 거부</h2>
-                <div style={{ color: '#fff', marginBottom: 24 }}>
-                    아이디 또는 비밀번호가 일치하지 않습니다.<br />
+                <h2 style={{color: '#00bcd4', marginBottom: 18}}>접근 거부</h2>
+                <div style={{color: '#fff', marginBottom: 24}}>
+                    아이디 또는 비밀번호가 일치하지 않습니다.<br/>
                     다시 시도해 주세요.
                 </div>
                 <button

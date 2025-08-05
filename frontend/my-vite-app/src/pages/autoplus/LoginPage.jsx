@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import {useState} from 'react';
+import {useNavigate} from "react-router-dom";
 import AccessDeniedModal from "../../components/AccessDeniedModal.jsx";
 import {useUser} from "../../contexts/UserProvider.jsx";
 
 
 const dummyUsers = [
-    { username: 'dlruddnjs', password: 'dlruddnjs' },
-    { username: 'user2', password: '1234' },
-    { username: 'user3', password: '1234' }
+    {username: 'dlruddnjs', password: 'dlruddnjs', name: '홍길동'},
+    {username: 'user2', password: '1234', name: '김철수'},
+    {username: 'user3', password: '1234', name: '이영희'}
 ];
 
 export default function AutoplusLoginPage() {
@@ -36,7 +36,7 @@ export default function AutoplusLoginPage() {
             justifyContent: 'center',
             background: '#181a20'
         }}>
-            <AccessDeniedModal open={modalOpen} onClose={() => setModalOpen(false)} />
+            <AccessDeniedModal open={modalOpen} onClose={() => setModalOpen(false)}/>
             <div style={{
                 width: 350,
                 padding: 32,
@@ -44,7 +44,7 @@ export default function AutoplusLoginPage() {
                 background: '#23262f',
                 boxShadow: '0 2px 12px rgba(0,0,0,0.25)'
             }}>
-                <h1 style={{ textAlign: 'center', marginBottom: 24, color: '#00bcd4' }}>오토플러스</h1>
+                <h1 style={{textAlign: 'center', marginBottom: 24, color: '#00bcd4'}}>오토플러스</h1>
                 <input
                     type="text"
                     placeholder="아이디"

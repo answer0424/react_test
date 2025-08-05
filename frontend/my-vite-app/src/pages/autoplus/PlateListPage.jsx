@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 const dummyPlates = [
-    { id: 1, number: '12가 3456', model: 'Hyundai Sonata' },
-    { id: 2, number: '34나 7890', model: 'Kia K5' },
-    { id: 3, number: '56다 1234', model: 'Genesis G80' },
+    {id: 1, number: '12가 3456', model: 'Hyundai Sonata'},
+    {id: 2, number: '34나 7890', model: 'Kia K5'},
+    {id: 3, number: '56다 1234', model: 'Genesis G80'},
 ];
 
-function PlateList({ plates }) {
+function PlateList({plates}) {
     if (plates.length === 0) {
         return (
-            <div style={{ color: '#aaa', textAlign: 'center', padding: 24 }}>
+            <div style={{color: '#aaa', textAlign: 'center', padding: 24}}>
                 등록된 차량이 없습니다.
             </div>
         );
     }
     return (
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+        <ul style={{listStyle: 'none', padding: 0, margin: 0}}>
             {plates.map(plate => (
                 <li key={plate.id} style={{
                     background: '#23262f',
@@ -28,8 +28,8 @@ function PlateList({ plates }) {
                     display: 'flex',
                     flexDirection: 'column'
                 }}>
-                    <span style={{ fontWeight: 'bold', fontSize: 18 }}>{plate.number}</span>
-                    <span style={{ color: '#00bcd4', fontSize: 15 }}>{plate.model}</span>
+                    <span style={{fontWeight: 'bold', fontSize: 18}}>{plate.number}</span>
+                    <span style={{color: '#00bcd4', fontSize: 15}}>{plate.model}</span>
                 </li>
             ))}
         </ul>
@@ -66,7 +66,7 @@ export default function PlateListPage() {
                 background: '#23262f',
                 boxShadow: '0 2px 12px rgba(0,0,0,0.18)'
             }}>
-                <h1 style={{ color: '#00bcd4', marginBottom: 24, textAlign: 'center' }}>번호판 목록</h1>
+                <h1 style={{color: '#00bcd4', marginBottom: 24, textAlign: 'center'}}>번호판 목록</h1>
                 <input
                     type="text"
                     placeholder="차량 번호 또는 모델 검색..."
@@ -100,7 +100,7 @@ export default function PlateListPage() {
                 >
                     차량 추가
                 </button>
-                <PlateList plates={filteredPlates} />
+                <PlateList plates={filteredPlates}/>
             </div>
         </div>
     );
