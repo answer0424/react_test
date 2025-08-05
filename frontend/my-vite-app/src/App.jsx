@@ -2,11 +2,17 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import {useNavigate} from "react-router-dom";
 
 function App() {
   const [count, setCount] = useState(0)
+    const navigate = useNavigate();
 
-  return (
+    function navigateLogin() {
+        navigate('/login');
+    }
+
+    return (
     <>
       <div>
         <a href="https://vite.dev" target="_blank">
@@ -18,8 +24,8 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button onClick={() => navigateLogin()}>
+          로그인 페이지 이동
         </button>
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
