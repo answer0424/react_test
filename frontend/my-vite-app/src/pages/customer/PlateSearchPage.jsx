@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import {useNavigate} from "react-router-dom";
 
 const dummyPlates = [
     { id: 1, number: '12가 3456', owner: '홍길동', type: '승용차', model: 'Hyundai Sonata' },

@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React from 'react';
 
 export default function AccessDeniedModal({ open, onClose }) {
     if (!open) return null;
