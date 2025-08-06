@@ -38,6 +38,34 @@
 #register-button { width: 100%; padding: 12px; background: #3498db; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; }
 #register-button:hover { background: #2980b9; }
 
+/* 번호판 기준 신차 등록 상태 */
+#plate-status-container { background: #f5f6f8; min-height: 100vh; padding: 20px; }
+#plate-status-content { max-width: 1000px; margin: 0 auto; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; }
+#plate-status-title { color: #2c3e50; font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid #e9ecef; padding-bottom: 15px; }
+#search-filters { margin-bottom: 24px; }
+.search-row { display: flex; gap: 12px; margin-bottom: 12px; }
+.search-input,
+.company-select,
+.date-picker { padding: 8px 12px; border: 1px solid #dde2e5; border-radius: 4px; font-size: 14px; }
+.search-input { flex: 2; }
+.company-select { flex: 1; }
+.date-picker-wrapper { position: relative; display: flex; align-items: center; gap: 8px; flex: 1; }
+.quick-date-selector { position: absolute; top: calc(100% + 4px); right: 0; background: white; border: 1px solid #ddd; border-radius: 4px; padding: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 1000; min-width: 120px; }
+.quick-date-selector button { width: 100%; padding: 8px 12px; background: none; border: none; text-align: left; cursor: pointer; font-size: 14px; }
+.quick-date-selector button:hover { background: #f0f0f0; }
+.date-select-button { padding: 8px 16px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; white-space: nowrap; }
+.close-button { position: absolute; top: 4px; right: 4px; padding: 4px 8px; font-size: 12px; }
+.date-separator { margin: 0 4px; }
+.search-button { padding: 0 24px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; }
+#status-tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid #e9ecef; padding-bottom: 1px; }
+.tab-button { padding: 8px 16px; border: none; background: none; cursor: pointer; color: #606060; font-size: 14px; }
+.tab-button.active { color: #3498db; border-bottom: 2px solid #3498db; margin-bottom: -1px; }
+#results-table { width: 100%; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e9ecef; }
+th { background: #f8f9fa; color: #2c3e50; font-weight: bold; }
+tr:hover { background: #f8f9fa; }
+
 /* 마이페이지 */
 #mypage-container { background: #f5f6f8; min-height: 100vh; padding: 40px 20px; }
 #mypage-content { max-width: 400px; margin: 0 auto; padding: 32px; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }

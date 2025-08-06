@@ -13,6 +13,7 @@ import PlateSearchPage from "./pages/customer/PlateSearchPage.jsx";
 import RegisterStatusPage from "./pages/customer/RegisterStatuesPage.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import {UserProvider} from "./contexts/UserProvider.jsx";
+import CarRegisterPlatePage from "./pages/autoplus/CarRegisterPlatePage.jsx";
 
 function MainLayout() {
     const location = useLocation();
@@ -31,6 +32,7 @@ function MainLayout() {
                     <Route path="/autoplus/plates" element={<PlateListPage />} />
                     <Route path="/autoplus/plate/add" element={<PlateRegisterPage />} />
                     <Route path="/autoplus/mypage" element={<AutoplusMyPage />} />
+                    <Route path="/autoplus/plate/status" element={<CarRegisterPlatePage />} />
                     <Route path="/customer/login" element={<CustomerLoginPage />} />
                     <Route path="/customer/plate/register" element={<CarRegisterPage />} />
                     <Route path="/customer/mypage" element={<CustomerMyPage />} />
