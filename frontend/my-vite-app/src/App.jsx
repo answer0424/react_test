@@ -1,5 +1,5 @@
 import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import viteLogo from './assets/vite.svg';
 import {useNavigate} from "react-router-dom";
 
 export default function App() {
@@ -20,6 +20,11 @@ export default function App() {
             <div>
                 <a href="https://vite.dev" target="_blank">
                     <img src={viteLogo} className="logo" alt="Vite logo"/>
+                </a>
+            </div>
+            <div>
+                <a href="https://react.dev" target="_blank">
+                    <img src={reactLogo} className="logo" alt="Vite logo"/>
                 </a>
             </div>
             <h1>Vite + React</h1>
