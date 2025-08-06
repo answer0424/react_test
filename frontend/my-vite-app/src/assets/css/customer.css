@@ -19,6 +19,23 @@
 .co-owner-section { padding: 16px; margin-bottom: 16px; border: 1px solid #dde2e5; border-radius: 4px; }
 #registerForm button { width: 100%; padding: 12px 0; border-radius: 4px; background: #3498db; color: white; border: none; font-size: 14px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
 #registerForm button:hover { background: #2980b9; }
+/* 차량 일괄 등록 */
+.register-tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #e0e0e0; }
+.tab-button { padding: 10px 20px; border: none; background: none; cursor: pointer; font-size: 16px; color: #666; }
+.tab-button.active { color: #3498db; border-bottom: 2px solid #3498db; }
+.bulk-register { padding: 20px; }
+.bulk-instructions { margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 4px; }
+.template-download { display: inline-block; margin-top: 15px; padding: 8px 16px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+.template-download:hover { background: #2980b9; }
+.file-upload-container { margin: 20px 0; }
+.file-info { margin-top: 10px; color: #2ecc71; }
+.file-upload-container input[type="file"] { width: 100%; padding: 10px; margin-bottom: 10px; }
+.bulk-register button[type="submit"] { width: 100%; padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; }
+.bulk-register button[type="submit"]:disabled { background-color: #ccc; cursor: not-allowed; }
+.file-input-group { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.clear-file-btn { padding: 6px 10px; background-color: #e53e3e; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.2s; }
+.clear-file-btn:hover { background-color: #c53030; }
+.clear-file-btn:active { background-color: #9b2c2c; }
 
 /* 신차 등록 상태 */
 .customer-container { background: #f5f6f8; height: 100vh; padding: 20px; box-sizing: border-box; }
@@ -56,7 +73,6 @@
 .customer-clickable { cursor: pointer; }
 .customer-clickable:hover { background: #f8f9fa; }
 .customer-no-data { text-align: center; color: #666; padding: 24px; }
-
 .customer-results-table th:nth-child(1),
 .customer-results-table td:nth-child(1) { width: 20%; }
 .customer-results-table th:nth-child(2),

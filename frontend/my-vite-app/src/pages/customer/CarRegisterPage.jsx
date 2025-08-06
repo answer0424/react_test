@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../assets/css/customer.css'; // 스타일시트 경로 수정
+import '../../assets/css/customer.css';
+import RegisterSuccessModal from "../../components/RegisterSuccessModal.jsx"; // 스타일시트 경로 수정
+import * as XLSX from 'xlsx'; // 엑셀 파일 처리 라이브러리
+import {
+    BulkCarRegisterExcel,
+    validateBulkData,
+    EXCEL_TEMPLATE_HEADERS,
+    VALID_BUSINESS_TYPES,
+    VALID_ID_TYPES
+} from '../../excel/BulkCarRegisterExcel';
+import ExcelValidationErrorModal from '../../components/ExcelValidationErrorModal.jsx'; // 엑셀 검증 오류 모달
 
 const dummyPlates = [
     { id: 1, number: '12가3456' },
@@ -16,23 +26,100 @@ const businessTypes = [
     { code: '03', name: '개인' },
 ];
 
-export default function CarRegisterPage() {
-    const [formData, setFormData] = useState({
-        plateId: '',
-        businessType: '',
-        price: '',
-        vinNumber: '',
-        carName: '',
-        ownerName: '',
-        idType: 'personal', // personal or business
-        idNumber: '',
-        hasCoOwner: false,
-        coOwnerName: '',
-        coOwnerIdType: 'personal',
-        coOwnerIdNumber: ''
-    });
+const initialFormState = {
+    plateId: '',
+    businessType: '',
+    price: '',
+    vinNumber: '',
+    carName: '',
+    ownerName: '',
+    idType: 'personal',
+    idNumber: '',
+    hasCoOwner: false,
+    coOwnerName: '',
+    coOwnerIdType: 'personal',
+    coOwnerIdNumber: ''
+};
 
-    const navigate = useNavigate();
+export default function CarRegisterPage() {
+    const [activeTab, setActiveTab] = useState('single');
+    const [bulkFile, setBulkFile] = useState(null);
+    const [bulkData, setBulkData] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [formData, setFormData] = useState(initialFormState);
+    const [registeredCount, setRegisteredCount] = useState(0);
+    const [validationErrors, setValidationErrors] = useState([]);
+    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        setBulkFile(file);
+
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            const bstr = evt.target.result;
+            const wb = XLSX.read(bstr, { type: 'binary' });
+            const wsname = wb.SheetNames[0];
+            const ws = wb.Sheets[wsname];
+            const data = XLSX.utils.sheet_to_json(ws);
+            setBulkData(data);
+        };
+        reader.readAsBinaryString(file);
+    };
+
+    const handleBulkSubmit = async (e) => {
+        e.preventDefault();
+        if (!bulkData.length) {
+            setValidationErrors(['업로드된 데이터가 없습니다.']);
+            setIsErrorModalOpen(true);
+            return;
+        }
+
+        const errors = validateBulkData(bulkData);
+        if (errors.length > 0) {
+            setValidationErrors(errors);
+            setIsErrorModalOpen(true);
+            return;
+        }
+
+        try {
+            const formattedData = bulkData.map(row => ({
+                plateId: row['번호판번호'],
+                businessType: row['업무구분'],
+                price: Number(row['공급가액']),
+                vinNumber: row['차대번호'],
+                carName: row['차명'],
+                ownerName: row['소유자명'],
+                idType: row['ID구분'] === '주민번호' ? 'personal' : 'business',
+                idNumber: row['ID번호'],
+                hasCoOwner: !!row['공동소유자명'],
+                coOwnerName: row['공동소유자명'] || '',
+                coOwnerIdType: row['공동소유자ID구분'] === '주민번호' ? 'personal' : 'business',
+                coOwnerIdNumber: row['공동소유자ID번호'] || ''
+            }));
+
+            // 등록된 데이터 수 저장
+            setRegisteredCount(formattedData.length);
+
+            // TODO: API 호출
+            console.log('Formatted bulk registration data:', formattedData);
+
+            setBulkFile(null);
+            setBulkData([]);
+            document.getElementById('bulkUploadForm').reset();
+            setIsModalOpen(true);
+        } catch (error) {
+            console.error('일괄 등록 중 오류 발생:', error);
+            alert('일괄 등록 중 오류가 발생했습니다.');
+            setIsErrorModalOpen(true);
+        }
+    };
+
+    const businessTypes = [
+        { code: '렌트', name: '렌트' },
+        { code: '리스', name: '리스' },
+        { code: '개인', name: '개인' }
+    ];
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -46,13 +133,43 @@ export default function CarRegisterPage() {
         e.preventDefault();
         // TODO: 유효성 검사 및 데이터 처리
         console.log(formData);
-        navigate('/customer/plate/search');
+        setFormData(initialFormState);
+        document.getElementById('registerForm').reset();
+        setIsModalOpen(true);
+    };
+
+    const handleTemplateDownload = (e) => {
+        e.preventDefault();
+        BulkCarRegisterExcel();
+    };
+
+    const handleClearFile = () => {
+        setBulkFile(null);
+        setBulkData([]);
+        document.getElementById('bulkUploadForm').reset();
     };
 
     return (
         <div className="wrap">
             <div className="register_box">
                 <h1 className="title">차량 등록</h1>
+                <div className="register-tabs">
+                    <button
+                        className={`tab-button ${activeTab === 'single' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('single')}
+                    >
+                        개별 등록
+                    </button>
+                    <button
+                        className={`tab-button ${activeTab === 'bulk' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('bulk')}
+                    >
+                        일괄 등록
+                    </button>
+                </div>
+
+                {activeTab === 'single' ? (
+                    // 기존 개별 등록 폼
                 <form id="registerForm" onSubmit={handleSubmit}>
                     <select
                         name="plateId"
@@ -204,7 +321,69 @@ export default function CarRegisterPage() {
 
                     <button type="submit">등록</button>
                 </form>
+                ) : (
+                    <div className="bulk-register">
+                        <div className="bulk-instructions">
+                            <h3>일괄 등록 방법</h3>
+                            <ol>
+                                <li>아래 양식 파일을 다운로드합니다.</li>
+                                <li>양식에 맞춰 데이터를 입력합니다.</li>
+                                <li>작성된 파일을 업로드합니다.</li>
+                            </ol>
+                            <button
+                                onClick={handleTemplateDownload}
+                                className="template-download"
+                            >
+                                양식 다운로드
+                            </button>
+                        </div>
+                        <form id="bulkUploadForm" onSubmit={handleBulkSubmit}>
+                            <div className="file-upload-container">
+                                <div className="file-input-group">
+                                    <input
+                                        type="file"
+                                        accept=".xlsx,.xls"
+                                        onChange={handleFileUpload}
+                                        required
+                                    />
+                                    {bulkFile && (
+                                        <button
+                                            type="button"
+                                            onClick={handleClearFile}
+                                            className="clear-file-btn"
+                                        >
+                                            ✕
+                                        </button>
+                                    )}
+                                </div>
+                                {bulkData.length > 0 && (
+                                    <div className="file-info">
+                                        <p>{bulkData.length}개의 데이터가 확인되었습니다.</p>
+                                    </div>
+                                )}
+                            </div>
+                            <button type="submit" disabled={!bulkData.length}>
+                                일괄 등록
+                            </button>
+                        </form>
+                    </div>
+                )}
             </div>
+            <ExcelValidationErrorModal
+                isOpen={isErrorModalOpen}
+                onClose={() => setIsErrorModalOpen(false)}
+                errors={validationErrors}
+            />
+            <RegisterSuccessModal
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setRegisteredCount(0);
+                }}
+            >
+                <h2>요청 완료</h2>
+                <p>{activeTab === 'single' ? '차량이' : `${registeredCount}대의 차량이`} 성공적으로 등록 요청되었습니다.</p>
+            </RegisterSuccessModal>
         </div>
     );
 }
