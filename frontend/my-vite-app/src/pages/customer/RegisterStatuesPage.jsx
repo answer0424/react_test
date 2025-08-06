@@ -4,72 +4,8 @@ import DatePicker from 'react-datepicker';
 import StatusDetailModal from '../../components/StatusDetailModal';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../assets/css/customer.css';
+import {dummyStatusData} from "../../services/CarRegisterDummyData.jsx";
 
-const dummyStatus = [
-    {
-        id: 1,
-        plateNumber: '12가 3456',
-        ownerName: '홍길동',
-        businessType: '01',
-        price: '30000000',
-        vinNumber: 'KMHXX00XXXX000001',
-        carName: '그랜저',
-        status: '승인 대기',
-        requestDate: '2024-03-24',
-        coOwner: {
-            name: '김영희',
-            idNumber: '820101-2******'
-        }
-    },
-    {
-        id: 2,
-        plateNumber: '34나 7890',
-        ownerName: '김철수',
-        businessType: '02',
-        price: '25000000',
-        vinNumber: 'KMHXX00XXXX000002',
-        carName: '아반떼',
-        status: '승인 완료',
-        requestDate: '2024-03-23'
-    },
-    {
-        id: 3,
-        plateNumber: '56다 1234',
-        ownerName: '이영희',
-        businessType: '03',
-        price: '45000000',
-        vinNumber: 'KMHXX00XXXX000003',
-        carName: '제네시스 G80',
-        status: '요청',
-        requestDate: '2024-03-25'
-    },
-    {
-        id: 4,
-        plateNumber: '78라 5678',
-        ownerName: '박민수',
-        businessType: '01',
-        price: '35000000',
-        vinNumber: 'KMHXX00XXXX000004',
-        carName: '싼타페',
-        status: '승인 대기',
-        requestDate: '2024-03-22'
-    },
-    {
-        id: 5,
-        plateNumber: '90마 9012',
-        ownerName: '정수민',
-        businessType: '02',
-        price: '28000000',
-        vinNumber: 'KMHXX00XXXX000005',
-        carName: '투싼',
-        status: '승인 완료',
-        requestDate: '2024-03-21',
-        coOwner: {
-            name: '정대현',
-            idNumber: '880505-1******'
-        }
-    }
-];
 
 // 업무구분 코드와 이름 매핑
 const businessTypes = {
@@ -104,7 +40,6 @@ const QuickDateSelector = ({ onSelect, onClose }) => {
             <button onClick={() => onSelect(getDate(7), new Date())}>7일전</button>
             <button onClick={() => onSelect(getDate(30), new Date())}>1개월전</button>
             <button onClick={() => onSelect(getDate(990), new Date())}>3개월전</button>
-            <button className="close-button" onClick={onClose}>✕</button>
         </div>
     );
 };
@@ -137,12 +72,13 @@ export default function RegisterStatusPage() {
     };
 
     // status 필터링 로직 추가
-    const filteredStatus = dummyStatus.filter(status => {
+    const filteredStatus = dummyStatusData.filter(status => {
         const matchesName = status.ownerName.includes(searchParams.ownerName);
         const matchesPlate = status.plateNumber.includes(searchParams.plateNumber);
         const matchesStatus = searchParams.statusTab === 'all' || status.status.includes(searchParams.statusTab);
         const requestDate = new Date(status.requestDate);
-        const isInDateRange = requestDate >= searchParams.startDate && requestDate <= searchParams.endDate;
+        const isInDateRange =  requestDate >= searchParams.startDate.setHours(0, 0, 0, 0) &&
+            requestDate <= searchParams.endDate.setHours(23, 59, 59, 999);
 
         return matchesName && matchesPlate && matchesStatus && isInDateRange;
     });
@@ -158,55 +94,38 @@ export default function RegisterStatusPage() {
                             type="text"
                             placeholder="소유자명"
                             value={searchParams.ownerName}
-                            onChange={e => setSearchParams({
-                                ...searchParams,
-                                ownerName: e.target.value
-                            })}
+                            onChange={e => setSearchParams({...searchParams, ownerName: e.target.value})}
                             className="customer-search-input"
                         />
                         <input
                             type="text"
                             placeholder="차량번호"
                             value={searchParams.plateNumber}
-                            onChange={e => setSearchParams({
-                                ...searchParams,
-                                plateNumber: e.target.value
-                            })}
+                            onChange={e => setSearchParams({...searchParams, plateNumber: e.target.value})}
                             className="customer-search-input"
                         />
-                    </div>
-                    <div className="customer-search-row">
                         <div className="customer-date-picker-wrapper">
                             <DatePicker
                                 selected={searchParams.startDate}
-                                onChange={date => setSearchParams({
-                                    ...searchParams,
-                                    startDate: date
-                                })}
+                                onChange={date => setSearchParams({...searchParams, startDate: date})}
                                 selectsStart
                                 startDate={searchParams.startDate}
                                 endDate={searchParams.endDate}
                                 dateFormat="yyyy-MM-dd"
                                 className="customer-date-picker"
-                            />
+                             showMonthYearDropdown/>
                             <span className="customer-date-separator">~</span>
                             <DatePicker
                                 selected={searchParams.endDate}
-                                onChange={date => setSearchParams({
-                                    ...searchParams,
-                                    endDate: date
-                                })}
+                                onChange={date => setSearchParams({...searchParams, endDate: date})}
                                 selectsEnd
                                 startDate={searchParams.startDate}
                                 endDate={searchParams.endDate}
                                 minDate={searchParams.startDate}
                                 dateFormat="yyyy-MM-dd"
                                 className="customer-date-picker"
-                            />
-                            <button
-                                className="customer-date-select-button"
-                                onClick={() => setShowQuickSelect(!showQuickSelect)}
-                            >
+                             showMonthYearDropdown/>
+                            <button className="customer-date-select-button" onClick={() => setShowQuickSelect(!showQuickSelect)}>
                                 날짜선택
                             </button>
                             {showQuickSelect && (
@@ -216,9 +135,7 @@ export default function RegisterStatusPage() {
                                 />
                             )}
                         </div>
-                        <button onClick={handleSearch} className="customer-search-button">
-                            검색
-                        </button>
+                        <button onClick={handleSearch} className="customer-search-button">검색</button>
                     </div>
                 </div>
 

@@ -1,7 +1,8 @@
 import {useState} from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import ko from 'date-fns/locale/ko'; // 한국어 로케일 추가
+import ko from 'date-fns/locale/ko';
+import {demoPlateData} from "../../services/CarRegisterDummyData.jsx"; // 한국어 로케일 추가
 
 const STATUS_TABS = [
     {id: 'all', label: '전체'},
@@ -23,7 +24,7 @@ const QuickDateSelector = ({ onSelect, onClose }) => {
             <button onClick={() => onSelect(getDate(3), new Date())}>3일전</button>
             <button onClick={() => onSelect(getDate(7), new Date())}>7일전</button>
             <button onClick={() => onSelect(getDate(30), new Date())}>1개월전</button>
-            <button className="close-button" onClick={onClose}>✕</button>
+            <button onClick={() => onSelect(getDate(990), new Date())}>3개월전</button>
         </div>
     );
 };
@@ -34,7 +35,7 @@ export default function CarRegisterPlatePage() {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [activeTab, setActiveTab] = useState('all');
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useState(demoPlateData);
     const [showQuickSelect, setShowQuickSelect] = useState(false);
 
     // 임시 데모 데이터
@@ -44,81 +45,10 @@ export default function CarRegisterPlatePage() {
         {id: 3, name: '르노코리아'}
     ];
 
-    const handleSearch = () => {
+    const handleSearch = (e) => {
         // TODO: API 호출 시 모든 검색 조건 포함
-        const demoData = [
-            {
-                plateNumber: '123가4567',
-                company: '현대자동차',
-                status: '요청',
-                registeredAt: '2025-07-25',
-                expiresAt: '2025-07-25'
-            },
-            {
-                plateNumber: '234나5678',
-                company: '기아자동차',
-                status: '대기',
-                registeredAt: '2025-03-26',
-                expiresAt: '2025-04-26'
-            },
-            {
-                plateNumber: '567다8901',
-                company: '현대자동차',
-                status: '완료',
-                registeredAt: '2025-03-24',
-                expiresAt: '2025-04-24'
-            },
-            {
-                plateNumber: '789라2345',
-                company: '르노코리아',
-                status: '요청',
-                registeredAt: '2025-03-27',
-                expiresAt: '2025-04-27'
-            },
-            {
-                plateNumber: '345마6789',
-                company: '기아자동차',
-                status: '완료',
-                registeredAt: '2025-03-23',
-                expiresAt: '2025-04-23'
-            },
-            {
-                plateNumber: '678바1234',
-                company: '르노코리아',
-                status: '대기',
-                registeredAt: '2025-03-28',
-                expiresAt: '2025-04-28'
-            },
-            {
-                plateNumber: '901사3456',
-                company: '현대자동차',
-                status: '대기',
-                registeredAt: '2025-03-29',
-                expiresAt: '2025-04-29'
-            },
-            {
-                plateNumber: '234아5678',
-                company: '기아자동차',
-                status: '요청',
-                registeredAt: '2025-03-30',
-                expiresAt: '2025-04-30'
-            },
-            {
-                plateNumber: '567자8901',
-                company: '르노코리아',
-                status: '완료',
-                registeredAt: '2025-03-22',
-                expiresAt: '2025-04-22'
-            },
-            {
-                plateNumber: '890차2345',
-                company: '현대자동차',
-                status: '요청',
-                registeredAt: '2025-03-31',
-                expiresAt: '2025-04-31'
-            }
-        ];
-        setSearchResults(demoData);
+        e.preventDefault();
+        setSearchResults(demoPlateData);
     };
 
     const filteredResults = searchResults.filter(result => {
@@ -176,8 +106,6 @@ export default function CarRegisterPlatePage() {
                                 </option>
                             ))}
                         </select>
-                    </div>
-                    <div className="search-row">
                         <div className="date-picker-wrapper">
                             <DatePicker
                                 selected={startDate}
@@ -214,9 +142,7 @@ export default function CarRegisterPlatePage() {
                                 />
                             )}
                         </div>
-                        <button onClick={handleSearch} className="search-button">
-                            검색
-                        </button>
+                        <button onClick={handleSearch} className="search-button">검색</button>
                     </div>
                 </div>
 
