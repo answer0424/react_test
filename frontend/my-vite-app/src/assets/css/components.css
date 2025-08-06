@@ -23,6 +23,18 @@
 .detail-item:last-child { margin-bottom: 0; }
 .detail-item label { flex: 0 0 100px; color: #666; font-weight: 500; }
 .detail-item span { color: #2c3e50; flex: 1; }
+.detail-modal { min-width: 500px; padding: 24px; }
+.detail-modal .modal-header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e2e8f0; }
+.detail-modal .modal-header h3 { font-size: 20px; font-weight: 600; color: #2d3748; }
+.detail-table { width: 100%; border-collapse: collapse; }
+.detail-table tr { border-bottom: 1px solid #e2e8f0; }
+.detail-table tr:last-child { border-bottom: none; }
+.detail-table th,
+.detail-table td { padding: 16px; text-align: left; }
+.detail-table th { width: 30%; background-color: #f8fafc; color: #4a5568; font-weight: 500; }
+.detail-table td { width: 70%; color: #2d3748; }
+.modal-close-button { background: none; border: none; font-size: 24px; color: #718096; cursor: pointer; padding: 4px; transition: color 0.2s; }
+.modal-close-button:hover { color: #2d3748; }
 
 /* 저장 성공 모달 */
 .register-success-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
