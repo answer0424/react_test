@@ -1,118 +1,82 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import '../../assets/css/page.css'; // 스타일시트 경로 수정
 
-export default function PlateRegisterPage({addPlate}) {
+export default function PlateRegisterPage() {
     const [plateNumber, setPlateNumber] = useState('');
-    const [ownerName, setOwnerName] = useState('');
-    const [vehicleType, setVehicleType] = useState('');
-    const [model, setModel] = useState('');
+    const [multipleNumbers, setMultipleNumbers] = useState('');
+    const [isMultiple, setIsMultiple] = useState(false);
     const navigate = useNavigate();
 
-    const handleRegister = () => {
-        if (!plateNumber || !ownerName || !vehicleType || !model) return;
-        addPlate({number: plateNumber, owner: ownerName, type: vehicleType, model});
-        setPlateNumber('');
-        setOwnerName('');
-        setVehicleType('');
-        setModel('');
-        navigate('/plates');
+    const handleSingleRegister = () => {
+        if (!plateNumber) return;
+        // TODO: API 호출로 단일 번호판 등록
+        navigate('/autoplus/plates');
+    };
+
+    const handleMultipleRegister = () => {
+        if (!multipleNumbers) return;
+        const numbers = multipleNumbers
+            .split('\n')
+            .map(num => num.trim())
+            .filter(num => num);
+        if (numbers.length === 0) return;
+        // TODO: API 호출로 다중 번호판 등록
+        navigate('/autoplus/plates');
     };
 
     return (
-        <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: '#181a20'
-        }}>
-            <div style={{
-                width: 380,
-                padding: 32,
-                borderRadius: 12,
-                background: '#23262f',
-                boxShadow: '0 2px 12px rgba(0,0,0,0.18)'
-            }}>
-                <h1 style={{color: '#00bcd4', textAlign: 'center', marginBottom: 24}}>번호판 등록</h1>
-                <input
-                    type="text"
-                    placeholder="차량 번호"
-                    value={plateNumber}
-                    onChange={e => setPlateNumber(e.target.value)}
-                    style={{
-                        width: '100%',
-                        padding: 10,
-                        marginBottom: 14,
-                        borderRadius: 6,
-                        border: '1px solid #444',
-                        background: '#181a20',
-                        color: '#fff',
-                        fontSize: 16
-                    }}
-                />
-                <input
-                    type="text"
-                    placeholder="소유자 이름"
-                    value={ownerName}
-                    onChange={e => setOwnerName(e.target.value)}
-                    style={{
-                        width: '100%',
-                        padding: 10,
-                        marginBottom: 14,
-                        borderRadius: 6,
-                        border: '1px solid #444',
-                        background: '#181a20',
-                        color: '#fff',
-                        fontSize: 16
-                    }}
-                />
-                <input
-                    type="text"
-                    placeholder="차종"
-                    value={vehicleType}
-                    onChange={e => setVehicleType(e.target.value)}
-                    style={{
-                        width: '100%',
-                        padding: 10,
-                        marginBottom: 14,
-                        borderRadius: 6,
-                        border: '1px solid #444',
-                        background: '#181a20',
-                        color: '#fff',
-                        fontSize: 16
-                    }}
-                />
-                <input
-                    type="text"
-                    placeholder="모델명"
-                    value={model}
-                    onChange={e => setModel(e.target.value)}
-                    style={{
-                        width: '100%',
-                        padding: 10,
-                        marginBottom: 20,
-                        borderRadius: 6,
-                        border: '1px solid #444',
-                        background: '#181a20',
-                        color: '#fff',
-                        fontSize: 16
-                    }}
-                />
-                <button
-                    onClick={handleRegister}
-                    style={{
-                        width: '100%',
-                        padding: '12px 0',
-                        borderRadius: 6,
-                        background: '#00bcd4',
-                        color: '#181a20',
-                        border: 'none',
-                        fontSize: 16,
-                        fontWeight: 'bold',
-                        cursor: 'pointer'
-                    }}
-                >
-                    등록
-                </button>
+        <div id="plate-register-container">
+            <div id="plate-register-content">
+                <h1 id="plate-register-title">번호판 등록</h1>
+
+                <div id="register-type-toggle">
+                    <button
+                        className={!isMultiple ? 'active' : ''}
+                        onClick={() => setIsMultiple(false)}
+                    >
+                        단일 등록
+                    </button>
+                    <button
+                        className={isMultiple ? 'active' : ''}
+                        onClick={() => setIsMultiple(true)}
+                    >
+                        다중 등록
+                    </button>
+                </div>
+
+                {!isMultiple ? (
+                    <div id="single-register-form">
+                        <input
+                            type="text"
+                            placeholder="번호판 번호 입력"
+                            value={plateNumber}
+                            onChange={e => setPlateNumber(e.target.value)}
+                            id="plate-number-input"
+                        />
+                        <button
+                            onClick={handleSingleRegister}
+                            id="register-button"
+                        >
+                            등록
+                        </button>
+                    </div>
+                ) : (
+                    <div id="multiple-register-form">
+                        <textarea
+                            placeholder="여러 번호판을 등록하려면 줄바꿈으로 구분해서 입력하세요"
+                            value={multipleNumbers}
+                            onChange={e => setMultipleNumbers(e.target.value)}
+                            id="multiple-plates-input"
+                        />
+                        <button
+                            onClick={handleMultipleRegister}
+                            id="register-button"
+                        >
+                            일괄 등록
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
