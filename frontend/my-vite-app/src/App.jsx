@@ -1,4 +1,5 @@
 import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
 import {useNavigate} from "react-router-dom";
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
     function navigateAutoplusLogin() {
         navigate('/react_test/autoplus/login');
     }
+
 
     return (
         <>
