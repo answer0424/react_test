@@ -1,0 +1,9 @@
+.wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #f5f6f8; margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
+.login_box { position: relative; width: 350px; padding: 32px; border-radius: 8px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.logo { text-align: center; margin-bottom: 24px; color: #2c3e50; font-size: 28px; font-weight: bold; }
+#loginForm input[type="text"], #loginForm input[type="password"] { width: 100%; padding: 12px; margin-bottom: 16px; border-radius: 4px; border: 1px solid #dde2e5; background: #ffffff; color: #2c3e50; font-size: 14px; }
+#loginForm button { width: 100%; padding: 12px 0; border-radius: 4px; background: #3498db; color: white; border: none; font-size: 14px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
+#loginForm button:hover { background: #2980b9; }
+.company-select { width: 100%; padding: 12px; margin-bottom: 16px; border-radius: 4px; border: 1px solid #dde2e5; background: #ffffff; color: #2c3e50; font-size: 14px; }
+.remember-me { display: flex; align-items: center; margin-bottom: 16px; gap: 8px; font-size: 14px; color: #2c3e50; }
+.remember-me input[type="checkbox"] { width: 16px; height: 16px; margin: 0; }

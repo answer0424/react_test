@@ -12,6 +12,8 @@
 .login_option input[type="checkbox"] { margin-right: 8px; }
 .login_Err { color: #e74c3c; font-size: 13px; margin-top: 10px; }
 #CORP_CD { background: #ffffff !important; color: #2c3e50 !important; }
+.remember-me { display: flex; align-items: center; margin-bottom: 16px; gap: 8px; font-size: 14px; color: #2c3e50; }
+.remember-me input[type="checkbox"] { width: 16px; height: 16px; margin: 0; }
 
 /* 번호판 목록 */
 #plate-list-container { background: #f5f6f8; min-height: 100vh; padding: 20px; }

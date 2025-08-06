@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import AccessDeniedModal from "../../components/AccessDeniedModal.jsx";
 import { useUser } from "../../contexts/UserProvider.jsx";
@@ -7,6 +7,7 @@ import '../../assets/css/autoplus.css';
 export default function AutoplusLoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
     const { setUser } = useUser();
@@ -18,11 +19,27 @@ export default function AutoplusLoginPage() {
         { username: 'user2', password: 'password2', name: '사용자2' }
     ];
 
+    useEffect(() => {
+        const savedUsername = localStorage.getItem('rememberedUsername');
+        const savedRememberMe = localStorage.getItem('rememberMe') === 'true';
+        if (savedUsername && savedRememberMe) {
+            setUsername(savedUsername);
+            setRememberMe(true);
+        }
+    }, []);
+
     const handleLogin = () => {
         const found = dummyUsers.find(
             user => user.username === username && user.password === password
         );
         if (found) {
+            if (rememberMe) {
+                localStorage.setItem('rememberedUsername', username);
+                localStorage.setItem('rememberMe', 'true');
+            } else {
+                localStorage.removeItem('rememberedUsername');
+                localStorage.setItem('rememberMe', 'false');
+            }
             setUser(found);
             navigate('/autoplus/plates');
         } else {
@@ -68,17 +85,17 @@ export default function AutoplusLoginPage() {
                             if (e.key === 'Enter') handleLogin();
                         }}
                     />
-                    <button type="submit">로그인</button>
 
-                    <div className="login_option">
+                    <div className="remember-me">
                         <input
                             type="checkbox"
-                            id="checkId"
-                            checked={saveId}
-                            onChange={(e) => setSaveId(e.target.checked)}
+                            id="rememberMe"
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.target.checked)}
                         />
-                        <label htmlFor="checkId">아이디저장</label>
+                        <label htmlFor="rememberMe">아이디 저장</label>
                     </div>
+                    <button type="submit">로그인</button>
 
                     <div id="pwErrTcnt" className="login_Err">
                         <b></b>
