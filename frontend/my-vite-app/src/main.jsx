@@ -3,7 +3,7 @@ import {createRoot} from 'react-dom/client'
 import App from './App.jsx'
 import AutoplusLoginPage from "./pages/autoplus/LoginPage.jsx";
 import PlateListPage from "./pages/autoplus/PlateListPage.jsx";
-import {BrowserRouter, Route, Routes, useLocation} from "react-router-dom";
+import {BrowserRouter, HashRouter, Route, Routes, useLocation} from "react-router-dom";
 import PlateRegisterPage from "./pages/autoplus/PlateRegisterPage.jsx";
 import AutoplusMyPage from "./pages/autoplus/MyPage.jsx";
 import CustomerLoginPage from "./pages/customer/LoginPage.jsx";
@@ -24,7 +24,7 @@ function MainLayout() {
     ].includes(location.pathname);
 
     return (
-        <>
+        <HashRouter>
             {!hideSidebar && <Sidebar />}
             <div style={{marginLeft: !hideSidebar ? 180 : 0}}>
                 <Routes>
@@ -41,7 +41,7 @@ function MainLayout() {
                     <Route path="/react_test/customer/plate/status" element={<RegisterStatusPage />} />
                 </Routes>
             </div>
-        </>
+        </HashRouter>
     );
 }
 
