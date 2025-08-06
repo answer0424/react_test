@@ -3,16 +3,16 @@ import {Link, useLocation} from 'react-router-dom';
 import '../assets/css/components.css'; // 스타일시트 경로 수정
 
 const autoplusMenus = [
-    { path: '/react_test/autoplus/plates', label: '번호판 목록' },
-    { path: '/react_test/autoplus/plate/add', label: '번호판 등록' },
-    { path: '/react_test/autoplus/plate/status', label: '차량 등록 상태' },
-    { path: '/react_test/autoplus/mypage', label: '마이페이지' },
+    { path: '/autoplus/plates', label: '번호판 목록' },
+    { path: '/autoplus/plate/add', label: '번호판 등록' },
+    { path: '/autoplus/plate/status', label: '차량 등록 상태' },
+    { path: '/autoplus/mypage', label: '마이페이지' },
 ];
 const customerMenus = [
-    { path: '/react_test/customer/plate/register', label: '차량 등록' },
+    { path: '/customer/plate/register', label: '차량 등록' },
     // { path: '/customer/plate/search', label: '번호판 검색' },
-    { path: '/react_test/customer/plate/status', label: '차량 등록 상태' },
-    { path: '/react_test/customer/mypage', label: '마이페이지' },
+    { path: '/customer/plate/status', label: '차량 등록 상태' },
+    { path: '/customer/mypage', label: '마이페이지' },
 ];
 
 export default function Sidebar() {

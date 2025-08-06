@@ -9,7 +9,7 @@
       const path = localStorage.getItem('path');
       if (path) {
         localStorage.removeItem('path');
-        location.replace(`/react_test/${path}`);
+        location.replace(`/#/${path}`);  // /react_test 제거
       }
     </script>
   </head>

@@ -14,43 +14,44 @@ import RegisterStatusPage from "./pages/customer/RegisterStatuesPage.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import {UserProvider} from "./contexts/UserProvider.jsx";
 import CarRegisterPlatePage from "./pages/autoplus/CarRegisterPlatePage.jsx";
+import './index.css';
 
 function MainLayout() {
     const location = useLocation();
     const hideSidebar = [
-        '/react_test/autoplus/login',
-        '/react_test/customer/login',
-        '/react_test/'
+        '/autoplus/login',
+        '/customer/login',
+        '/'
     ].includes(location.pathname);
 
     return (
-        <HashRouter>
+        <>
             {!hideSidebar && <Sidebar />}
             <div style={{marginLeft: !hideSidebar ? 180 : 0}}>
                 <Routes>
-                    <Route path="/react_test/" element={<App />} />
-                    <Route path="/react_test/autoplus/login" element={<AutoplusLoginPage />} />
-                    <Route path="/react_test/autoplus/plates" element={<PlateListPage />} />
-                    <Route path="/react_test/autoplus/plate/add" element={<PlateRegisterPage />} />
-                    <Route path="/react_test/autoplus/mypage" element={<AutoplusMyPage />} />
-                    <Route path="/react_test/autoplus/plate/status" element={<CarRegisterPlatePage />} />
-                    <Route path="/react_test/customer/login" element={<CustomerLoginPage />} />
-                    <Route path="/react_test/customer/plate/register" element={<CarRegisterPage />} />
-                    <Route path="/react_test/customer/mypage" element={<CustomerMyPage />} />
-                    <Route path="/react_test/customer/plate/search" element={<PlateSearchPage />} />
-                    <Route path="/react_test/customer/plate/status" element={<RegisterStatusPage />} />
+                    <Route path="/" element={<App />} />
+                    <Route path="/autoplus/login" element={<AutoplusLoginPage />} />
+                    <Route path="/autoplus/plates" element={<PlateListPage />} />
+                    <Route path="/autoplus/plate/add" element={<PlateRegisterPage />} />
+                    <Route path="/autoplus/mypage" element={<AutoplusMyPage />} />
+                    <Route path="/autoplus/plate/status" element={<CarRegisterPlatePage />} />
+                    <Route path="/customer/login" element={<CustomerLoginPage />} />
+                    <Route path="/customer/plate/register" element={<CarRegisterPage />} />
+                    <Route path="/customer/mypage" element={<CustomerMyPage />} />
+                    <Route path="/customer/plate/search" element={<PlateSearchPage />} />
+                    <Route path="/customer/plate/status" element={<RegisterStatusPage />} />
                 </Routes>
             </div>
-        </HashRouter>
+        </>
     );
 }
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <BrowserRouter>
+        <HashRouter >
             <UserProvider >
                 <MainLayout />
             </UserProvider>
-        </BrowserRouter>
+        </HashRouter>
     </StrictMode>,
 );

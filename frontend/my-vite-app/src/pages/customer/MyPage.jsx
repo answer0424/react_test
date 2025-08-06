@@ -23,7 +23,7 @@ export default function CustomerMyPage() {
     const handleLogout = () => {
         // 로그아웃 처리 로직 (예시)
         setUser(null); // UserProvider의 user 상태 초기화
-        navigate('/react_test/customer/login');
+        navigate('/customer/login');
     };
 
     return (

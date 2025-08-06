@@ -11,7 +11,7 @@ export default function PlateRegisterPage() {
     const handleSingleRegister = () => {
         if (!plateNumber) return;
         // TODO: API 호출로 단일 번호판 등록
-        navigate('/react_test/autoplus/plates');
+        navigate('/autoplus/plates');
     };
 
     const handleMultipleRegister = () => {
@@ -22,7 +22,7 @@ export default function PlateRegisterPage() {
             .filter(num => num);
         if (numbers.length === 0) return;
         // TODO: API 호출로 다중 번호판 등록
-        navigate('/react_test/autoplus/plates');
+        navigate('/autoplus/plates');
     };
 
     return (
