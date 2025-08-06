@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import '../../assets/css/page.css'; // 스타일시트 경로 수정
+import '../../assets/css/autoplus.css'; // 스타일시트 경로 수정
 
 function PlateList({plates}) {
     if (plates.length === 0) {

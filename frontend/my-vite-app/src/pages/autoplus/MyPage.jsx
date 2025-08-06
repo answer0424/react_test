@@ -3,7 +3,7 @@ import puppyImage from '../../assets/puppy.png';
 import {useUser} from '../../contexts/UserProvider.jsx';
 import {useEffect, useState} from "react";
 import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx";
-import '../../assets/css/page.css'; // 스타일시트 경로 수정
+import '../../assets/css/autoplus.css'; // 스타일시트 경로 수정
 
 export default function AutoplusMyPage() {
     const navigate = useNavigate();

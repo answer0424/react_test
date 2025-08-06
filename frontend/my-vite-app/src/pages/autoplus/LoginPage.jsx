@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import AccessDeniedModal from "../../components/AccessDeniedModal.jsx";
 import { useUser } from "../../contexts/UserProvider.jsx";
-import '../../assets/css/page.css';
+import '../../assets/css/autoplus.css';
 
 export default function AutoplusLoginPage() {
     const [username, setUsername] = useState('');
