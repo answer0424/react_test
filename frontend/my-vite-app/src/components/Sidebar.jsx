@@ -10,7 +10,7 @@ const autoplusMenus = [
 ];
 const customerMenus = [
     { path: '/customer/plate/register', label: '차량 등록' },
-    { path: '/customer/plate/search', label: '번호판 검색' },
+    // { path: '/customer/plate/search', label: '번호판 검색' },
     { path: '/customer/plate/status', label: '차량 등록 상태' },
     { path: '/customer/mypage', label: '마이페이지' },
 ];

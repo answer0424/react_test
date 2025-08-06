@@ -2,7 +2,8 @@ import {useNavigate} from 'react-router-dom';
 import puppyImage from '../../assets/puppy.png';
 import {useUser} from "../../contexts/UserProvider.jsx";
 import {useEffect, useState} from "react";
-import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx"; // 이미지 경로 수정]
+import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx"; // 이미지 경로 수정
+import '../../assets/css/customer.css'; // 스타일시트 경로 수정
 
 export default function CustomerMyPage() {
     const navigate = useNavigate();
@@ -26,38 +27,26 @@ export default function CustomerMyPage() {
     };
 
     return (
-        <div style={{
-            minWidth: 400,
-            margin: '80px auto',
-            padding: 32,
-            background: '#23262f',
-            borderRadius: 14,
-            boxShadow: '0 2px 12px rgba(0,0,0,0.18)',
-            textAlign: 'center'
-        }}>
-            <img
-                src={puppyImage}
-                alt="프로필"
-                style={{width: 72, height: 72, borderRadius: '50%', marginBottom: 18}}
-            />
-            <div style={{fontWeight: 'bold', fontSize: 22, color: '#fff', marginBottom: 8}}>아이디: {user.username}</div>
-            <div style={{color: '#aaa', marginBottom: 32}}>이름: {user.name}</div>
-            <button
-                onClick={handleLogout}
-                style={{
-                    width: '100%',
-                    padding: '12px 0',
-                    borderRadius: 6,
-                    background: '#e53935',
-                    color: '#fff',
-                    border: 'none',
-                    fontWeight: 'bold',
-                    fontSize: 16,
-                    cursor: 'pointer'
-                }}
-            >
-                로그아웃
-            </button>
+        <div id="mypage-container">
+            <div id="mypage-content">
+                <div id="profile-section">
+                    <img
+                        src={puppyImage}
+                        alt="프로필"
+                        id="profile-image"
+                    />
+                    <div id="user-info">
+                        <div id="user-id">아이디: {user.username}</div>
+                        <div id="user-name">이름: {user.name}</div>
+                    </div>
+                </div>
+                <button
+                    onClick={handleLogout}
+                    id="logout-button"
+                >
+                    로그아웃
+                </button>
+            </div>
         </div>
     );
 }

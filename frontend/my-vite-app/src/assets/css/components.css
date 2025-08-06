@@ -1,85 +1,25 @@
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 56px;
-    background: #ffffff;
-    transition: width 0.2s;
-    z-index: 100;
-    box-shadow: 1px 0 3px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-right: 1px solid #e9ecef;
-}
+/* 사이드바 */
+.sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 56px; background: #ffffff; transition: width 0.2s; z-index: 100; box-shadow: 1px 0 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; border-right: 1px solid #e9ecef; }
+.sidebar.expanded { width: 180px; align-items: flex-start; }
+.sidebar-header { width: 100%; height: 64px; display: flex; align-items: center; justify-content: center; color: #2c3e50; font-weight: bold; font-size: 22px; border-bottom: 1px solid #e9ecef; background: #34badb; }
+.sidebar.expanded .sidebar-header { padding-left: 18px; justify-content: flex-start; }
+.sidebar-nav { margin-top: 24px; width: 100%; }
+.sidebar-link { display: block; padding: 12px 0; color: #606060; text-decoration: none; font-size: 0; text-align: center; margin-bottom: 8px; transition: all 0.2s; }
+.sidebar.expanded .sidebar-link { padding: 12px 24px; font-size: 15px; text-align: left; }
+.sidebar-link:hover { background: #f8f9fa; color: #3498db; }
+.sidebar-link.active { color: #3498db; font-weight: bold; background: #f8f9fa; }
+.sidebar.expanded .sidebar-link.active { position: relative; }
+.sidebar.expanded .sidebar-link.active::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #3498db; }
 
-.sidebar.expanded {
-    width: 180px;
-    align-items: flex-start;
-}
-
-.sidebar-header {
-    width: 100%;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #2c3e50;
-    font-weight: bold;
-    font-size: 22px;
-    border-bottom: 1px solid #e9ecef;
-    background: #34badb;
-}
-
-.sidebar.expanded .sidebar-header {
-    padding-left: 18px;
-    justify-content: flex-start;
-}
-
-.sidebar-nav {
-    margin-top: 24px;
-    width: 100%;
-}
-
-.sidebar-link {
-    display: block;
-    padding: 12px 0;
-    color: #606060;
-    text-decoration: none;
-    font-size: 0;
-    text-align: center;
-    margin-bottom: 8px;
-    transition: all 0.2s;
-}
-
-.sidebar.expanded .sidebar-link {
-    padding: 12px 24px;
-    font-size: 15px;
-    text-align: left;
-}
-
-.sidebar-link:hover {
-    background: #f8f9fa;
-    color: #3498db;
-}
-
-.sidebar-link.active {
-    color: #3498db;
-    font-weight: bold;
-    background: #f8f9fa;
-}
-
-.sidebar.expanded .sidebar-link.active {
-    position: relative;
-}
-
-.sidebar.expanded .sidebar-link.active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: #3498db;
-}
+/* 진행 상태 상세 모달 */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; }
+.modal-content { background: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); width: 100%; max-width: 500px; cursor: default; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid #e9ecef; }
+.modal-header h3 { color: #2c3e50; font-size: 20px; margin: 0; }
+.modal-close-button { background: none; border: none; font-size: 24px; color: #666; cursor: pointer; padding: 8px; line-height: 1; border-radius: 4px; transition: all 0.2s; }
+.modal-close-button:hover { background: #f0f0f0; color: #333; }
+.modal-body { padding: 24px; }
+.detail-item { display: flex; margin-bottom: 16px; }
+.detail-item:last-child { margin-bottom: 0; }
+.detail-item label { flex: 0 0 100px; color: #666; font-weight: 500; }
+.detail-item span { color: #2c3e50; flex: 1; }

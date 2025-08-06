@@ -1,3 +1,4 @@
+/* 로그인 */
 .wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #f5f6f8; margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
 .login_box { position: relative; width: 350px; padding: 32px; border-radius: 8px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 .logo { text-align: center; margin-bottom: 24px; color: #2c3e50; font-size: 28px; font-weight: bold; }
@@ -7,3 +8,48 @@
 .company-select { width: 100%; padding: 12px; margin-bottom: 16px; border-radius: 4px; border: 1px solid #dde2e5; background: #ffffff; color: #2c3e50; font-size: 14px; }
 .remember-me { display: flex; align-items: center; margin-bottom: 16px; gap: 8px; font-size: 14px; color: #2c3e50; }
 .remember-me input[type="checkbox"] { width: 16px; height: 16px; margin: 0; }
+
+/* 신차 등록 */
+.wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #f5f6f8; }
+.register_box { width: 450px; padding: 32px; border-radius: 8px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.title { text-align: center; margin-bottom: 24px; color: #2c3e50; font-size: 24px; font-weight: bold; }
+#registerForm select, #registerForm input[type="text"], #registerForm input[type="number"] { width: 100%; padding: 12px; margin-bottom: 16px; border-radius: 4px; border: 1px solid #dde2e5; background: #ffffff; color: #2c3e50; font-size: 14px; }
+.id-type-selector, .co-owner-check { margin-bottom: 16px; display: flex; gap: 20px; }
+.id-type-selector label, .co-owner-check label { display: flex; align-items: center; gap: 8px; color: #2c3e50; font-size: 14px; }
+.co-owner-section { padding: 16px; margin-bottom: 16px; border: 1px solid #dde2e5; border-radius: 4px; }
+#registerForm button { width: 100%; padding: 12px 0; border-radius: 4px; background: #3498db; color: white; border: none; font-size: 14px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
+#registerForm button:hover { background: #2980b9; }
+
+/* 신차 등록 상태 */
+.customer-container { background: #f5f6f8; min-height: 100vh; padding: 20px; }
+.customer-content { max-width: 1000px; margin: 0 auto; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; }
+.customer-title { color: #2c3e50; font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid #e9ecef; padding-bottom: 15px; }
+.customer-search-filters { margin-bottom: 24px; }
+.customer-search-row { display: flex; gap: 12px; margin-bottom: 12px; }
+.customer-search-input { padding: 8px 12px; border: 1px solid #dde2e5; border-radius: 4px; font-size: 14px; flex: 1; }
+.customer-date-picker-wrapper { position: relative; display: flex; align-items: center; gap: 8px; flex: 1; }
+.customer-date-picker { padding: 8px 12px; border: 1px solid #dde2e5; border-radius: 4px; font-size: 14px; flex: 1; }
+.customer-date-separator { margin: 0 4px; }
+.customer-date-select-button { padding: 8px 16px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; white-space: nowrap; }
+.customer-search-button { padding: 0 24px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; }
+.customer-status-tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid #e9ecef; padding-bottom: 1px; }
+.customer-tab-button { padding: 8px 16px; border: none; background: none; cursor: pointer; color: #606060; font-size: 14px; }
+.customer-tab-button.active { color: #3498db; border-bottom: 2px solid #3498db; margin-bottom: -1px; }
+.customer-results-table { width: 100%; overflow-x: auto; }
+.customer-results-table table { width: 100%; border-collapse: collapse; }
+.customer-results-table th { background: #f8f9fa; color: #2c3e50; font-weight: bold; padding: 12px; text-align: left; border-bottom: 1px solid #e9ecef; }
+.customer-results-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e9ecef; }
+.customer-clickable { cursor: pointer; }
+.customer-clickable:hover { background: #f8f9fa; }
+.customer-no-data { text-align: center; color: #666; padding: 24px; }
+
+/* 마이페이지 */
+#mypage-container { background: #f5f6f8; min-height: 100vh; padding: 40px 20px; }
+#mypage-content { max-width: 400px; margin: 0 auto; padding: 32px; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+#profile-section { text-align: center; margin-bottom: 32px; }
+#profile-image { width: 100px; height: 100px; border-radius: 50%; margin-bottom: 20px; border: 3px solid #f5f6f8; }
+#user-info { margin-bottom: 24px; }
+#user-id { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 8px; }
+#user-name { font-size: 16px; color: #606060; }
+#logout-button { width: 100%; padding: 12px 0; background: #e74c3c; color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
+#logout-button:hover { background: #c0392b; }
