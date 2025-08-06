@@ -18,8 +18,9 @@ import CarRegisterPlatePage from "./pages/autoplus/CarRegisterPlatePage.jsx";
 function MainLayout() {
     const location = useLocation();
     const hideSidebar = [
-        '/autoplus/login',
-        '/customer/login'
+        '/react_test/autoplus/login',
+        '/react_test/customer/login',
+        '/react_test/'
     ].includes(location.pathname);
 
     return (

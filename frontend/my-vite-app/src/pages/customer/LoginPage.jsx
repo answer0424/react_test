@@ -46,7 +46,7 @@ export default function CustomerLoginPage() {
                 localStorage.setItem('rememberMe', 'false');
             }
             setUser(found);
-            navigate('/customer/plate/register');
+            navigate('/react_test/customer/plate/register');
         } else {
             setModalOpen(true);
         }

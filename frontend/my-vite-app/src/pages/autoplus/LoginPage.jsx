@@ -41,7 +41,7 @@ export default function AutoplusLoginPage() {
                 localStorage.setItem('rememberMe', 'false');
             }
             setUser(found);
-            navigate('/autoplus/plates');
+            navigate('/react_test/autoplus/plates');
         } else {
             setModalOpen(true);
         }

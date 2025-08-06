@@ -22,7 +22,7 @@ export default function AutoplusMyPage() {
 
     const handleLogout = () => {
         setUser(null);
-        navigate('/autoplus/login');
+        navigate('/react_test/autoplus/login');
     };
 
     return (

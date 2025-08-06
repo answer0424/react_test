@@ -30,7 +30,7 @@ export default function PlateListPage() {
     };
 
     const handleAddPlate = () => {
-        navigate('/autoplus/plate/add');
+        navigate('/react_test/autoplus/plate/add');
     };
 
     // TODO 더미 데이터 (실제 API 호출로 대체 필요)

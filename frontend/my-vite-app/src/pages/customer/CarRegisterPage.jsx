@@ -46,7 +46,7 @@ export default function CarRegisterPage() {
         e.preventDefault();
         // TODO: 유효성 검사 및 데이터 처리
         console.log(formData);
-        navigate('/customer/plate/search');
+        navigate('/react_test/customer/plate/search');
     };
 
     return (

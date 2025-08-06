@@ -10,9 +10,9 @@ export default function LoginRequiredModal({open}) {
 
     const handleMoveLogin = () => {
         if (location.pathname.startsWith('/autoplus')) {
-            navigate('/autoplus/login');
+            navigate('/react_test/autoplus/login');
         } else {
-            navigate('/customer/login');
+            navigate('/react_test/customer/login');
         }
     }
     return (

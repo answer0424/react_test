@@ -1,53 +1,45 @@
+import { useState } from 'react'
 import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg';
+import viteLogo from '/vite.svg'
+import './App.css'
 import {useNavigate} from "react-router-dom";
 
-export default function App() {
-
+function App() {
     const navigate = useNavigate();
 
-    function navigateCustomerLogin() {
-        navigate('/react_test/customer/login');
-    }
-
-    function navigateAutoplusLogin() {
+    function loginAutoplus() {
         navigate('/react_test/autoplus/login');
     }
-
+    function loginCustomer() {
+        navigate('/react_test/customer/login');
+    }
 
     return (
         <>
             <div>
                 <a href="https://vite.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo"/>
+                    <img src={viteLogo} className="logo" alt="Vite logo" />
                 </a>
-            </div>
-            <div>
                 <a href="https://react.dev" target="_blank">
-                    <img src={reactLogo} className="logo" alt="Vite logo"/>
+                    <img src={reactLogo} className="logo react" alt="React logo" />
                 </a>
             </div>
             <h1>Vite + React</h1>
             <div className="card">
-                <button onClick={() => navigateAutoplusLogin()}>
-                    오토플러스 로그인 페이지
+                <button onClick={() => loginAutoplus()}>
+                    오토플러스 로그인
                 </button>
-                <p>
-                    오토플러스 로그인 페이지로 이동합니다.
-                </p>
             </div>
             <div className="card">
-                <button onClick={navigateCustomerLogin}>
-                    고객사 로그인 페이지
+                <button onClick={() => loginCustomer()}>
+                    고객사 로그인
                 </button>
-                <p>
-                    고객사 로그인 페이지로 이동합니다.
-                </p>
-                <p className="read-the-docs">
-                    Click on the Vite and React logos to learn more
-            </p>
             </div>
+            <p className="read-the-docs">
+                Click on the Vite and React logos to learn more
+            </p>
         </>
-    );
+    )
 }
 
+export default App
