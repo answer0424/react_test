@@ -1,7 +1,7 @@
 import reactLogo from './assets/react.svg'
 import {useNavigate} from "react-router-dom";
 
-function App() {
+export default function App() {
 
     const navigate = useNavigate();
 
@@ -33,14 +33,14 @@ function App() {
                 <button onClick={navigateCustomerLogin}>
                     고객사 로그인 페이지
                 </button>
-            <p>
-                고객사 로그인 페이지로 이동합니다.
+                <p>
+                    고객사 로그인 페이지로 이동합니다.
+                </p>
+                <p className="read-the-docs">
+                    Click on the Vite and React logos to learn more
             </p>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
+            </div>
         </>
-    )
+    );
 }
 
-export default App
