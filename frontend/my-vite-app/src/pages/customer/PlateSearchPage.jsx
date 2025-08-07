@@ -1,4 +1,7 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import {useUser} from "../../contexts/UserProvider.jsx";
+import {useNavigate} from "react-router-dom";
+import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx";
 
 const dummyPlates = [
     {id: 1, number: '12가 3456', owner: '홍길동', type: '승용차', model: 'Hyundai Sonata'},
@@ -10,6 +13,19 @@ const dummyPlates = [
 
 export default function PlateSearchPage() {
     const [searchTerm, setSearchTerm] = useState('');
+    const {user} = useUser();
+    const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!user) {
+            setUserInfoRequiredModalOpen(true);
+        }
+    }, [user, navigate]);
+
+    if (!user || !user.username) {
+        return <LoginRequiredModal open={userInfoRequiredModalOpen}/>;
+    }
 
     const filteredPlates = dummyPlates.filter(
         plate =>

@@ -1,6 +1,8 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import '../../assets/css/autoplus.css'; // 스타일시트 경로 수정
+import '../../assets/css/autoplus.css';
+import {useUser} from "../../contexts/UserProvider.jsx";
+import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx"; // 스타일시트 경로 수정
 
 function PlateList({plates}) {
     if (plates.length === 0) {
@@ -24,6 +26,18 @@ function PlateList({plates}) {
 export default function PlateListPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
+    const {user} = useUser();
+    const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
+
+    useEffect(() => {
+        if (!user) {
+            setUserInfoRequiredModalOpen(true);
+        }
+    }, [user, navigate]);
+
+    if (!user || !user.username) {
+        return <LoginRequiredModal open={userInfoRequiredModalOpen}/>;
+    }
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);

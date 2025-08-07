@@ -1,10 +1,13 @@
 // RegisterStatusPage.jsx
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import DatePicker from 'react-datepicker';
 import StatusDetailModal from '../../components/StatusDetailModal';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../assets/css/customer.css';
 import {dummyStatusData} from "../../services/CarRegisterDummyData.jsx";
+import {useUser} from "../../contexts/UserProvider.jsx";
+import {useNavigate} from "react-router-dom";
+import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx";
 
 
 // 업무구분 코드와 이름 매핑
@@ -55,6 +58,19 @@ export default function RegisterStatusPage() {
     });
     const [selectedStatus, setSelectedStatus] = useState(null);
     const [showQuickSelect, setShowQuickSelect] = useState(false);
+    const {user} = useUser();
+    const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!user) {
+            setUserInfoRequiredModalOpen(true);
+        }
+    }, [user, navigate]);
+
+    if (!user || !user.username) {
+        return <LoginRequiredModal open={userInfoRequiredModalOpen}/>;
+    }
 
     const handleSearch = (e) => {
         e.preventDefault();

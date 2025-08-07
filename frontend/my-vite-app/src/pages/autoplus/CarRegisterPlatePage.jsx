@@ -1,8 +1,11 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import ko from 'date-fns/locale/ko';
-import {demoPlateData} from "../../services/CarRegisterDummyData.jsx"; // 한국어 로케일 추가
+import {demoPlateData} from "../../services/CarRegisterDummyData.jsx";
+import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx";
+import {useNavigate} from "react-router-dom";
+import {useUser} from "../../contexts/UserProvider.jsx"; // 한국어 로케일 추가
 
 const STATUS_TABS = [
     {id: 'all', label: '전체'},
@@ -11,7 +14,7 @@ const STATUS_TABS = [
     {id: 'completed', label: '완료'}
 ];
 
-const QuickDateSelector = ({ onSelect, onClose }) => {
+const QuickDateSelector = ({ onSelect }) => {
     const getDate = (days) => {
         const date = new Date();
         date.setDate(date.getDate() - days);
@@ -37,6 +40,20 @@ export default function CarRegisterPlatePage() {
     const [activeTab, setActiveTab] = useState('all');
     const [searchResults, setSearchResults] = useState(demoPlateData);
     const [showQuickSelect, setShowQuickSelect] = useState(false);
+    const { user } = useUser(); // 사용자 정보 가져오기
+    const navigate = useNavigate(); // 네비게이션 훅
+    const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
+
+    // 사용자 정보가 없으면 모달 열기
+    useEffect(() => {
+        if (!user) {
+            setUserInfoRequiredModalOpen(true);
+        }
+    }, [user, navigate]);
+
+    if (!user || !user.username) {
+        return <LoginRequiredModal open={userInfoRequiredModalOpen}/>;
+    }
 
     // 임시 데모 데이터
     const companies = [

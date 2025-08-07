@@ -5,14 +5,16 @@ import { useUser } from "../../contexts/UserProvider.jsx";
 import '../../assets/css/customer.css';
 
 const dummyUsers = [
-    { username: 'dlruddnjs', password: 'dlruddnjs', name: '홍길동', company: '현대자동차' },
-    { username: 'user2', password: '1234', name: '김철수', company: '기아자동차' },
-    { username: 'user3', password: '1234', name: '이영희', company: '현대자동차' }
+    { username: 'admin', password: 'admin123', name: 'admin', company: 'CARBANG' },
+    { username: 'user1', password: '1234', name: 'park', company: 'AUTOPLUS' },
+    { username: 'dlruddnjs', password: 'dlruddnjs', name: 'hong', company: 'HYUNDAI' },
+    { username: 'user2', password: '1234', name: 'kim', company: 'KIA' },
+    { username: 'user3', password: '1234', name: 'lee', company: 'GENESIS' }
 ];
 
-const companies = ['현대자동차', '기아자동차', '르노코리아'];
+const companies = ['CARBANG', 'AUTOPLUS', 'HYUNDAI', 'KIA', 'GENESIS'];
 
-export default function CustomerLoginPage() {
+export default function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [company, setCompany] = useState('');

@@ -7,7 +7,7 @@ import '../../assets/css/customer.css'; // 스타일시트 경로 수정
 
 export default function CustomerMyPage() {
     const navigate = useNavigate();
-    const {user, setUser} = useUser(); // UserProvider에서 user 정보 가져오기
+    const {user, logout} = useUser(); // UserProvider에서 user 정보 가져오기
     const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
 
     useEffect(() => {
@@ -22,7 +22,7 @@ export default function CustomerMyPage() {
 
     const handleLogout = () => {
         // 로그아웃 처리 로직 (예시)
-        setUser(null); // UserProvider의 user 상태 초기화
+        logout(); // UserProvider의 user 상태 초기화
         navigate('/customer/login');
     };
 

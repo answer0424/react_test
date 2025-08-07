@@ -7,7 +7,7 @@ import '../../assets/css/autoplus.css'; // 스타일시트 경로 수정
 
 export default function AutoplusMyPage() {
     const navigate = useNavigate();
-    const {user, setUser} = useUser();
+    const {user, logout} = useUser();
     const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
 
     useEffect(() => {
@@ -21,7 +21,7 @@ export default function AutoplusMyPage() {
     }
 
     const handleLogout = () => {
-        setUser(null);
+        logout();
         navigate('/autoplus/login');
     };
 

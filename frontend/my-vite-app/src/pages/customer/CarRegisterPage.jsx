@@ -1,16 +1,12 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import '../../assets/css/customer.css';
 import RegisterSuccessModal from "../../components/RegisterSuccessModal.jsx"; // 스타일시트 경로 수정
 import * as XLSX from 'xlsx'; // 엑셀 파일 처리 라이브러리
-import {
-    BulkCarRegisterExcel,
-    validateBulkData,
-    EXCEL_TEMPLATE_HEADERS,
-    VALID_BUSINESS_TYPES,
-    VALID_ID_TYPES
-} from '../../excel/BulkCarRegisterExcel';
-import ExcelValidationErrorModal from '../../components/ExcelValidationErrorModal.jsx'; // 엑셀 검증 오류 모달
+import {BulkCarRegisterExcel, validateBulkData} from '../../excel/BulkCarRegisterExcel';
+import ExcelValidationErrorModal from '../../components/ExcelValidationErrorModal.jsx';
+import {useUser} from "../../contexts/UserProvider.jsx";
+import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx"; // 엑셀 검증 오류 모달
 
 const dummyPlates = [
     { id: 1, number: '12가3456' },
@@ -50,6 +46,19 @@ export default function CarRegisterPage() {
     const [registeredCount, setRegisteredCount] = useState(0);
     const [validationErrors, setValidationErrors] = useState([]);
     const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+    const {user} = useUser();
+    const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!user) {
+            setUserInfoRequiredModalOpen(true);
+        }
+    }, [user, navigate]);
+
+    if (!user || !user.username) {
+        return <LoginRequiredModal open={userInfoRequiredModalOpen}/>;
+    }
 
     const handleFileUpload = (e) => {
         const file = e.target.files[0];

@@ -14,9 +14,9 @@ export default function AutoplusLoginPage() {
     const [saveId, setSaveId] = useState(false);
 
     const dummyUsers = [
-        { username: 'dlruddnjs', password: 'dlruddnjs', name: '관리자' },
-        { username: 'user1', password: 'password1', name: '사용자1' },
-        { username: 'user2', password: 'password2', name: '사용자2' }
+        { username: 'dlruddnjs', password: 'dlruddnjs', name: 'admin' },
+        { username: 'user1', password: 'password1', name: 'user1' },
+        { username: 'user2', password: 'password2', name: 'user1' }
     ];
 
     useEffect(() => {
