@@ -7,11 +7,8 @@ import {useNavigate} from "react-router-dom";
 function App() {
     const navigate = useNavigate();
 
-    function loginAutoplus() {
-        navigate('/autoplus/login');
-    }
-    function loginCustomer() {
-        navigate('/customer/login');
+    function login() {
+        navigate('/login');
     }
 
     return (
@@ -26,13 +23,8 @@ function App() {
             </div>
             <h1>Vite + React</h1>
             <div className="card">
-                <button onClick={() => loginAutoplus()} className="viteLogin">
-                    오토플러스 로그인
-                </button>
-            </div>
-            <div className="card">
-                <button onClick={() => loginCustomer()} className="viteLogin">
-                    고객사 로그인
+                <button onClick={() => login()} className="viteLogin">
+                    로그인
                 </button>
             </div>
             <p className="read-the-docs">
