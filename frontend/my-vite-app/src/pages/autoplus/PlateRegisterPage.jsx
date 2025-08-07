@@ -31,6 +31,8 @@ const validateBulkData = (data) => {
     return errors;
 };
 
+const CUSTOMER_OPTIONS = ['HYUNDAI', 'KIA', 'GENESIS'];
+
 export default function PlateRegisterPage() {
     const [isMultiple, setIsMultiple] = useState(false);
     const [plateNumber, setPlateNumber] = useState('');
@@ -44,8 +46,8 @@ export default function PlateRegisterPage() {
     const { user } = useUser();
     const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
     const [rows, setRows] = useState([]);
-    const [showGrid, setShowGrid] = useState(false);
     const [showExcelModal, setShowExcelModal] = useState(false);
+    const [selectedCustomer, setSelectedCustomer] = useState('');
 
     useEffect(() => {
         if (!user) {
@@ -81,15 +83,6 @@ export default function PlateRegisterPage() {
             setShowExcelModal(true); // 모달 열기
         };
         reader.readAsBinaryString(file);
-    };
-
-    const handleSaveExcel = () => {
-        // 수정된 데이터를 엑셀 파일로 저장
-        const ws = XLSX.utils.json_to_sheet(bulkData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, '차량번호등록');
-        XLSX.writeFile(wb, '수정된_차량번호.xlsx');
-        setShowExcelModal(false);
     };
 
     const handleRowsChange = (newRows) => {
@@ -132,6 +125,7 @@ export default function PlateRegisterPage() {
         setRegisteredCount(1);
         setIsModalOpen(true);
         setPlateNumber('');
+        setSelectedCustomer('');
     };
 
     const handleClearFile = () => {
@@ -181,15 +175,37 @@ export default function PlateRegisterPage() {
                 </div>
 
                 {!isMultiple ? (
-                    <form id="registerForm" onSubmit={handleSingleRegister}>
-                        <input
-                            type="text"
-                            placeholder="차량번호 입력"
-                            value={plateNumber}
-                            onChange={e => setPlateNumber(e.target.value)}
-                            required
-                        />
-                        <button type="submit">등록</button>
+                    <form id="registerForm" onSubmit={handleSingleRegister} className="single-register-form">
+                        <div className="input-group-vertical">
+                            <div className="input-field">
+                                <label htmlFor="plateNumber">차량번호</label>
+                                <input
+                                    id="plateNumber"
+                                    type="text"
+                                    placeholder="차량번호 입력"
+                                    value={plateNumber}
+                                    onChange={e => setPlateNumber(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="input-field">
+                                <label htmlFor="customer">고객사</label>
+                                <select
+                                    id="customer"
+                                    value={selectedCustomer}
+                                    onChange={e => setSelectedCustomer(e.target.value)}
+                                    required
+                                >
+                                    <option value="">선택하세요</option>
+                                    {CUSTOMER_OPTIONS.map(customer => (
+                                        <option key={customer} value={customer}>
+                                            {customer}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" className="register-button">등록</button>
                     </form>
                 ) : (
                     <div className="bulk-register">
