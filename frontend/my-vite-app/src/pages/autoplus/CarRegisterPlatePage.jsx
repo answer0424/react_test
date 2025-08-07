@@ -79,7 +79,7 @@ export default function CarRegisterPlatePage() {
         const companyMatch = !selectedCompany ||
             result.company === companies.find(c => c.id === parseInt(selectedCompany))?.name;
 
-        // 번호판 검색어 필터링 (부분 일치)
+        // 차량번호 검색어 필터링 (부분 일치)
         const plateMatch = !searchTerm ||
             result.plateNumber.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -100,13 +100,13 @@ export default function CarRegisterPlatePage() {
     return (
         <div id="plate-status-container">
             <div id="plate-status-content">
-                <h1 id="plate-status-title">번호판 등록 상태 조회</h1>
+                <h1 id="plate-status-title">차량번호 등록 상태 조회</h1>
 
                 <div id="search-filters">
                     <div className="search-row">
                         <input
                             type="text"
-                            placeholder="번호판 번호 검색"
+                            placeholder="차량번호 번호 검색"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="search-input"
@@ -179,7 +179,7 @@ export default function CarRegisterPlatePage() {
                     <table>
                         <thead>
                         <tr>
-                            <th>번호판</th>
+                            <th>차량번호</th>
                             <th>고객사</th>
                             <th>상태</th>
                             <th>요청일</th>

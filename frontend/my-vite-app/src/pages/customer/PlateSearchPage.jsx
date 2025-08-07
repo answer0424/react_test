@@ -48,7 +48,7 @@ export default function PlateSearchPage() {
                 background: '#23262f',
                 boxShadow: '0 2px 12px rgba(0,0,0,0.18)'
             }}>
-                <h1 style={{color: '#00bcd4', marginBottom: 24, textAlign: 'center'}}>번호판 검색</h1>
+                <h1 style={{color: '#00bcd4', marginBottom: 24, textAlign: 'center'}}>차량번호 검색</h1>
                 <input
                     type="text"
                     placeholder="차량 번호, 모델, 소유자 검색..."

@@ -93,7 +93,7 @@ export default function CarRegisterPage() {
 
         try {
             const formattedData = bulkData.map(row => ({
-                plateId: row['번호판번호'],
+                plateId: row['차량번호'],
                 businessType: row['업무구분'],
                 price: Number(row['공급가액']),
                 vinNumber: row['차대번호'],
@@ -186,7 +186,7 @@ export default function CarRegisterPage() {
                         onChange={handleChange}
                         required
                     >
-                        <option value="">번호판 선택</option>
+                        <option value="">차량번호 선택</option>
                         {dummyPlates.map(plate => (
                             <option key={plate.id} value={plate.id}>
                                 {plate.number}

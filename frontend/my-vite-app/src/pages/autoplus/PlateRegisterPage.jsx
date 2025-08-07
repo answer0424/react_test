@@ -25,7 +25,7 @@ export default function PlateRegisterPage() {
 
     const handleSingleRegister = () => {
         if (!plateNumber) return;
-        // TODO: API 호출로 단일 번호판 등록
+        // TODO: API 호출로 단일 차량번호 등록
         navigate('/autoplus/plates');
     };
 
@@ -36,14 +36,14 @@ export default function PlateRegisterPage() {
             .map(num => num.trim())
             .filter(num => num);
         if (numbers.length === 0) return;
-        // TODO: API 호출로 다중 번호판 등록
+        // TODO: API 호출로 다중 차량번호 등록
         navigate('/autoplus/plates');
     };
 
     return (
         <div id="plate-register-container">
             <div id="plate-register-content">
-                <h1 id="plate-register-title">번호판 등록</h1>
+                <h1 id="plate-register-title">차량번호 등록</h1>
 
                 <div id="register-type-toggle">
                     <button
@@ -64,7 +64,7 @@ export default function PlateRegisterPage() {
                     <div id="single-register-form">
                         <input
                             type="text"
-                            placeholder="번호판 번호 입력"
+                            placeholder="차량번호 입력"
                             value={plateNumber}
                             onChange={e => setPlateNumber(e.target.value)}
                             id="plate-number-input"
@@ -79,7 +79,7 @@ export default function PlateRegisterPage() {
                 ) : (
                     <div id="multiple-register-form">
                         <textarea
-                            placeholder="여러 번호판을 등록하려면 줄바꿈으로 구분해서 입력하세요"
+                            placeholder="여러 차량번호를 등록하려면 줄바꿈으로 구분해서 입력하세요"
                             value={multipleNumbers}
                             onChange={e => setMultipleNumbers(e.target.value)}
                             id="multiple-plates-input"

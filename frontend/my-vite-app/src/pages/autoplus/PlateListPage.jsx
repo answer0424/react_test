@@ -8,7 +8,7 @@ function PlateList({plates}) {
     if (plates.length === 0) {
         return (
             <div id="plate-empty-message">
-                등록된 번호판이 없습니다.
+                등록된 차량번호가 없습니다.
             </div>
         );
     }
@@ -63,11 +63,11 @@ export default function PlateListPage() {
     return (
         <div id="plate-list-container">
             <div id="plate-list-content">
-                <h1 id="plate-list-title">번호판 관리</h1>
+                <h1 id="plate-list-title">차량번호 관리</h1>
                 <div id="plate-list-actions">
                     <input
                         type="text"
-                        placeholder="번호판 검색..."
+                        placeholder="차량번호 검색..."
                         value={searchTerm}
                         onChange={handleSearchChange}
                         id="plate-search-input"
@@ -76,7 +76,7 @@ export default function PlateListPage() {
                         onClick={handleAddPlate}
                         id="plate-add-button"
                     >
-                        신규 번호판 등록
+                        신규 차량번호 등록
                     </button>
                 </div>
                 <PlateList plates={filteredPlates}/>
