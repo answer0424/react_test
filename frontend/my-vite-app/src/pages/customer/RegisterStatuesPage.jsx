@@ -182,7 +182,7 @@ export default function RegisterStatusPage() {
                             <th>차대번호</th>
                             <th>가격(원)</th>
                             <th>상태</th>
-                            <th>신청일자</th>
+                            <th>신청일시</th>
                         </tr>
                         </thead>
                         <tbody>

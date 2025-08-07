@@ -182,8 +182,8 @@ export default function CarRegisterStatusPage() {
                             <th>차량번호</th>
                             <th>고객사</th>
                             <th>상태</th>
-                            <th>요청일</th>
-                            <th>등록일</th>
+                            <th>접수일시</th>
+                            <th>등록일시</th>
                         </tr>
                         </thead>
                         <tbody>
