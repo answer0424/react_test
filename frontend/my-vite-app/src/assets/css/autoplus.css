@@ -90,7 +90,7 @@
 #results-table thead { position: sticky; top: 0; background: #ffffff; }
 #results-table thead tr { display: table; width: 100%; table-layout: fixed; }
 #results-table tbody { display: block; overflow-y: auto; height: calc(100vh - 450px); min-height: 200px; }
-#results-table tbody tr { display: table; width: 100%; table-layout: fixed; }
+#results-table tbody tr { display: table; width: 100%; table-layout: fixed; font-size: 12px; line-height: 10px}
 #results-table th,
 #results-table td { padding: 12px; text-align: left; }
 #results-table th { background: #f8f9fa; border-bottom: 2px solid #e9ecef; }

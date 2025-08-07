@@ -174,8 +174,13 @@ export default function RegisterStatusPage() {
                     <table>
                         <thead>
                         <tr>
+                            <th>번호</th>
                             <th>차량번호</th>
                             <th>소유자</th>
+                            <th>차명</th>
+                            <th>업무구분</th>
+                            <th>차대번호</th>
+                            <th>가격(원)</th>
                             <th>상태</th>
                             <th>신청일자</th>
                         </tr>
@@ -183,17 +188,22 @@ export default function RegisterStatusPage() {
                         <tbody>
                         {filteredStatus.length === 0 ? (
                             <tr>
-                                <td colSpan="4" className="customer-no-data">검색 결과가 없습니다.</td>
+                                <td colSpan="9" className="customer-no-data">검색 결과가 없습니다.</td>
                             </tr>
                         ) : (
-                            filteredStatus.map(status => (
+                            filteredStatus.map((status, index) => (
                                 <tr
                                     key={status.id}
                                     onClick={() => setSelectedStatus(status)}
                                     className="customer-clickable"
                                 >
+                                    <td>{index + 1}</td>
                                     <td>{status.plateNumber}</td>
                                     <td>{status.ownerName}</td>
+                                    <td>{status.carName}</td>
+                                    <td>{getBusinessTypeName(status.businessType)}</td>
+                                    <td>{status.vinNumber}</td>
+                                    <td>{Number(status.price).toLocaleString()}</td>
                                     <td>{status.status}</td>
                                     <td>{status.requestDate}</td>
                                 </tr>
