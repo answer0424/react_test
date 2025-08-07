@@ -12,7 +12,7 @@ import CustomerMyPage from "./pages/customer/MyPage.jsx";
 import RegisterStatusPage from "./pages/customer/RegisterStatuesPage.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import {UserProvider} from "./contexts/UserProvider.jsx";
-import CarRegisterPlatePage from "./pages/autoplus/CarRegisterPlatePage.jsx";
+import CarRegisterStatusPage from "./pages/autoplus/CarRegisterStatusPage.jsx";
 import './index.css';
 
 function MainLayout() {
@@ -34,7 +34,7 @@ function MainLayout() {
                     <Route path="/autoplus/plates" element={<PlateListPage />} />
                     <Route path="/autoplus/plate/add" element={<PlateRegisterPage />} />
                     <Route path="/autoplus/mypage" element={<AutoplusMyPage />} />
-                    <Route path="/autoplus/plate/status" element={<CarRegisterPlatePage />} />
+                    <Route path="/autoplus/plate/status" element={<CarRegisterStatusPage />} />
                     <Route path="/customer/plate/register" element={<CarRegisterPage />} />
                     <Route path="/customer/mypage" element={<CustomerMyPage />} />
                     <Route path="/customer/plate/status" element={<RegisterStatusPage />} />

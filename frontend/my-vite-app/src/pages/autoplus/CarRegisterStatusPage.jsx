@@ -32,7 +32,7 @@ const QuickDateSelector = ({ onSelect }) => {
     );
 };
 
-export default function CarRegisterPlatePage() {
+export default function CarRegisterStatusPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCompany, setSelectedCompany] = useState('');
     const [startDate, setStartDate] = useState(new Date());

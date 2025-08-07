@@ -54,3 +54,20 @@
 .error-modal .close-button { width: 100%; padding: 12px; background-color: #e53e3e; color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 20px; font-size: 16px; font-weight: 500; transition: background-color 0.2s ease; }
 .error-modal .close-button:hover { background-color: #c53030; }
 .error-modal .close-button:active { background-color: #9b2c2c; }
+
+/* 엑셀 편집 모달 */
+.excel-editor-content { width: 90vw; max-width: 1200px; padding: 24px; background: #fff; max-height: 1000px; overflow-y: hidden}
+.excel-editor-title { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 16px; }
+.excel-editor-grid-container { height: 70vh; border: 1px solid #e2e2e2; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+.excel-editor-button-group { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+.excel-editor-save-btn,
+.excel-editor-cancel-btn { padding: 8px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; }
+.excel-editor-save-btn { background-color: #1a73e8; color: white; border: none; }
+.excel-editor-cancel-btn { background-color: #f1f3f4; color: #3c4043; border: 1px solid #dadce0; }
+/* 버튼 스타일 */
+.excel-editor-button-group { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.excel-editor-save-btn,
+.excel-editor-cancel-btn { padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; }
+.excel-editor-save-btn { background-color: #1a73e8; color: white; }
+.excel-editor-cancel-btn { background-color: #f1f3f4; color: #3c4043; }
+.edit-excel-btn { background-color: #1a73e8; color: white; padding: 4px 8px; border-radius: 4px; border: none; cursor: pointer; }
