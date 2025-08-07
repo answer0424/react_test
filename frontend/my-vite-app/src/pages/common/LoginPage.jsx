@@ -5,11 +5,11 @@ import { useUser } from "../../contexts/UserProvider.jsx";
 import '../../assets/css/customer.css';
 
 const dummyUsers = [
-    { username: 'admin', password: 'admin123', name: 'admin', company: 'CARBANG' },
-    { username: 'user1', password: '1234', name: 'park', company: 'AUTOPLUS' },
-    { username: 'dlruddnjs', password: 'dlruddnjs', name: 'hong', company: 'HYUNDAI' },
-    { username: 'user2', password: '1234', name: 'kim', company: 'KIA' },
-    { username: 'user3', password: '1234', name: 'lee', company: 'GENESIS' }
+    { username: 'dlruddnjs1', password: 'dlruddnjs', name: 'CARBANG', company: 'CARBANG' },
+    { username: 'dlruddnjs2', password: 'dlruddnjs', name: 'AUTOPLUS', company: 'AUTOPLUS' },
+    { username: 'dlruddnjs3', password: 'dlruddnjs', name: 'HYUNDAI', company: 'HYUNDAI' },
+    { username: 'dlruddnjs4', password: 'dlruddnjs', name: 'KIA', company: 'KIA' },
+    { username: 'dlruddnjs5', password: 'dlruddnjs', name: 'GENESIS', company: 'GENESIS' }
 ];
 
 const companies = ['CARBANG', 'AUTOPLUS', 'HYUNDAI', 'KIA', 'GENESIS'];
@@ -32,6 +32,7 @@ export default function LoginPage() {
         }
     }, []);
 
+    // LoginPage.jsx
     const handleLogin = () => {
         const found = dummyUsers.find(
             user => user.username === username &&
@@ -48,7 +49,25 @@ export default function LoginPage() {
                 localStorage.setItem('rememberMe', 'false');
             }
             setUser(found);
-            navigate('/customer/plate/register');
+
+            // 사용자 정보를 세션에 저장
+            setUser({
+                ...found,
+                company: found.company // company 정보 명시적 포함
+            });
+
+            // 회사별 리다이렉션 경로 설정
+            switch (found.company) {
+                case 'CARBANG':
+                    navigate('/customer/plate/status');
+                    break;
+                case 'AUTOPLUS':
+                    navigate('/autoplus/plate/add');
+                    break;
+                default:
+                    navigate('/customer/plate/register');
+                    break;
+            }
         } else {
             setModalOpen(true);
         }
