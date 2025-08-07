@@ -2,7 +2,7 @@ import * as XLSX from 'xlsx';
 
 // 상수들을 export
 export const EXCEL_TEMPLATE_HEADERS = [
-    { label: '번호판번호', required: true },
+    { label: '차량번호', required: true },
     { label: '업무구분', required: true },
     { label: '공급가액', required: true },
     { label: '차대번호', required: true },
