@@ -1,9 +1,8 @@
 import {useState} from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import '../assets/css/components.css';
-import {useUser} from "../contexts/UserProvider.jsx"; // 스타일시트 경로 수정
+import {useUser} from "../contexts/UserProvider.jsx";
 
-// Sidebar.jsx
 const autoplusMenus = [
     { path: '/autoplus/plate/add', label: '번호판 등록' },
     { path: '/autoplus/plates', label: '번호판 목록' },
@@ -23,7 +22,7 @@ const carbangMenus = [
 ];
 
 export default function Sidebar() {
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(true); // 기본값 true로 항상 보이게
     const location = useLocation();
     const { user } = useUser();
 
@@ -41,13 +40,23 @@ export default function Sidebar() {
     const menus = getMenusByCompany();
 
     return (
-        <div
-            className={`sidebar ${expanded ? 'expanded' : ''}`}
-            onMouseEnter={() => setExpanded(true)}
-            onMouseLeave={() => setExpanded(false)}
-        >
+        <div className={`sidebar ${expanded ? 'expanded' : ''}`}>
             <div className="sidebar-header">
                 {expanded ? user?.company || 'Customer' : user?.company?.[0] || 'C'}
+                <button
+                    style={{
+                        marginLeft: 'auto',
+                        background: 'none',
+                        border: 'none',
+                        fontSize: '18px',
+                        cursor: 'pointer',
+                        color: '#2c3e50'
+                    }}
+                    onClick={() => setExpanded(prev => !prev)}
+                    aria-label="사이드바 토글"
+                >
+                    {expanded ? '◀' : '▶'}
+                </button>
             </div>
             <nav className="sidebar-nav">
                 {menus.map(menu => (
