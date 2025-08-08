@@ -192,6 +192,11 @@ export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, 
         console.log('workbookInit 호출');
         console.log('spreadsheet', spreadsheet);
 
+        if (!spreadsheet) {
+            console.error('SpreadJS spreadsheet 객체가 없습니다.');
+            return;
+        }
+
         setSpread(spreadsheet);
         const sheet = spreadsheet.getActiveSheet();
 
