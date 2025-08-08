@@ -1,11 +1,9 @@
-// components/ExcelEditorModal.jsx
 import Modal from '../utils/Modal.jsx';
-import '@mescius/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
-import { SpreadSheets, Worksheet } from '@mescius/spread-sheets-react';
-import { useEffect, useCallback, useState} from 'react';
-import * as GC from '@mescius/spread-sheets';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PlateSearchModal from './PlateSearchModal.jsx';
-
+import Handsontable from 'handsontable';
+import {HotTable}  from '@handsontable/react';
+import 'handsontable/dist/handsontable.full.min.css';
 
 const dummyPlates = [
     { id: 1, number: '12가3456' },
@@ -40,236 +38,148 @@ const locationCompany = [
     {code: '010', name: 'HYUNDAI 강원점'},
     {code: '011', name: 'HYUNDAI 경기점'},
     {code: '012', name: 'HYUNDAI 충청점'},
-]
+];
 
-const functionMap = {
-    plateRegisterEditor: {
-        processData: (sheet, rowCount) => {
-            const newRows = [];
-            for (let i = 1; i < rowCount; i++) {
-                const rowData = {
-                    index: i,
-                    차량번호: sheet.getValue(i, 1),
-                    고객사: sheet.getValue(i, 2)
-                };
-                if (rowData.차량번호 || rowData.고객사) {
-                    newRows.push(rowData);
-                }
-            }
-            console.log('sheet, rowCount', sheet, rowCount);
-            return newRows;
-        },
-        initSheet: (sheet) => {
-            sheet.setColumnWidth(0, 80);
-            sheet.setColumnWidth(1, 150);
-            sheet.setColumnWidth(2, 200);
-        }
-    },
-    // 다른 에디터 타입을 추가할 수 있음
-    carRegisterEditor: {
-        processData: (sheet, rowCount) => {
-            const newRows = [];
-            for (let i = 1; i < rowCount; i++) {
-                const plateNumber = sheet.getValue(i, 1);
-                const businessType = sheet.getValue(i, 2);
-                const price = sheet.getValue(i, 3);
-                const vinNumber = sheet.getValue(i, 4);
-                const carName = sheet.getValue(i, 5);
-                const companyLocation = sheet.getValue(i, 6);
-
-                // 차량번호가 더미데이터에 포함된 값만 허용
-                if (dummyPlates.some(p => p.number === plateNumber)) {
-                    newRows.push({
-                        index: i,
-                        차량번호: plateNumber,
-                        업무구분: businessType,
-                        공급가액: price,
-                        차대번호: vinNumber,
-                        차명: carName,
-                        사용본거지: companyLocation
-                    });
-                }
-            }
-            console.log('sheet, rowCount', sheet, rowCount);
-            return newRows;
-        },
-        initSheet: (sheet, rowCount, openPlateSearchModal) => {
-            sheet.setColumnWidth(0, 80);  // index
-            sheet.setColumnWidth(1, 120); // 차량번호
-            sheet.setColumnWidth(2, 100); // 업무구분
-            sheet.setColumnWidth(3, 100); // 공급가액
-            sheet.setColumnWidth(4, 120); // 차대번호
-            sheet.setColumnWidth(5, 120); // 차명
-            sheet.setColumnWidth(6, 150); // 사용본거지
-
-            // 셀 클릭 이벤트: 차량번호 셀 클릭 시 PlateSearchModal 오픈
-            const handleCellClick = (sender, args) => {
-                if (args.row > 0 && args.col === 1) {
-                    openPlateSearchModal(args.row);
-                }
-            };
-            sheet.bind(GC.Spread.Sheets.Events.CellClick, handleCellClick);
-
-
-            // 차량번호 셀렉트 cellType 적용
-            const plateNumbers = dummyPlates.map(p => p.number);
-            const companyLocationNames = locationCompany.map(l => l.name);
-            const businessTypeNames = businessTypes.map(b => b.name);
-            for (let i = 1; i < rowCount; i++) {
-                // 차량번호 셀
-                // const plateCombo = new GC.Spread.Sheets.CellTypes.ComboBox();
-                // plateCombo.items(plateNumbers);
-                // plateCombo.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.text);
-                // sheet.getCell(i, 1).cellType(plateCombo);
-
-                // 업무구분 셀
-                const businessCombo = new GC.Spread.Sheets.CellTypes.ComboBox();
-                businessCombo.items(businessTypeNames);
-                businessCombo.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.text);
-                sheet.getCell(i, 2).cellType(businessCombo);
-
-                // 사용본거지 셀
-                const locationCombo = new GC.Spread.Sheets.CellTypes.ComboBox();
-                locationCombo.items(companyLocationNames);
-                locationCombo.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.text);
-                sheet.getCell(i, 6).cellType(locationCombo);
-
-                console.log(sheet.getCell(i, 1).cellType(), sheet.getCell(i, 2).cellType(), sheet.getCell(i, 6).cellType());
-            }
-            console.log(sheet.getCell(1, 1).cellType(), sheet.getCell(1, 2).cellType(), sheet.getCell(1, 6).cellType());
-            console.log(rowCount);
-        }
+function processRows(rows, editorType) {
+    if (editorType === 'plateRegisterEditor') {
+        return rows.filter(row => row.차량번호 || row.고객사);
     }
-};
-
-export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, handleRowsChange, editorType = 'plateRegisterEditor' }) {
-    console.log('ExcelEditorModal.isOpen');
-    if(SpreadSheets === undefined) {
-        console.log('SpreadSheets undefined');
-        return;
-    }else {
-        console.log('SpreadSheets: ', SpreadSheets);
-        console.log('Worksheet: ', Worksheet);
+    if (editorType === 'carRegisterEditor') {
+        return rows.filter(row =>
+            dummyPlates.some(p => p.number === row.차량번호)
+        );
     }
-    const [spread, setSpread] = useState(null);
+    return rows;
+}
+
+export default function ExcelEditorModal({
+                                             isOpen,
+                                             onClose,
+                                             rows,
+                                             excelColumns,
+                                             handleRowsChange,
+                                             editorType = 'plateRegisterEditor'
+                                         }) {
+    const [tableData, setTableData] = useState([]);
     const [plateModalOpen, setPlateModalOpen] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
+    const hotRef = useRef(null);
+
+    console.log('excelColumns rows: ',excelColumns, rows);
 
     useEffect(() => {
-        if (!isOpen) {
-            setSpread(null);
-        }// 모달 닫힐 때 spread 초기화
-        else {
-            console.log('isOpen 상태로 SpreadSheet 렌더링 시작');
+        if (isOpen) {
+            const initialRows = Array.from({ length: 2000 }, (_, i) => {
+                const row = rows[i] || {};
+                return { index: i + 1, ...row };
+            });
+            setTableData(initialRows);
+
+            // Handsontable 강제 렌더링
+            setTimeout(() => {
+                if (hotRef.current) {
+                    hotRef.current.hotInstance.render();
+                }
+            }, 100);
         }
+    }, [isOpen, rows]);
 
-    }, [isOpen]);
+    // Handsontable columns 설정
+    const columns = excelColumns.map(col => {
+        if (editorType === 'carRegisterEditor' && col.key === '차량번호') {
+            return {
+                data: col.key,
+                renderer: function(instance, td, row, colIdx, prop, value, cellProps) {
+                    td.innerHTML = value || '차량번호 선택';
+                    td.style.cursor = 'pointer';
+                }
+            };
+        }
+        if (editorType === 'carRegisterEditor' && col.key === '업무구분') {
+            return {
+                data: col.key,
+                type: 'dropdown',
+                source: businessTypes.map(b => b.name),
+                allowInvalid: false
+            };
+        }
+        if (editorType === 'carRegisterEditor' && col.key === '사용본거지') {
+            return {
+                data: col.key,
+                type: 'dropdown',
+                source: locationCompany.map(l => l.name),
+                allowInvalid: false
+            };
+        }
+        return { data: col.key };
+    });
 
-    const openPlateSearchModal = (row) => {
-        setSelectedRow(row);
-        setPlateModalOpen(true);
+    // 차량번호 셀 클릭 시 PlateSearchModal 오픈
+    const afterOnCellMouseDown = (event, coords, td) => {
+        if (
+            editorType === 'carRegisterEditor' &&
+            coords.col >= 0 &&
+            excelColumns[coords.col].key === '차량번호'
+        ) {
+            setSelectedRow(coords.row);
+            setPlateModalOpen(true);
+            event.stopImmediatePropagation();
+        }
     };
 
-    const closePlateSearchModal = () => {
+    const closePlateSearchModal = useCallback(() => {
         setPlateModalOpen(false);
         setSelectedRow(null);
-    };
+    }, []);
 
-    const handlePlateSelect = (plate) => {
-        if (spread && selectedRow !== null) {
-            const sheet = spread.getActiveSheet();
-            sheet.setValue(selectedRow, 1, plate.number); // 1번 컬럼: 차량번호
-        }
+    const handlePlateSelect = useCallback((plate) => {
+        setTableData(prev =>
+            prev.map((row, idx) =>
+                idx === selectedRow ? { ...row, 차량번호: plate.number } : row
+            )
+        );
         closePlateSearchModal();
-    };
+    }, [selectedRow, closePlateSearchModal]);
 
-    const getSelectedPlateNumbers = () => {
-        if (!spread) return [];
-        const sheet = spread.getActiveSheet();
-        const rowCount = sheet.getRowCount();
-        const plateNumbers = [];
-        for (let i = 1; i < rowCount; i++) {
-            const plate = sheet.getValue(i, 1);
-            if (plate) plateNumbers.push(plate);
-        }
-        return plateNumbers;
-    };
-
-    const workbookInit = useCallback((spreadsheet) => {
-        console.log('workbookInit 호출');
-        console.log('spreadsheet', spreadsheet);
-
-        if (!spreadsheet) {
-            console.error('SpreadJS spreadsheet 객체가 없습니다.');
-            return;
-        }
-
-        setSpread(spreadsheet);
-        const sheet = spreadsheet.getActiveSheet();
-
-        console.log('ExcelEditorModal.workbookInit', spreadsheet, sheet);
-
-        sheet.setRowCount(20);
-
-        const data = new Array(rows.length + 1).fill(null).map(() => new Array(excelColumns.length).fill(null));
-        excelColumns.forEach((col, index) => {
-            data[0][index] = col.name;
-        });
-
-        rows.forEach((row, rowIndex) => {
-            excelColumns.forEach((col, colIndex) => {
-                data[rowIndex + 1][colIndex] = row[col.key];
-            });
-        });
-
-        console.log('ExcelEditorModal.data', data);
-
-        sheet.setArray(0, 0, data);
-
-        const headerRange = sheet.getRange(0, 0, 1, excelColumns.length);
-        headerRange.backColor('#f8f9fa');
-        headerRange.font('bold 12px Arial');
-
-        const rowCount = sheet.getRowCount();
-        functionMap[editorType].initSheet(sheet, rowCount, openPlateSearchModal);
-
-        sheet.options.gridline = { showVerticalGridline: true, showHorizontalGridline: true };
-        sheet.options.colHeaderVisible = false;
-        sheet.options.rowHeaderVisible = false;
-    }, [rows, excelColumns, editorType]);
+    const getSelectedPlateNumbers = useCallback(() => {
+        return tableData.map(row => row.차량번호).filter(Boolean);
+    }, [tableData]);
 
     const handleConfirm = useCallback(() => {
-        if (!spread) return;
-
-        const sheet = spread.getActiveSheet();
-        const rowCount = sheet.getRowCount();
-
-        const newRows = functionMap[editorType].processData(sheet, rowCount);
-
-        const finalRows = newRows.map((row, idx) => ({
+        const newRows = processRows(tableData, editorType).map((row, idx) => ({
             ...row,
             index: idx + 1
         }));
-
-        handleRowsChange(finalRows);
+        handleRowsChange(newRows);
         onClose();
-    }, [spread, handleRowsChange, onClose, editorType]);
+    }, [tableData, handleRowsChange, onClose, editorType]);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <div className="excel-editor-content">
                 <h2 className="excel-editor-title">엑셀 데이터 편집</h2>
-                <div className="excel-editor-grid-container">
-                    <SpreadSheets
-                        workbookInitialized={workbookInit}
-                        hostStyle={{
-                            width: '100%',
-                            height: '100%'
+                <div className="excel-editor-grid-container" style={{ height: 500 }}>
+                    <HotTable
+                        ref={hotRef}
+                        data={tableData}
+                        colHeaders={excelColumns.map(col => col.name)}
+                        columns={columns}
+                        rowHeaders={true}
+                        height={500} // 숫자값으로 지정
+                        width="100%"
+                        licenseKey="non-commercial-and-evaluation"
+                        afterOnCellMouseDown={afterOnCellMouseDown}
+                        stretchH="all"
+                        manualColumnResize={true}
+                        manualRowResize={true}
+                        outsideClickDeselects={false}
+                        className="htCore"
+                        afterChange={(changes, source) => {
+                            if (source === 'edit' || source === 'Autofill.fill') {
+                                setTableData([...tableData]);
+                            }
                         }}
-                        backColor="white"
-                    >
-                        <Worksheet />
-                    </SpreadSheets>
+                    />
                 </div>
                 {plateModalOpen && (
                     <PlateSearchModal
