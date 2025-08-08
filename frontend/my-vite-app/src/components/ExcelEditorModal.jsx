@@ -5,6 +5,7 @@ import { SpreadSheets, Worksheet } from '@mescius/spread-sheets-react';
 import { useEffect, useCallback, useState} from 'react';
 import * as GC from '@mescius/spread-sheets';
 import PlateSearchModal from './PlateSearchModal.jsx';
+import '/react-test/gc.spread.sheets.excel2013white.css';
 
 
 const dummyPlates = [
@@ -149,7 +150,13 @@ export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, 
     const [selectedRow, setSelectedRow] = useState(null);
 
     useEffect(() => {
-        if (!isOpen) setSpread(null); // 모달 닫힐 때 spread 초기화
+        if (!isOpen) {
+            setSpread(null);
+        }// 모달 닫힐 때 spread 초기화
+        else {
+            console.log('isOpen 상태로 SpreadSheet 렌더링 시작');
+        }
+
     }, [isOpen]);
 
     const openPlateSearchModal = (row) => {
@@ -184,6 +191,7 @@ export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, 
 
     const workbookInit = useCallback((spreadsheet) => {
         console.log('workbookInit 호출');
+        console.log('spreadsheet', spreadsheet);
 
         setSpread(spreadsheet);
         const sheet = spreadsheet.getActiveSheet();
