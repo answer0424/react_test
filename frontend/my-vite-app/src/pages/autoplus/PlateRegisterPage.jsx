@@ -71,7 +71,7 @@ export default function PlateRegisterPage() {
             const ws = wb.Sheets[wsname];
             const data = XLSX.utils.sheet_to_json(ws, { header: 0 });
 
-            console.log(data);
+            console.log('Excel Data:', data);
 
             const rowsWithIndex = data.map((row, index) => ({
                 index: index + 1,

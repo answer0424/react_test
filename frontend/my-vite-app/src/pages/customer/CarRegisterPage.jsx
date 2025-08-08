@@ -94,6 +94,8 @@ export default function CarRegisterPage() {
             const ws = wb.Sheets[wsname];
             const data = XLSX.utils.sheet_to_json(ws, { header: 0 });
 
+            console.log('Excel Data:', data);
+
             // index 붙이기
             const rowsWithIndex = data.map((row, index) => ({
                 index: index + 1,
