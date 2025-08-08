@@ -10,6 +10,10 @@
 .sidebar-link.active { color: #3498db; font-weight: bold; background: #f8f9fa; }
 .sidebar.expanded .sidebar-link.active { position: relative; }
 .sidebar.expanded .sidebar-link.active::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: #3498db; }
+.sidebar-footer { width: 100%; position: absolute; bottom: 24px; left: 0; display: flex; justify-content: center; align-items: center; margin-left: -24px; }
+.sidebar.expanded .sidebar-footer { justify-content: flex-start; padding-left: 24px; }
+.logout-btn { color: #000; border: none; padding: 8px 18px; font-size: 15px; cursor: pointer; transition: background 0.2s; width: 100%; box-sizing: border-box; left:0; }
+.logout-btn:hover { background: #c0392b; }
 
 /* 진행 상태 상세 모달 */
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; }

@@ -2,29 +2,28 @@ import {useState} from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import '../assets/css/components.css';
 import {useUser} from "../contexts/UserProvider.jsx";
+import {useNavigate} from "react-router-dom";
 
 const autoplusMenus = [
     { path: '/autoplus/plate/add', label: '차량번호 등록' },
     { path: '/autoplus/plates', label: '차량번호 목록' },
     { path: '/autoplus/plate/status', label: '차량번호 신규 등록 상태' },
-    { path: '/autoplus/mypage', label: '마이페이지' },
 ];
 
 const customerMenus = [
     { path: '/customer/plate/register', label: '자동차 신규 등록' },
     { path: '/customer/plate/status', label: '자동차 신규 등록 상태' },
-    { path: '/customer/mypage', label: '마이페이지' },
 ];
 
 const carbangMenus = [
     { path: '/customer/plate/status', label: '차량 등록 상태' },
-    { path: '/customer/mypage', label: '마이페이지' },
 ];
 
 export default function Sidebar() {
     const [expanded, setExpanded] = useState(true); // 기본값 true로 항상 보이게
     const location = useLocation();
-    const { user } = useUser();
+    const navigate = useNavigate();
+    const { user, logout } = useUser();
 
     const getMenusByCompany = () => {
         switch (user?.company) {
@@ -38,6 +37,11 @@ export default function Sidebar() {
     };
 
     const menus = getMenusByCompany();
+
+    const handleLogout = () => {
+        logout?.();
+        navigate('/login');
+    };
 
     return (
         <div className={`sidebar ${expanded ? 'expanded' : ''}`}>
@@ -69,6 +73,14 @@ export default function Sidebar() {
                     </Link>
                 ))}
             </nav>
+            <div className="sidebar-footer">
+                <button
+                    className="logout-btn"
+                    onClick={handleLogout}
+                >
+                    {expanded ? '로그아웃' : '⎋'}
+                </button>
+            </div>
         </div>
     );
 }
