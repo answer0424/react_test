@@ -267,6 +267,7 @@ export default function PlateRegisterPage() {
                             excelColumns={excelColumns}
                             handleRowsChange={handleRowsChange}
                             rowsKeyGetter={(row) => row.index}
+                            editorType='plateRegisterEditor'
                         />
                     </div>
                 )}
