@@ -8,6 +8,7 @@ import ExcelValidationErrorModal from '../../components/ExcelValidationErrorModa
 import {useUser} from "../../contexts/UserProvider.jsx";
 import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx"; // 엑셀 검증 오류 모달
 import PlateSearchModal from "../../components/PlateSearchModal.jsx"; // 차량번호 검색 모달
+import ExcelEditorModal from "../../components/ExcelEditorModal.jsx";
 
 const dummyPlates = [
     { id: 1, number: '12가3456' },
@@ -42,10 +43,17 @@ const initialFormState = {
     ownerName: '',
     idType: 'business',
     idNumber: '',
-    coOwnerName: '',
-    coOwnerIdType: 'personal',
-    coOwnerIdNumber: ''
 };
+
+const carRegisterExcelColumns = [
+    { key: 'index', name: '번호' },
+    { key: '차량번호', name: '차량번호' },
+    { key: '업무구분', name: '업무구분' },
+    { key: '공급가액', name: '공급가액' },
+    { key: '차대번호', name: '차대번호' },
+    { key: '차명', name: '차명' },
+    { key: '사용본거지', name: '사용본거지' }
+];
 
 export default function CarRegisterPage() {
     const [activeTab, setActiveTab] = useState('single');
@@ -61,6 +69,8 @@ export default function CarRegisterPage() {
     const navigate = useNavigate();
     const [isPlateModalOpen, setIsPlateModalOpen] = useState(false);
     const [selectedPlate, setSelectedPlate] = useState(null);
+    const [showExcelModal, setShowExcelModal] = useState(false);
+    const [rows, setRows] = useState([]);
 
     useEffect(() => {
         if (!user) {
@@ -82,10 +92,24 @@ export default function CarRegisterPage() {
             const wb = XLSX.read(bstr, { type: 'binary' });
             const wsname = wb.SheetNames[0];
             const ws = wb.Sheets[wsname];
-            const data = XLSX.utils.sheet_to_json(ws);
+            const data = XLSX.utils.sheet_to_json(ws, { header: 0 });
+
+            // index 붙이기
+            const rowsWithIndex = data.map((row, index) => ({
+                index: index + 1,
+                ...row
+            }));
+
+            setRows(rowsWithIndex);
             setBulkData(data);
+            setShowExcelModal(true); // 모달 열기
         };
         reader.readAsBinaryString(file);
+    };
+
+    const handleRowsChange = (newRows) => {
+        setRows(newRows);
+        setBulkData(newRows.map(({ index, ...rest }) => rest));
     };
 
     const handleBulkSubmit = async (e) => {
@@ -159,6 +183,10 @@ export default function CarRegisterPage() {
         setIsModalOpen(true);
         setSelectedPlate('');
     };
+
+    const openExcelEditorModal = () => {
+        setShowExcelModal(true);
+    }
 
     const handleTemplateDownload = (e) => {
         e.preventDefault();
@@ -324,13 +352,22 @@ export default function CarRegisterPage() {
                                         required
                                     />
                                     {bulkFile && (
-                                        <button
-                                            type="button"
-                                            onClick={handleClearFile}
-                                            className="clear-file-btn"
-                                        >
-                                            ✕
-                                        </button>
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={handleClearFile}
+                                                className="clear-file-btn"
+                                            >
+                                                ✕
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={openExcelEditorModal}
+                                                className="edit-excel-btn"
+                                            >
+                                                엑셀편집
+                                            </button>
+                                        </>
                                     )}
                                 </div>
                                 {bulkData.length > 0 && (
@@ -343,6 +380,15 @@ export default function CarRegisterPage() {
                                 일괄 등록
                             </button>
                         </form>
+                        <ExcelEditorModal
+                            isOpen={showExcelModal}
+                            onClose={() => setShowExcelModal(false)}
+                            rows={rows}
+                            excelColumns={carRegisterExcelColumns}
+                            handleRowsChange={handleRowsChange}
+                            rowsKeyGetter={(row) => row.index}
+                            editorType="carRegisterEditor"
+                        />
                     </div>
                 )}
             </div>

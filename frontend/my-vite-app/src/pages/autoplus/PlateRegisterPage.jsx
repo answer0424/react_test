@@ -134,7 +134,7 @@ export default function PlateRegisterPage() {
         document.getElementById('bulkUploadForm').reset();
     };
 
-    const excelColumns = [
+    const plateExcelColumns = [
         {
             key: 'index',
             name: '번호',
@@ -264,7 +264,7 @@ export default function PlateRegisterPage() {
                             isOpen={showExcelModal}
                             onClose={() => setShowExcelModal(false)}
                             rows={rows}
-                            excelColumns={excelColumns}
+                            excelColumns={plateExcelColumns}
                             handleRowsChange={handleRowsChange}
                             rowsKeyGetter={(row) => row.index}
                             editorType='plateRegisterEditor'

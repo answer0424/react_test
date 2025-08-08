@@ -2,7 +2,44 @@
 import Modal from '../utils/Modal.jsx';
 import '@mescius/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
 import { SpreadSheets, Worksheet } from '@mescius/spread-sheets-react';
-import {useCallback, useState} from 'react';
+import { useEffect, useCallback, useState} from 'react';
+import * as GC from '@mescius/spread-sheets';
+
+
+const dummyPlates = [
+    { id: 1, number: '12가3456' },
+    { id: 2, number: '34나7890' },
+    { id: 3, number: '56다1234' },
+    { id: 4, number: '78라5678' },
+    { id: 5, number: '90마9012' },
+    { id: 6, number: '11바3456' },
+    { id: 7, number: '22사7890' },
+    { id: 8, number: '33아1234' },
+    { id: 9, number: '44자5678' },
+    { id: 10, number: '55차9012' },
+    { id: 11, number: '123가3456'},
+];
+
+const businessTypes = [
+    { code: '01', name: '렌트' },
+    { code: '02', name: '리스' },
+    { code: '03', name: '개인' },
+];
+
+const locationCompany = [
+    {code: '001', name: 'CARBANG'},
+    {code: '002', name: 'BMW 성수점'},
+    {code: '003', name: 'KIA 건대점'},
+    {code: '004', name: 'BMW 방이점'},
+    {code: '005', name: 'KIA 잠실점'},
+    {code: '006', name: 'HYUNDAI 강남점'},
+    {code: '007', name: 'HYUNDAI 강서점'},
+    {code: '008', name: 'HYUNDAI 강북점'},
+    {code: '009', name: 'HYUNDAI 강동점'},
+    {code: '010', name: 'HYUNDAI 강원점'},
+    {code: '011', name: 'HYUNDAI 경기점'},
+    {code: '012', name: 'HYUNDAI 충청점'},
+]
 
 const functionMap = {
     plateRegisterEditor: {
@@ -18,6 +55,7 @@ const functionMap = {
                     newRows.push(rowData);
                 }
             }
+            console.log(rowCount);
             return newRows;
         },
         initSheet: (sheet) => {
@@ -29,10 +67,66 @@ const functionMap = {
     // 다른 에디터 타입을 추가할 수 있음
     carRegisterEditor: {
         processData: (sheet, rowCount) => {
-            // 다른 처리 로직
+            const newRows = [];
+            for (let i = 1; i < rowCount; i++) {
+                const plateNumber = sheet.getValue(i, 1);
+                const businessType = sheet.getValue(i, 2);
+                const price = sheet.getValue(i, 3);
+                const vinNumber = sheet.getValue(i, 4);
+                const carName = sheet.getValue(i, 5);
+                const companyLocation = sheet.getValue(i, 6);
+
+                // 차량번호가 더미데이터에 포함된 값만 허용
+                if (dummyPlates.some(p => p.number === plateNumber)) {
+                    newRows.push({
+                        index: i,
+                        차량번호: plateNumber,
+                        업무구분: businessType,
+                        공급가액: price,
+                        차대번호: vinNumber,
+                        차명: carName,
+                        사용본거지: companyLocation
+                    });
+                }
+            }
+            return newRows;
         },
-        initSheet: (sheet) => {
-            // 다른 초기화 로직
+        initSheet: (sheet, rowCount) => {
+            sheet.setColumnWidth(0, 80);  // index
+            sheet.setColumnWidth(1, 120); // 차량번호
+            sheet.setColumnWidth(2, 100); // 업무구분
+            sheet.setColumnWidth(3, 100); // 공급가액
+            sheet.setColumnWidth(4, 120); // 차대번호
+            sheet.setColumnWidth(5, 120); // 차명
+            sheet.setColumnWidth(6, 150); // 사용본거지
+
+            // 차량번호 셀렉트 cellType 적용
+            const plateNumbers = dummyPlates.map(p => p.number);
+            const companyLocationNames = locationCompany.map(l => l.name);
+            const businessTypeNames = businessTypes.map(b => b.name);
+            for (let i = 1; i < rowCount; i++) {
+                // 차량번호 셀
+                const plateCombo = new GC.Spread.Sheets.CellTypes.ComboBox();
+                plateCombo.items(plateNumbers);
+                plateCombo.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.text);
+                sheet.getCell(i, 1).cellType(plateCombo);
+
+                // 업무구분 셀
+                const businessCombo = new GC.Spread.Sheets.CellTypes.ComboBox();
+                businessCombo.items(businessTypeNames);
+                businessCombo.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.text);
+                sheet.getCell(i, 2).cellType(businessCombo);
+
+                // 사용본거지 셀
+                const locationCombo = new GC.Spread.Sheets.CellTypes.ComboBox();
+                locationCombo.items(companyLocationNames);
+                locationCombo.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.text);
+                sheet.getCell(i, 6).cellType(locationCombo);
+
+                console.log(sheet.getCell(i, 1).cellType(), sheet.getCell(i, 2).cellType(), sheet.getCell(i, 6).cellType());
+            }
+            console.log(sheet.getCell(1, 1).cellType(), sheet.getCell(1, 2).cellType(), sheet.getCell(1, 6).cellType());
+            console.log(rowCount);
         }
     }
 };
@@ -40,10 +134,14 @@ const functionMap = {
 export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, handleRowsChange, editorType = 'plateRegisterEditor' }) {
     const [spread, setSpread] = useState(null);
 
+    useEffect(() => {
+        if (!isOpen) setSpread(null); // 모달 닫힐 때 spread 초기화
+    }, [isOpen]);
+
     const workbookInit = useCallback((spreadsheet) => {
         setSpread(spreadsheet);
         const sheet = spreadsheet.getActiveSheet();
-        sheet.setRowCount(2000);
+        sheet.setRowCount(20);
 
         const data = new Array(rows.length + 1).fill(null).map(() => new Array(excelColumns.length).fill(null));
         excelColumns.forEach((col, index) => {
@@ -62,7 +160,8 @@ export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, 
         headerRange.backColor('#f8f9fa');
         headerRange.font('bold 12px Arial');
 
-        functionMap[editorType].initSheet(sheet);
+        const rowCount = sheet.getRowCount();
+        functionMap[editorType].initSheet(sheet, rowCount);
 
         sheet.options.gridline = { showVerticalGridline: true, showHorizontalGridline: true };
         sheet.options.colHeaderVisible = false;
