@@ -182,6 +182,8 @@ export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, 
     };
 
     const workbookInit = useCallback((spreadsheet) => {
+        console.log('workbookInit 호출');
+
         setSpread(spreadsheet);
         const sheet = spreadsheet.getActiveSheet();
 
