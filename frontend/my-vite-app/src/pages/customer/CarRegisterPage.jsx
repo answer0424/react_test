@@ -243,6 +243,7 @@ export default function CarRegisterPage() {
                                 plateId: plate.id
                             }));
                         }}
+                        selectedPlateNumbers={selectedPlate ? [selectedPlate.number] : []}
                     />
 
                     <select
