@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import '../../assets/css/autoplus.css';
 import { useUser } from "../../contexts/UserProvider.jsx";
 import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx";
-import * as XLSX from 'xlsx';
+// import * as XLSX from 'xlsx';
 import RegisterSuccessModal from "../../components/RegisterSuccessModal.jsx";
 import ExcelValidationErrorModal from "../../components/ExcelValidationErrorModal.jsx";
 import ExcelEditorModal from '../../components/ExcelEditorModal';
 
 // 엑셀 템플릿 생성 함수
-const createExcelTemplate = () => {
+const createExcelTemplate = async () => {
+    const XLSX = await import('xlsx');
     const header = ['차량번호', '고객사'];
     const ws = XLSX.utils.aoa_to_sheet([header]);
     const wb = XLSX.utils.book_new();
@@ -59,11 +60,13 @@ export default function PlateRegisterPage() {
         return <LoginRequiredModal open={userInfoRequiredModalOpen}/>;
     }
 
-    const handleFileUpload = (e) => {
+    const handleFileUpload = async (e) => {
         const file = e.target.files[0];
         setBulkFile(file);
 
+        const XLSX = await import('xlsx');
         const reader = new FileReader();
+
         reader.onload = (evt) => {
             const bstr = evt.target.result;
             const wb = XLSX.read(bstr, { type: 'binary' });
