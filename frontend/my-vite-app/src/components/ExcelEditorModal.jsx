@@ -4,6 +4,8 @@ import PlateSearchModal from './PlateSearchModal.jsx';
 import Handsontable from 'handsontable';
 import {HotTable}  from '@handsontable/react';
 import 'handsontable/dist/handsontable.full.min.css';
+import { DropdownCellType } from 'handsontable/cellTypes';
+Handsontable.cellTypes.registerCellType('dropdown', DropdownCellType);
 
 const dummyPlates = [
     { id: 1, number: '12가3456' },
