@@ -1,14 +1,13 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useRef} from 'react';
 import {useNavigate} from 'react-router-dom';
 import '../../assets/css/customer.css';
-import RegisterSuccessModal from "../../components/RegisterSuccessModal.jsx"; // 스타일시트 경로 수정
-// import * as XLSX from 'xlsx'; // 엑셀 파일 처리 라이브러리
-import {BulkCarRegisterExcel, validateBulkData} from '../../excel/BulkCarRegisterExcel';
+import RegisterSuccessModal from "../../components/RegisterSuccessModal.jsx";
+import {BulkCarRegisterExcel} from '../../excel/BulkCarRegisterExcel';
 import ExcelValidationErrorModal from '../../components/ExcelValidationErrorModal.jsx';
 import {useUser} from "../../contexts/UserProvider.jsx";
-import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx"; // 엑셀 검증 오류 모달
-import PlateSearchModal from "../../components/PlateSearchModal.jsx"; // 차량번호 검색 모달
-import ExcelEditorModal from "../../components/ExcelEditorModal.jsx";
+import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx";
+import PlateSearchModal from "../../components/PlateSearchModal.jsx";
+
 
 const dummyPlates = [
     { id: 1, number: '12가3456' },
@@ -49,6 +48,16 @@ const carRegisterExcelColumns = [
     { key: '사용본거지', name: '사용본거지' }
 ];
 
+const businessTypes = [
+    { code: '렌트', name: '렌트' },
+    { code: '리스', name: '리스' },
+    { code: '개인', name: '개인' }
+];
+
+const locations = [
+    '서울', '경기', '인천', '부산', '대구', '광주', '대전', '울산', '세종', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주'
+];
+
 export default function CarRegisterPage() {
     const [activeTab, setActiveTab] = useState('single');
     const [bulkFile, setBulkFile] = useState(null);
@@ -61,15 +70,14 @@ export default function CarRegisterPage() {
     const {user} = useUser();
     const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
     const navigate = useNavigate();
-    const [isPlateModalOpen, setIsPlateModalOpen] = useState(false);
+    const [isPlateModalOpen, setIsPlateModalOpen] = useState(null);
     const [selectedPlate, setSelectedPlate] = useState(null);
-    const [showExcelModal, setShowExcelModal] = useState(false);
     const [rows, setRows] = useState([]);
+    const fileInputRef = useRef(null);
+
 
     useEffect(() => {
-        if (!user) {
-            setUserInfoRequiredModalOpen(true);
-        }
+        if (!user) setUserInfoRequiredModalOpen(true);
     }, [user, navigate]);
 
     if (!user || !user.username) {
@@ -90,22 +98,22 @@ export default function CarRegisterPage() {
             const ws = wb.Sheets[wsname];
             const data = XLSX.utils.sheet_to_json(ws, { header: 0 });
 
-            console.log('CarRegisterPage.Excel Data:', data);
-
             // index 붙이기
-            const rowsWithIndex = data.map((row, index) => ({
-                index: index + 1,
+            const rowsWithIndex = data.map((row, idx) => ({
+                index: idx + 1,
                 ...row
             }));
-            console.log('CarRegisterPage.Rows with index:', rowsWithIndex);
-
             setRows(rowsWithIndex);
-            console.log('CarRegisterPage.rowWithIndex', rowsWithIndex);
-            setBulkData(data);
-            console.log('CarRegisterPage.data', data);
-            setShowExcelModal(true); // 모달 열기
         };
         reader.readAsArrayBuffer(file);
+    };
+
+    const handleCellChange = (rowIdx, key, value) => {
+        setRows(prev =>
+            prev.map((row, idx) =>
+                idx === rowIdx ? { ...row, [key]: value } : row
+            )
+        );
     };
 
     const handleRowsChange = (newRows) => {
@@ -113,59 +121,27 @@ export default function CarRegisterPage() {
         setBulkData(newRows.map(({ index, ...rest }) => rest));
     };
 
-    const handleBulkSubmit = async (e) => {
+    const handleBulkSubmit = (e) => {
         e.preventDefault();
-        if (!bulkData.length) {
+        if (!rows.length) {
             setValidationErrors(['업로드된 데이터가 없습니다.']);
             setIsErrorModalOpen(true);
             return;
         }
-
-        const errors = validateBulkData(bulkData);
-        if (errors.length > 0) {
-            setValidationErrors(errors);
-            setIsErrorModalOpen(true);
-            return;
-        }
-
-        try {
-            const formattedData = bulkData.map(row => ({
-                plateId: row['차량번호'],
-                businessType: row['업무구분'],
-                price: Number(row['공급가액']),
-                vinNumber: row['차대번호'],
-                carName: row['차명'],
-                ownerName: row['소유자명'],
-                idType: row['ID구분'] === '주민번호' ? 'personal' : 'business',
-                idNumber: row['ID번호'],
-                hasCoOwner: !!row['공동소유자명'],
-                coOwnerName: row['공동소유자명'] || '',
-                coOwnerIdType: row['공동소유자ID구분'] === '주민번호' ? 'personal' : 'business',
-                coOwnerIdNumber: row['공동소유자ID번호'] || ''
-            }));
-
-            // 등록된 데이터 수 저장
-            setRegisteredCount(formattedData.length);
-
-            // TODO: API 호출
-            console.log('Formatted bulk registration data:', formattedData);
-
-            setBulkFile(null);
-            setBulkData([]);
-            document.getElementById('bulkUploadForm').reset();
-            setIsModalOpen(true);
-        } catch (error) {
-            console.error('일괄 등록 중 오류 발생:', error);
-            alert('일괄 등록 중 오류가 발생했습니다.');
-            setIsErrorModalOpen(true);
-        }
+        // TODO: 유효성 검사 및 등록 API 호출
+        setRegisteredCount(rows.length);
+        setRows([]);
+        setBulkFile(null);
+        setIsModalOpen(true);
     };
 
-    const businessTypes = [
-        { code: '렌트', name: '렌트' },
-        { code: '리스', name: '리스' },
-        { code: '개인', name: '개인' }
-    ];
+    const handleClearGrid = () => {
+        setRows([]);
+        setBulkFile(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -185,19 +161,26 @@ export default function CarRegisterPage() {
         setSelectedPlate('');
     };
 
-    const openExcelEditorModal = () => {
-        setShowExcelModal(true);
-    }
-
     const handleTemplateDownload = (e) => {
         e.preventDefault();
-        BulkCarRegisterExcel();
+        BulkCarRegisterExcel(carRegisterExcelColumns.map(col => col.name));
     };
 
     const handleClearFile = () => {
         setBulkFile(null);
         setBulkData([]);
         document.getElementById('bulkUploadForm').reset();
+    };
+
+    const handlePlateCellClick = (rowIdx) => {
+        setIsPlateModalOpen(rowIdx);
+    };
+
+    const handlePlateSelect = (plate) => {
+        if (isPlateModalOpen !== null) {
+            handleCellChange(isPlateModalOpen, '차량번호', plate.number);
+        }
+        setIsPlateModalOpen(null);
     };
 
     return (
@@ -220,7 +203,7 @@ export default function CarRegisterPage() {
                 </div>
 
                 {activeTab === 'single' ? (
-                    // 기존 개별 등록 폼
+                // 기존 개별 등록 폼
                 <form id="registerForm" onSubmit={handleSubmit}>
                     <div className="plate-selector" onClick={() => setIsPlateModalOpen(true)}>
                         <input
@@ -330,67 +313,126 @@ export default function CarRegisterPage() {
                 </form>
                 ) : (
                     <div className="bulk-register">
-                        <div className="bulk-instructions">
-                            <h3>일괄 등록 방법</h3>
-                            <ol>
-                                <li>아래 양식 파일을 다운로드합니다.</li>
-                                <li>양식에 맞춰 데이터를 입력합니다.</li>
-                                <li>작성된 파일을 업로드합니다.</li>
-                                <li>차량번호 셀을 클릭하여 등록된 차량번호 선택</li>
-                            </ol>
+                        <div className="file-upload-container">
+                            <input
+                                type="file"
+                                accept=".xlsx,.xls"
+                                onChange={handleFileUpload}
+                                required
+                                ref={fileInputRef}
+                            />
                             <button
                                 onClick={handleTemplateDownload}
                                 className="template-download"
+                                type="button"
                             >
                                 양식 다운로드
                             </button>
-                        </div>
-                        <form id="bulkUploadForm" onSubmit={handleBulkSubmit}>
-                            <div className="file-upload-container">
-                                <div className="file-input-group">
-                                    <input
-                                        type="file"
-                                        accept=".xlsx,.xls"
-                                        onChange={handleFileUpload}
-                                        required
-                                    />
-                                    {bulkFile && (
-                                        <>
-                                            <button
-                                                type="button"
-                                                onClick={handleClearFile}
-                                                className="clear-file-btn"
-                                            >
-                                                ✕
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={openExcelEditorModal}
-                                                className="edit-excel-btn"
-                                            >
-                                                엑셀편집
-                                            </button>
-                                        </>
-                                    )}
+                            {bulkFile && (
+                                <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+                                    <span className="file-info">{bulkFile.name}</span>
+                                    <button
+                                        type="button"
+                                        className="clear-file-btn"
+                                        onClick={handleClearGrid}
+                                    >
+                                        삭제
+                                    </button>
                                 </div>
-                                {bulkData.length > 0 && (
-                                    <div className="file-info">
-                                        <p>{bulkData.length}개의 데이터가 확인되었습니다.</p>
-                                    </div>
+                            )}
+                        </div>
+                        <div className="customer-results-table" style={{marginTop: 20}}>
+                            <table>
+                                <thead>
+                                <tr>
+                                    {carRegisterExcelColumns.map(col => (
+                                        <th key={col.key}>{col.name}</th>
+                                    ))}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {rows.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={carRegisterExcelColumns.length} className="customer-no-data">
+                                            업로드된 데이터가 없습니다.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    rows.map((row, rowIdx) => (
+                                        <tr key={row.index}>
+                                            {carRegisterExcelColumns.map(col => (
+                                                <td key={col.key}>
+                                                    {col.key === 'index' ? (
+                                                        row.index
+                                                    ) : col.key === '차량번호' ? (
+                                                        <div
+                                                            className="cell-plate"
+                                                            style={{cursor: 'pointer'}}
+                                                            onClick={() => handlePlateCellClick(rowIdx)}
+                                                        >
+                                                            {row['차량번호'] || <span style={{color: '#bbb'}}>선택</span>}
+                                                        </div>
+                                                    ) : col.key === '업무구분' ? (
+                                                        <select
+                                                            value={row['업무구분'] || ''}
+                                                            onChange={e => handleCellChange(rowIdx, '업무구분', e.target.value)}
+                                                            className="cell-select"
+                                                        >
+                                                            <option value="">선택</option>
+                                                            {businessTypes.map(type => (
+                                                                <option key={type.code} value={type.code}>{type.name}</option>
+                                                            ))}
+                                                        </select>
+                                                    ) : col.key === '사용본거지' ? (
+                                                        <select
+                                                            value={row['사용본거지'] || ''}
+                                                            onChange={e => handleCellChange(rowIdx, '사용본거지', e.target.value)}
+                                                            className="cell-select"
+                                                        >
+                                                            <option value="">선택</option>
+                                                            {locations.map(loc => (
+                                                                <option key={loc} value={loc}>{loc}</option>
+                                                            ))}
+                                                        </select>
+                                                    ) : (
+                                                        <input
+                                                            type="text"
+                                                            value={row[col.name] || ''}
+                                                            onChange={e => handleCellChange(rowIdx, col.name, e.target.value)}
+                                                            className="cell-input"
+                                                        />
+                                                    )}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))
                                 )}
-                            </div>
-                            <button type="submit" disabled={!bulkData.length}>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style={{display: 'flex', gap: 10, marginTop: 24}}>
+                            <button
+                                type="button"
+                                onClick={handleBulkSubmit}
+                                disabled={rows.length === 0}
+                                style={{flex: 1, padding: '12px', background: '#3498db', color: '#fff', border: 'none', borderRadius: 4, fontSize: 15, cursor: 'pointer'}}
+                            >
                                 일괄 등록
                             </button>
-                        </form>
-                        <ExcelEditorModal
-                            isOpen={showExcelModal}
-                            onClose={() => setShowExcelModal(false)}
-                            rows={rows}
-                            excelColumns={carRegisterExcelColumns}
-                            handleRowsChange={handleRowsChange}
-                            rowsKeyGetter={(row) => row.index}
-                            editorType="carRegisterEditor"
+                            <button
+                                type="button"
+                                onClick={handleClearGrid}
+                                style={{flex: 1, padding: '12px', background: '#e74c3c', color: '#fff', border: 'none', borderRadius: 4, fontSize: 15, cursor: 'pointer'}}
+                            >
+                                초기화
+                            </button>
+                        </div>
+                        <PlateSearchModal
+                            isOpen={isPlateModalOpen !== null}
+                            onClose={() => setIsPlateModalOpen(null)}
+                            plates={dummyPlates}
+                            onSelect={handlePlateSelect}
+                            selectedPlateNumbers={[]}
                         />
                     </div>
                 )}
@@ -408,7 +450,7 @@ export default function CarRegisterPage() {
                 }}
             >
                 <h2>요청 완료</h2>
-                <p>{activeTab === 'single' ? '차량이' : `${registeredCount}대의 차량이`} 성공적으로 등록 요청되었습니다.</p>
+                <p>{registeredCount}대의 차량이 성공적으로 등록 요청되었습니다.</p>
             </RegisterSuccessModal>
         </div>
     );
