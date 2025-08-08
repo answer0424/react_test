@@ -3,17 +3,19 @@ import { useState, useEffect } from 'react';
 import Modal from '../utils/Modal';
 import '../assets/css/components.css';
 
-export default function PlateSearchModal({ isOpen, onClose, onSelect, plates }) {
+export default function PlateSearchModal({ isOpen, onClose, onSelect, plates, selectedPlateNumbers = [] }) {
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredPlates, setFilteredPlates] = useState(plates);
+    const [filteredPlates, setFilteredPlates] = useState([]);
 
     useEffect(() => {
         setFilteredPlates(
-            plates.filter(plate =>
-                plate.number.toLowerCase().includes(searchTerm.toLowerCase())
-            )
+            plates
+                .filter(plate => !selectedPlateNumbers.includes(plate.number))
+                .filter(plate =>
+                    plate.number.toLowerCase().includes(searchTerm.toLowerCase())
+                )
         );
-    }, [searchTerm, plates]);
+    }, [searchTerm, plates, selectedPlateNumbers]);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>

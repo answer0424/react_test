@@ -334,6 +334,7 @@ export default function CarRegisterPage() {
                                 <li>아래 양식 파일을 다운로드합니다.</li>
                                 <li>양식에 맞춰 데이터를 입력합니다.</li>
                                 <li>작성된 파일을 업로드합니다.</li>
+                                <li>차량번호 셀을 클릭하여 등록된 차량번호 선택</li>
                             </ol>
                             <button
                                 onClick={handleTemplateDownload}

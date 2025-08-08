@@ -4,6 +4,7 @@ import '@mescius/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
 import { SpreadSheets, Worksheet } from '@mescius/spread-sheets-react';
 import { useEffect, useCallback, useState} from 'react';
 import * as GC from '@mescius/spread-sheets';
+import PlateSearchModal from './PlateSearchModal.jsx';
 
 
 const dummyPlates = [
@@ -91,7 +92,7 @@ const functionMap = {
             }
             return newRows;
         },
-        initSheet: (sheet, rowCount) => {
+        initSheet: (sheet, rowCount, openPlateSearchModal) => {
             sheet.setColumnWidth(0, 80);  // index
             sheet.setColumnWidth(1, 120); // 차량번호
             sheet.setColumnWidth(2, 100); // 업무구분
@@ -100,16 +101,25 @@ const functionMap = {
             sheet.setColumnWidth(5, 120); // 차명
             sheet.setColumnWidth(6, 150); // 사용본거지
 
+            // 셀 클릭 이벤트: 차량번호 셀 클릭 시 PlateSearchModal 오픈
+            const handleCellClick = (sender, args) => {
+                if (args.row > 0 && args.col === 1) {
+                    openPlateSearchModal(args.row);
+                }
+            };
+            sheet.bind(GC.Spread.Sheets.Events.CellClick, handleCellClick);
+
+
             // 차량번호 셀렉트 cellType 적용
             const plateNumbers = dummyPlates.map(p => p.number);
             const companyLocationNames = locationCompany.map(l => l.name);
             const businessTypeNames = businessTypes.map(b => b.name);
             for (let i = 1; i < rowCount; i++) {
                 // 차량번호 셀
-                const plateCombo = new GC.Spread.Sheets.CellTypes.ComboBox();
-                plateCombo.items(plateNumbers);
-                plateCombo.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.text);
-                sheet.getCell(i, 1).cellType(plateCombo);
+                // const plateCombo = new GC.Spread.Sheets.CellTypes.ComboBox();
+                // plateCombo.items(plateNumbers);
+                // plateCombo.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.text);
+                // sheet.getCell(i, 1).cellType(plateCombo);
 
                 // 업무구분 셀
                 const businessCombo = new GC.Spread.Sheets.CellTypes.ComboBox();
@@ -133,10 +143,42 @@ const functionMap = {
 
 export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, handleRowsChange, editorType = 'plateRegisterEditor' }) {
     const [spread, setSpread] = useState(null);
+    const [plateModalOpen, setPlateModalOpen] = useState(false);
+    const [selectedRow, setSelectedRow] = useState(null);
 
     useEffect(() => {
         if (!isOpen) setSpread(null); // 모달 닫힐 때 spread 초기화
     }, [isOpen]);
+
+    const openPlateSearchModal = (row) => {
+        setSelectedRow(row);
+        setPlateModalOpen(true);
+    };
+
+    const closePlateSearchModal = () => {
+        setPlateModalOpen(false);
+        setSelectedRow(null);
+    };
+
+    const handlePlateSelect = (plate) => {
+        if (spread && selectedRow !== null) {
+            const sheet = spread.getActiveSheet();
+            sheet.setValue(selectedRow, 1, plate.number); // 1번 컬럼: 차량번호
+        }
+        closePlateSearchModal();
+    };
+
+    const getSelectedPlateNumbers = () => {
+        if (!spread) return [];
+        const sheet = spread.getActiveSheet();
+        const rowCount = sheet.getRowCount();
+        const plateNumbers = [];
+        for (let i = 1; i < rowCount; i++) {
+            const plate = sheet.getValue(i, 1);
+            if (plate) plateNumbers.push(plate);
+        }
+        return plateNumbers;
+    };
 
     const workbookInit = useCallback((spreadsheet) => {
         setSpread(spreadsheet);
@@ -161,7 +203,7 @@ export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, 
         headerRange.font('bold 12px Arial');
 
         const rowCount = sheet.getRowCount();
-        functionMap[editorType].initSheet(sheet, rowCount);
+        functionMap[editorType].initSheet(sheet, rowCount, openPlateSearchModal);
 
         sheet.options.gridline = { showVerticalGridline: true, showHorizontalGridline: true };
         sheet.options.colHeaderVisible = false;
@@ -201,6 +243,15 @@ export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, 
                         <Worksheet />
                     </SpreadSheets>
                 </div>
+                {plateModalOpen && (
+                    <PlateSearchModal
+                        isOpen={plateModalOpen}
+                        onClose={closePlateSearchModal}
+                        onSelect={handlePlateSelect}
+                        plates={dummyPlates}
+                        selectedPlateNumbers={getSelectedPlateNumbers()}
+                    />
+                )}
                 <div className="excel-editor-button-group">
                     <button onClick={handleConfirm} className="excel-editor-save-btn">확인</button>
                     <button onClick={onClose} className="excel-editor-cancel-btn">취소</button>
