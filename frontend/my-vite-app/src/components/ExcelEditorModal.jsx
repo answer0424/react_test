@@ -144,11 +144,12 @@ const functionMap = {
 
 export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, handleRowsChange, editorType = 'plateRegisterEditor' }) {
     console.log('ExcelEditorModal.isOpen');
-    console.log('SpreadSheets: ', SpreadSheets);
-    console.log('Worksheet: ', Worksheet);
     if(SpreadSheets === undefined) {
         console.log('SpreadSheets undefined');
         return;
+    }else {
+        console.log('SpreadSheets: ', SpreadSheets);
+        console.log('Worksheet: ', Worksheet);
     }
     const [spread, setSpread] = useState(null);
     const [plateModalOpen, setPlateModalOpen] = useState(false);
