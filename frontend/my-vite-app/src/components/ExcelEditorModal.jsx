@@ -1,6 +1,6 @@
 // components/ExcelEditorModal.jsx
 import Modal from '../utils/Modal.jsx';
-import '@mescius/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
+import '/react_test/gc.spread.sheets.excel2013white.css';
 import { SpreadSheets, Worksheet } from '@mescius/spread-sheets-react';
 import { useEffect, useCallback, useState} from 'react';
 import * as GC from '@mescius/spread-sheets';
