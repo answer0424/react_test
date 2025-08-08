@@ -28,12 +28,6 @@ const dummyPlates = [
     { id: 15, number: '00가1234' },
 ];
 
-const businessTypes = [
-    { code: '01', name: '렌트' },
-    { code: '02', name: '리스' },
-    { code: '03', name: '개인' },
-];
-
 const initialFormState = {
     plateId: '',
     businessType: '',
