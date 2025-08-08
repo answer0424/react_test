@@ -21,6 +21,7 @@ const ModalContainer = styled.div`
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
+    overflow-x: hidden;
 `;
 
 const CloseButton = styled.button`
@@ -33,6 +34,7 @@ const CloseButton = styled.button`
     cursor: pointer;
     padding: 5px;
     color: #666;
+    max-width: 30px;
     
     &:hover {
         color: #000;

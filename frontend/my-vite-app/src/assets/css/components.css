@@ -64,6 +64,7 @@
 .excel-editor-cancel-btn { padding: 8px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; }
 .excel-editor-save-btn { background-color: #1a73e8; color: white; border: none; }
 .excel-editor-cancel-btn { background-color: #f1f3f4; color: #3c4043; border: 1px solid #dadce0; }
+
 /* 버튼 스타일 */
 .excel-editor-button-group { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
 .excel-editor-save-btn,
@@ -71,3 +72,12 @@
 .excel-editor-save-btn { background-color: #1a73e8; color: white; }
 .excel-editor-cancel-btn { background-color: #f1f3f4; color: #3c4043; }
 .edit-excel-btn { background-color: #1a73e8; color: white; padding: 4px 8px; border-radius: 4px; border: none; cursor: pointer; }
+
+/* 차량번호 검색 모달 */
+.plate-search-modal { padding: 20px; width: 400px; }
+.plate-search-modal h2 { margin-bottom: 20px; text-align: center; }
+.plate-search-box { margin-bottom: 20px; max-width: 90%; }
+.plate-search-box input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+.plates-list { max-height: 300px; overflow-y: auto; }
+.plate-item { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
+.plate-item:hover { background-color: #f5f5f5; }

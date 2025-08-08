@@ -7,6 +7,7 @@ import {BulkCarRegisterExcel, validateBulkData} from '../../excel/BulkCarRegiste
 import ExcelValidationErrorModal from '../../components/ExcelValidationErrorModal.jsx';
 import {useUser} from "../../contexts/UserProvider.jsx";
 import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx"; // 엑셀 검증 오류 모달
+import PlateSearchModal from "../../components/PlateSearchModal.jsx"; // 차량번호 검색 모달
 
 const dummyPlates = [
     { id: 1, number: '12가3456' },
@@ -14,6 +15,16 @@ const dummyPlates = [
     { id: 3, number: '56다1234' },
     { id: 4, number: '78라5678' },
     { id: 5, number: '90마4321' },
+    { id: 6, number: '11바8765' },
+    { id: 7, number: '22사2345' },
+    { id: 8, number: '33아6789' },
+    { id: 9, number: '44자1234' },
+    { id: 10, number: '55차5678' },
+    { id: 11, number: '66카4321' },
+    { id: 12, number: '77타8765' },
+    { id: 13, number: '88파2345' },
+    { id: 14, number: '99하6789' },
+    { id: 15, number: '00가1234' },
 ];
 
 const businessTypes = [
@@ -29,9 +40,8 @@ const initialFormState = {
     vinNumber: '',
     carName: '',
     ownerName: '',
-    idType: 'personal',
+    idType: 'business',
     idNumber: '',
-    hasCoOwner: false,
     coOwnerName: '',
     coOwnerIdType: 'personal',
     coOwnerIdNumber: ''
@@ -49,6 +59,8 @@ export default function CarRegisterPage() {
     const {user} = useUser();
     const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
     const navigate = useNavigate();
+    const [isPlateModalOpen, setIsPlateModalOpen] = useState(false);
+    const [selectedPlate, setSelectedPlate] = useState(null);
 
     useEffect(() => {
         if (!user) {
@@ -145,6 +157,7 @@ export default function CarRegisterPage() {
         setFormData(initialFormState);
         document.getElementById('registerForm').reset();
         setIsModalOpen(true);
+        setSelectedPlate('');
     };
 
     const handleTemplateDownload = (e) => {
@@ -180,19 +193,29 @@ export default function CarRegisterPage() {
                 {activeTab === 'single' ? (
                     // 기존 개별 등록 폼
                 <form id="registerForm" onSubmit={handleSubmit}>
-                    <select
-                        name="plateId"
-                        value={formData.plateId}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">차량번호 선택</option>
-                        {dummyPlates.map(plate => (
-                            <option key={plate.id} value={plate.id}>
-                                {plate.number}
-                            </option>
-                        ))}
-                    </select>
+                    <div className="plate-selector" onClick={() => setIsPlateModalOpen(true)}>
+                        <input
+                            name="plateId"
+                            type="text"
+                            readOnly
+                            placeholder="차량번호를 선택하세요"
+                            value={selectedPlate ? selectedPlate.number : ''}
+                            className="plate-input"
+                        />
+                    </div>
+
+                    <PlateSearchModal
+                        isOpen={isPlateModalOpen}
+                        onClose={() => setIsPlateModalOpen(false)}
+                        plates={dummyPlates}
+                        onSelect={(plate) => {
+                            setSelectedPlate(plate);
+                            setFormData(prev => ({
+                                ...prev,
+                                plateId: plate.id
+                            }));
+                        }}
+                    />
 
                     <select
                         name="businessType"
@@ -249,19 +272,19 @@ export default function CarRegisterPage() {
                             <input
                                 type="radio"
                                 name="idType"
-                                value="personal"
-                                checked={formData.idType === 'personal'}
+                                value="business"
+                                checked={formData.idType === 'business'}
                                 onChange={handleChange}
-                            /> 주민번호
+                            /> 법인번호
                         </label>
                         <label>
                             <input
                                 type="radio"
                                 name="idType"
-                                value="business"
-                                checked={formData.idType === 'business'}
+                                value="personal"
+                                checked={formData.idType === 'personal'}
                                 onChange={handleChange}
-                            /> 법인번호
+                            /> 주민번호
                         </label>
                     </div>
 
@@ -273,61 +296,6 @@ export default function CarRegisterPage() {
                         onChange={handleChange}
                         required
                     />
-
-                    <div className="co-owner-check">
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="hasCoOwner"
-                                checked={formData.hasCoOwner}
-                                onChange={handleChange}
-                            /> 공동 소유자 있음
-                        </label>
-                    </div>
-
-                    {formData.hasCoOwner && (
-                        <div className="co-owner-section">
-                            <input
-                                type="text"
-                                name="coOwnerName"
-                                placeholder="공동 소유자명"
-                                value={formData.coOwnerName}
-                                onChange={handleChange}
-                                required
-                            />
-
-                            <div className="id-type-selector">
-                                <label>
-                                    <input
-                                        type="radio"
-                                        name="coOwnerIdType"
-                                        value="personal"
-                                        checked={formData.coOwnerIdType === 'personal'}
-                                        onChange={handleChange}
-                                    /> 주민번호
-                                </label>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        name="coOwnerIdType"
-                                        value="business"
-                                        checked={formData.coOwnerIdType === 'business'}
-                                        onChange={handleChange}
-                                    /> 법인번호
-                                </label>
-                            </div>
-
-                            <input
-                                type="text"
-                                name="coOwnerIdNumber"
-                                placeholder={formData.coOwnerIdType === 'personal' ? "주민번호 입력" : "법인번호 입력"}
-                                value={formData.coOwnerIdNumber}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                    )}
-
                     <button type="submit">등록</button>
                 </form>
                 ) : (
