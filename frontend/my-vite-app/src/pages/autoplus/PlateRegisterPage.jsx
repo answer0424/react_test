@@ -74,18 +74,21 @@ export default function PlateRegisterPage() {
             const ws = wb.Sheets[wsname];
             const data = XLSX.utils.sheet_to_json(ws, { header: 0 });
 
-            console.log('Excel Data:', data);
+            console.log('PlateRegisterPage.Excel Data:', data);
 
             const rowsWithIndex = data.map((row, index) => ({
                 index: index + 1,
                 ...row
             }));
+            console.log('PlateRegisterPage.Rows with index:', rowsWithIndex);
 
             setRows(rowsWithIndex);
+            console.log('PlateRegisterPage.rowWithIndex', rowsWithIndex);
             setBulkData(data);
+            console.log('PlateRegisterPage.data', data);
             setShowExcelModal(true); // 모달 열기
         };
-        reader.readAsBinaryString(file);
+        reader.readAsArrayBuffer(file);
     };
 
     const handleRowsChange = (newRows) => {

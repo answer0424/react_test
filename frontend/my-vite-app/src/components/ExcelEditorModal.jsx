@@ -56,7 +56,7 @@ const functionMap = {
                     newRows.push(rowData);
                 }
             }
-            console.log(rowCount);
+            console.log('sheet, rowCount', sheet, rowCount);
             return newRows;
         },
         initSheet: (sheet) => {
@@ -90,6 +90,7 @@ const functionMap = {
                     });
                 }
             }
+            console.log('sheet, rowCount', sheet, rowCount);
             return newRows;
         },
         initSheet: (sheet, rowCount, openPlateSearchModal) => {
@@ -183,6 +184,9 @@ export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, 
     const workbookInit = useCallback((spreadsheet) => {
         setSpread(spreadsheet);
         const sheet = spreadsheet.getActiveSheet();
+
+        console.log('ExcelEditorModal.workbookInit', spreadsheet, sheet);
+
         sheet.setRowCount(20);
 
         const data = new Array(rows.length + 1).fill(null).map(() => new Array(excelColumns.length).fill(null));
@@ -195,6 +199,8 @@ export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, 
                 data[rowIndex + 1][colIndex] = row[col.key];
             });
         });
+
+        console.log('ExcelEditorModal.data', data);
 
         sheet.setArray(0, 0, data);
 
