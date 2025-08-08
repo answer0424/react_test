@@ -5,7 +5,6 @@ import { SpreadSheets, Worksheet } from '@mescius/spread-sheets-react';
 import { useEffect, useCallback, useState} from 'react';
 import * as GC from '@mescius/spread-sheets';
 import PlateSearchModal from './PlateSearchModal.jsx';
-import '/react-test/gc.spread.sheets.excel2013white.css';
 
 
 const dummyPlates = [
