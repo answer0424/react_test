@@ -203,7 +203,7 @@ export default function CarRegisterPage() {
     return (
         <div className="wrap">
             <div className="register_box">
-                <h1 className="title">차량 등록</h1>
+                <h1 className="title">자동차 신규 등록</h1>
                 <div className="register-tabs">
                     <button
                         className={`tab-button ${activeTab === 'single' ? 'active' : ''}`}

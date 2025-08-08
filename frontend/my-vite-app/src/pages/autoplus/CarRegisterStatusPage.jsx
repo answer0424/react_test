@@ -100,7 +100,7 @@ export default function CarRegisterStatusPage() {
     return (
         <div id="plate-status-container">
             <div id="plate-status-content">
-                <h1 id="plate-status-title">차량번호 등록 상태 조회</h1>
+                <h1 id="plate-status-title">차량번호 신규 등록 상태</h1>
 
                 <div id="search-filters">
                     <div className="search-row">

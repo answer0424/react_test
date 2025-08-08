@@ -4,15 +4,15 @@ import '../assets/css/components.css';
 import {useUser} from "../contexts/UserProvider.jsx";
 
 const autoplusMenus = [
-    { path: '/autoplus/plate/add', label: '번호판 등록' },
-    { path: '/autoplus/plates', label: '번호판 목록' },
-    { path: '/autoplus/plate/status', label: '차량 등록 상태' },
+    { path: '/autoplus/plate/add', label: '차량번호 등록' },
+    { path: '/autoplus/plates', label: '차량번호 목록' },
+    { path: '/autoplus/plate/status', label: '차량번호 신규 등록 상태' },
     { path: '/autoplus/mypage', label: '마이페이지' },
 ];
 
 const customerMenus = [
-    { path: '/customer/plate/register', label: '차량 등록' },
-    { path: '/customer/plate/status', label: '차량 등록 상태' },
+    { path: '/customer/plate/register', label: '자동차 신규 등록' },
+    { path: '/customer/plate/status', label: '자동차 신규 등록 상태' },
     { path: '/customer/mypage', label: '마이페이지' },
 ];
 

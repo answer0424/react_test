@@ -63,7 +63,7 @@ export default function PlateListPage() {
     return (
         <div id="plate-list-container">
             <div id="plate-list-content">
-                <h1 id="plate-list-title">차량번호 관리</h1>
+                <h1 id="plate-list-title">차량번호 목록</h1>
                 <div id="plate-list-actions">
                     <input
                         type="text"

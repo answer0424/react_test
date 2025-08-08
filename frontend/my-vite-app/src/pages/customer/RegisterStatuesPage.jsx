@@ -102,7 +102,7 @@ export default function RegisterStatusPage() {
     return (
         <div className="customer-container">
             <div className="customer-content">
-                <h1 className="customer-title">차량 등록 진행 상태</h1>
+                <h1 className="customer-title">자동차 신규 등록 상태</h1>
 
                 <div className="customer-search-filters">
                     <div className="customer-search-row">
