@@ -144,6 +144,8 @@ const functionMap = {
 
 export default function ExcelEditorModal({ isOpen, onClose, rows, excelColumns, handleRowsChange, editorType = 'plateRegisterEditor' }) {
     console.log('ExcelEditorModal.isOpen');
+    console.log('SpreadSheets: ', SpreadSheets);
+    console.log('Worksheet: ', Worksheet);
     if(SpreadSheets === undefined) {
         console.log('SpreadSheets undefined');
         return;
