@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import '../../assets/css/customer.css';
 import RegisterSuccessModal from "../../components/RegisterSuccessModal.jsx"; // 스타일시트 경로 수정
-// import * as XLSX from 'xlsx'; // 엑셀 파일 처리 라이브러리
+import * as XLSX from 'xlsx'; // 엑셀 파일 처리 라이브러리
 import {BulkCarRegisterExcel, validateBulkData} from '../../excel/BulkCarRegisterExcel';
 import ExcelValidationErrorModal from '../../components/ExcelValidationErrorModal.jsx';
 import {useUser} from "../../contexts/UserProvider.jsx";
@@ -82,11 +82,11 @@ export default function CarRegisterPage() {
         return <LoginRequiredModal open={userInfoRequiredModalOpen}/>;
     }
 
-    const handleFileUpload = async (e) => {
+    const handleFileUpload = (e) => {
         const file = e.target.files[0];
         setBulkFile(file);
 
-        const XLSX = await import('xlsx');
+        // const XLSX = await import('xlsx');
         const reader = new FileReader();
 
         reader.onload = (evt) => {
