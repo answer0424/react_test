@@ -265,7 +265,7 @@ export default function CarRegisterPage() {
     };
 
     // 일괄 등록 제출
-    const handleBulkSubmit = (e) => {
+    const handleBulkSubmit = async (e) => {
         e.preventDefault();
         if (rows.length === 0) {
             setValidationErrors(['업로드된 데이터가 없습니다.']);
@@ -273,12 +273,102 @@ export default function CarRegisterPage() {
             return;
         }
 
-        // TODO: 일괄 등록 API 호출
+        // 유효성 검사
+        const errors = [];
+        const validRows = [];
 
-        setRegisteredCount(rows.length);
-        setRows([]);
-        setBulkFile(null);
-        setIsSuccessModalOpen(true);
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const rowErrors = [];
+
+            // 필수 항목 검사
+            if (!row['차량번호']) rowErrors.push(`${i+1}번 행: 차량번호가 없습니다.`);
+            if (!row['업무구분']) rowErrors.push(`${i+1}번 행: 업무구분을 선택해주세요.`);
+            if (!row['공급가액']) rowErrors.push(`${i+1}번 행: 공급가액을 입력해주세요.`);
+            if (!row['차대번호']) rowErrors.push(`${i+1}번 행: 차대번호를 입력해주세요.`);
+            else if (!/^[A-HJ-NPR-Z0-9]{17}$/i.test(row['차대번호'])) {
+                rowErrors.push(`${i+1}번 행: 유효한 차대번호 형식이 아닙니다. (17자리 영숫자)`);
+            }
+            if (!row['차명']) rowErrors.push(`${i+1}번 행: 차명을 입력해주세요.`);
+
+            if (rowErrors.length > 0) {
+                errors.push(...rowErrors);
+            } else {
+                validRows.push(row);
+            }
+        }
+
+        if (errors.length > 0) {
+            setValidationErrors(errors);
+            setIsErrorModalOpen(true);
+            return;
+        }
+
+        try {
+            // API 호출용 데이터 준비
+            const requestData = {
+                data: validRows.map(row => {
+                    // 차량번호로 플레이트 ID 찾기
+                    const plateInfo = dummyRegistableCarNumber.find(plate => plate.number === row['차량번호']);
+
+                    return {
+                        managementCorpNumber: '0000000000',
+                        AgencyCorpNumber: 'Carbang',
+                        businessType: row['업무구분'],
+                        plateNumber: row['차량번호'],
+                        price: row['공급가액'].replace(/,/g, ''),
+                        vinNumber: row['차대번호'],
+                        carName: row['차명'],
+                        companyLocation: row['사용본거지'] || '',
+                        ownerName: 'BMW파이낸셜서비스코리아(주)',
+                        corpNumber: '0000000000',
+                        bondDiscount: '',
+                        plateLength: '필름',
+                        corpPlateYN: '1',
+                        plateId: plateInfo ? plateInfo.id : '',
+                        username: user?.username || ''
+                    };
+                })
+            };
+
+            console.log('일괄 등록 API 요청 데이터:', requestData);
+
+            // API 호출
+            const response = await fetch('https://autodev.gtinc.co.kr/Interface/NewCarApi.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`API 오류: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('일괄 등록 API 응답 결과:', result);
+
+            // 응답 처리
+            if (result.success) {
+                // 성공 시 초기화
+                setRows([]);
+                setBulkFile(null);
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
+                setRegisteredCount(validRows.length);
+                setIsSuccessModalOpen(true);
+            } else {
+                // API에서 오류 반환 시
+                setValidationErrors([result.message || '차량 등록 중 오류가 발생했습니다.']);
+                setIsErrorModalOpen(true);
+            }
+        } catch (error) {
+            console.error('일괄 등록 API 오류:', error);
+            setValidationErrors(['서버 연결 오류가 발생했습니다. 잠시 후 다시 시도해주세요.']);
+            setIsErrorModalOpen(true);
+        }
     };
 
     // 업로드 파일 및 데이터 초기화
