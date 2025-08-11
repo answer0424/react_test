@@ -28,7 +28,7 @@ export default function StatusDetailModal({status, onClose}) {
                     <table className="detail-table">
                         <tbody>
                         <tr>
-                            <th>번호판</th>
+                            <th>차량번호</th>
                             <td>{status.plateNumber}</td>
                         </tr>
                         <tr>

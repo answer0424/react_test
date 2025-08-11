@@ -15,9 +15,9 @@
 .remember-me { display: flex; align-items: center; margin-bottom: 16px; gap: 8px; font-size: 14px; color: #2c3e50; }
 .remember-me input[type="checkbox"] { width: 16px; height: 16px; margin: 0; }
 
-/* 번호판 목록 */
+/* 차량번호 목록 */
 #plate-list-container { background: #f5f6f8; min-height: 100vh; padding: 20px; }
-#plate-list-content { max-width: 800px; margin: 0 auto; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; }
+#plate-list-content { max-width: 1400px; margin: 0 auto; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; }
 #plate-list-title { color: #2c3e50; font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid #e9ecef; padding-bottom: 15px; }
 #plate-list-actions { display: flex; gap: 12px; margin-bottom: 20px; }
 #plate-search-input { flex: 1; padding: 8px 12px; border: 1px solid #dde2e5; border-radius: 4px; font-size: 14px; }
@@ -27,8 +27,18 @@
 .plate-item { padding: 12px 16px; border: 1px solid #e9ecef; border-radius: 4px; margin-bottom: 8px; background: #ffffff; font-size: 16px; color: #34495e; }
 .plate-item:hover { background: #f8f9fa; }
 #plate-empty-message { text-align: center; color: #7f8c8d; padding: 24px; background: #f8f9fa; border-radius: 4px; }
+#plate-list-table { border-collapse: collapse; width: 100%; background: #f9f9f9; }
+#plate-list-table th, #plate-list-table td { border: 1px solid #ddd; padding: 8px; }
+#plate-list-title { color: #000; font-size: 1.5rem; margin-bottom: 16px; }
+#plate-company-select { min-width: 300px; width: 300px; padding: 8px 12px; border-radius: 4px; border: 1px solid #dde2e5; font-size: 14px; margin-left: 8px; }
+#plate-list-table-wrapper { max-height: 480px; /* 원하는 높이로 조정 */ overflow-y: auto; margin-top: 16px; border: 1px solid #eee; border-radius: 4px; background: #fff; }
+#plate-list-table-wrapper::-webkit-scrollbar { width: 8px; }
+#plate-list-table-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+#plate-list-table-wrapper::-webkit-scrollbar-thumb { background: #3498db; border-radius: 4px; }
+#plate-list-table-wrapper::-webkit-scrollbar-thumb:hover { background: #2980b9; }
+#plate-list-table-wrapper { scrollbar-width: thin; scrollbar-color: #3498db #f1f1f1; }
 
-/* 번호판 등록 */
+/* 차량번호 등록 */
 #plate-register-container { background: #f5f6f8; min-height: 100vh; padding: 20px; }
 #plate-register-content { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; }
 #plate-register-title { color: #2c3e50; font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid #e9ecef; padding-bottom: 15px; }
