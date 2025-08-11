@@ -58,8 +58,8 @@ export default function CarRegisterPage() {
     const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);      // 에러 모달 상태
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);  // 등록 성공 모달 상태
     const [registeredCount, setRegisteredCount] = useState(0);            // 등록된 차량 데이터 개수 상태
-    const [formErrors, setFormErrors] = useState({});
-    const [isFailureModalOpen, setIsFailureModalOpen] = useState(false);
+    const [formErrors, setFormErrors] = useState({});                         // 개별 등록 에러 상태
+    const [isFailureModalOpen, setIsFailureModalOpen] = useState(false);  // 실패 모달 상태
 
 
     // hook: 사용자 정보, 네비게이트
@@ -130,21 +130,21 @@ export default function CarRegisterPage() {
             // API 호출용 데이터 준비
             const requestData = {
                 data: {
-                    managementCorpNumber: '0000000000',
-                    AgencyCorpNumber: 'Carbang',
-                    businessType: formData.businessType,
-                    plateNumber: selectedPlate?.number || '',
-                    price: formData.price,
-                    vinNumber: formData.vinNumber,
-                    carName: formData.carName,
-                    companyLocation: formData.location || '',
-                    ownerName: 'BMW파이낸셜서비스코리아(주)',
-                    corpNumber: '0000000000',
-                    bondDiscount: '',
-                    plateLength: '필름',
-                    corpPlateYN: '1',
-                    plateId: selectedPlate?.id || '',
-                    username: user?.username || ''
+                    vcexSvcMgntNo:'00000001',                                       // 대행서비스관리번호
+                    mgntCrpnNo: '0000000000',                                       // 관리법인번호
+                    vcexCrpnNo: 'Carbang',                                          // 대행법인번호
+                    bizDv: formData.businessType,                                   // 업무구분
+                    vhclNo: selectedPlate?.number || '',                            // 차량번호
+                    splyAmt: formData.price,                                        // 공급가액
+                    vhidNo: formData.vinNumber,                                     // 차대번호
+                    vhclNm: formData.carName,                                       // 차명
+                    ownrNm: formData.ownerName || 'BMW파이낸셜서비스코리아(주)',       // 소유자명
+                    ownrCrpnNo: formData.idNumber || '0000000000',                  // 법인번호
+                    ownrAddress: formData.location || '',                           // 사용본거지
+                    bondDcDv: '',                                                   // 채권할인구분
+                    nopltKind: '필름',                                               // 번호판종류
+                    crpnNopltYn: parseInt(formData.price) > 80000000 ? '1' : '',    // 법인번호판(연두)여부
+                    rduDav: '',                                                     // 감면구분
                 }
             };
 
@@ -154,17 +154,24 @@ export default function CarRegisterPage() {
             const response = await fetch('https://autodev.gtinc.co.kr/Interface/NewCarApi.php', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'text/plain', // 서버 예시에 맞춤
                 },
-                body: JSON.stringify(requestData)
+                body: JSON.stringify(requestData) // JSON 그대로 전송
             });
 
-            if (!response.ok) {
-                throw new Error(`API 오류: ${response.status}`);
+            const text = await response.text();
+            console.log('서버 원본 응답:', text);
+
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (e) {
+                console.error('JSON 파싱 실패:', e);
+                throw e;
             }
 
-            const result = await response.json();
             console.log('API 응답 결과:', result);
+
 
             // 응답 처리
             if (result.success) {
@@ -196,10 +203,36 @@ export default function CarRegisterPage() {
     // 개별 등록 폼 입력값 변경
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+
+        // form 데이터 업데이트
         setFormData((prev) => ({
             ...prev,
             [name]: type === 'checkbox' ? checked : value,
         }));
+
+        // 사용본거지(location) 선택 시 해당하는 회사 정보를 찾아서 소유자명과 법인번호 자동 설정
+        if (name === 'location' && value) {
+            const selectedCompany = dummyCompanyList.find(company => company.name === value);
+            if (selectedCompany) {
+                setFormData(prev => ({
+                    ...prev,
+                    ownerName: selectedCompany.ownerName || '',
+                    idNumber: selectedCompany.coNo || ''
+                }));
+            }
+        }
+    };
+
+    const handleLocationChange = (rowIdx, value) => {
+        handleCellChange(rowIdx, '사용본거지', value);
+
+        // 선택한 회사 정보 찾기
+        const selectedCompany = dummyCompanyList.find(company => company.name === value);
+        if (selectedCompany) {
+            // 회사 정보를 행 데이터에 추가 (화면에는 보이지 않지만 API 요청 시 사용)
+            handleCellChange(rowIdx, '_ownerName', selectedCompany.ownerName);
+            handleCellChange(rowIdx, '_corpNumber', selectedCompany.coNo);
+        }
     };
 
     // 엑셀 파일 업로드
@@ -310,23 +343,27 @@ export default function CarRegisterPage() {
                 data: validRows.map(row => {
                     // 차량번호로 플레이트 ID 찾기
                     const plateInfo = dummyRegistableCarNumber.find(plate => plate.number === row['차량번호']);
+                    // 사용본거지로 회사 정보 찾기
+                    const companyInfo = dummyCompanyList.find(company => company.name === row['사용본거지']);
+                    // 공급가액 숫자 변환
+                    const priceValue = row['공급가액'].replace(/,/g, '');
 
                     return {
-                        managementCorpNumber: '0000000000',
-                        AgencyCorpNumber: 'Carbang',
-                        businessType: row['업무구분'],
-                        plateNumber: row['차량번호'],
-                        price: row['공급가액'].replace(/,/g, ''),
-                        vinNumber: row['차대번호'],
-                        carName: row['차명'],
-                        companyLocation: row['사용본거지'] || '',
-                        ownerName: 'BMW파이낸셜서비스코리아(주)',
-                        corpNumber: '0000000000',
-                        bondDiscount: '',
-                        plateLength: '필름',
-                        corpPlateYN: '1',
-                        plateId: plateInfo ? plateInfo.id : '',
-                        username: user?.username || ''
+                        vcexSvcMgntNo: '00000001',
+                        mgntCrpnNo: '0000000000',
+                        vcexCrpnNo: 'Carbang',
+                        bizDv: row['업무구분'],
+                        vhclNo: row['차량번호'],
+                        splyAmt: row['공급가액'].replace(/,/g, ''),
+                        vhidNo: row['차대번호'],
+                        vhclNm: row['차명'],
+                        ownrNm: row['_ownerName'] || companyInfo?.ownerName || 'BMW파이낸셜서비스코리아(주)',
+                        ownrCrpnNo: row['_corpNumber'] || companyInfo?.coNo || '0000000000',
+                        ownrAddress: row['사용본거지'] || '',
+                        bondDcDv: '',
+                        nopltKind: '필름',
+                        crpnNopltYn: parseInt(priceValue) > 80000000 ? '1' : '',
+                        rduDav: '',
                     };
                 })
             };
@@ -337,7 +374,7 @@ export default function CarRegisterPage() {
             const response = await fetch('https://autodev.gtinc.co.kr/Interface/NewCarApi.php', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'text/plain',
                 },
                 body: JSON.stringify(requestData)
             });
@@ -581,9 +618,7 @@ export default function CarRegisterPage() {
                                                     ) : col.key === '사용본거지' ? (
                                                         <select
                                                             value={row['사용본거지'] || ''}
-                                                            onChange={(e) =>
-                                                                handleCellChange(rowIdx, '사용본거지', e.target.value)
-                                                            }
+                                                            onChange={(e) => handleLocationChange(rowIdx, e.target.value)}
                                                             className="cell-select"
                                                         >
                                                             <option value="">선택</option>

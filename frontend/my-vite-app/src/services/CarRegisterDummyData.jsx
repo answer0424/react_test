@@ -509,19 +509,19 @@ export const dummyCarNumberData = [
 ];
 
 export const dummyCompanyList = [
-    { id: 1, name: '현대캐피탈 강남지점' },
-    { id: 2, name: '현대캐피탈 강북중고지점' },
-    { id: 3, name: '현대캐피탈 강서지점' },
-    { id: 4, name: '현대캐피탈 광진지점' },
-    { id: 5, name: '현대캐피탈 마포지점' },
-    { id: 6, name: 'KB캐피탈 강남지점' },
-    { id: 7, name: 'KB캐피탈 강북지점' },
-    { id: 8, name: 'KB캐피탈 강서지점' },
-    { id: 9, name: 'KB캐피탈 서울지점' },
-    { id: 10, name: 'KB캐피탈 생활금융부 집중화팀' },
-    { id: 11, name: '메리츠캐피탈 본점' },
-    { id: 12, name: '메리츠캐피탈 강남신차지점' },
-    { id: 13, name: '메리츠캐피탈 서울지점' },
+    { id: 1, name: '현대캐피탈 강남지점', ownerName: '현대캐피탈', coNo: '0000000001'},
+    { id: 2, name: '현대캐피탈 강북중고지점', ownerName: '현대캐피탈', coNo: '0000000001' },
+    { id: 3, name: '현대캐피탈 강서지점', ownerName: '현대캐피탈', coNo: '0000000001' },
+    { id: 4, name: '현대캐피탈 광진지점', ownerName: '현대캐피탈', coNo: '0000000001' },
+    { id: 5, name: '현대캐피탈 마포지점', ownerName: '현대캐피탈', coNo: '0000000001' },
+    { id: 6, name: 'KB캐피탈 강남지점', ownerName: 'KB캐피탈', coNo: '0000000002' },
+    { id: 7, name: 'KB캐피탈 강북지점', ownerName: 'KB캐피탈', coNo: '0000000002' },
+    { id: 8, name: 'KB캐피탈 강서지점', ownerName: 'KB캐피탈', coNo: '0000000002' },
+    { id: 9, name: 'KB캐피탈 서울지점', ownerName: 'KB캐피탈', coNo: '0000000002' },
+    { id: 10, name: 'KB캐피탈 생활금융부 집중화팀', ownerName: 'KB캐피탈', coNo: '0000000002' },
+    { id: 11, name: '메리츠캐피탈 본점', ownerName: '메리츠캐피탈', coNo: '0000000003' },
+    { id: 12, name: '메리츠캐피탈 강남신차지점', ownerName: '메리츠캐피탈', coNo: '0000000003' },
+    { id: 13, name: '메리츠캐피탈 서울지점', ownerName: '메리츠캐피탈', coNo: '0000000003' }
 ];
 
 export const dummyRegistableCarNumber = [
@@ -539,5 +539,5 @@ export const dummyRegistableCarNumber = [
     { id: 12, number: '77타8765' },
     { id: 13, number: '88파2345' },
     { id: 14, number: '99하6789' },
-    { id: 15, number: '00가1234' },
-]
+    { id: 15, number: '00가1234' }
+];
