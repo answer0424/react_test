@@ -8,6 +8,7 @@ import RegisterSuccessModal from '../../components/RegisterSuccessModal.jsx';
 import ExcelValidationErrorModal from '../../components/ExcelValidationErrorModal.jsx';
 import LoginRequiredModal from '../../components/UserInfoRequiredModal.jsx';
 import PlateSearchModal from '../../components/PlateSearchModal.jsx';
+import CarRegisterFailureModal from '../../components/CarRegisterFailureModal.jsx';
 import '../../assets/css/customer.css';
 
 const INITIAL_FORM_STATE = {
@@ -57,6 +58,9 @@ export default function CarRegisterPage() {
     const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);      // 에러 모달 상태
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);  // 등록 성공 모달 상태
     const [registeredCount, setRegisteredCount] = useState(0);            // 등록된 차량 데이터 개수 상태
+    const [formErrors, setFormErrors] = useState({});
+    const [isFailureModalOpen, setIsFailureModalOpen] = useState(false);
+
 
     // hook: 사용자 정보, 네비게이트
     const { user } = useUser();
@@ -78,18 +82,115 @@ export default function CarRegisterPage() {
     /* ---------- 이벤트 핸들러 ---------- */
 
     // 개별 등록 폼 제출
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // TODO: 유효성 검사 및 API 호출
 
+        // 유효성 검사
+        const errors = {};
+
+        // 차량번호 유효성 검사
+        if (!selectedPlate) {
+            errors.plateId = '차량번호를 선택해주세요.';
+        }
+
+        // 차대번호 유효성 검사
+        if (!formData.vinNumber) {
+            errors.vinNumber = '차대번호를 입력해주세요.';
+        } else if (!/^[A-HJ-NPR-Z0-9]{17}$/i.test(formData.vinNumber)) {
+            errors.vinNumber = '유효한 차대번호 형식이 아닙니다. (17자리 영숫자)';
+        }
+
+        // 업무구분 유효성 검사
+        if (!formData.businessType) {
+            errors.businessType = '업무구분을 선택해주세요.';
+        }
+
+        // 공급가액 유효성 검사
+        if (!formData.price) {
+            errors.price = '공급가액을 입력해주세요.';
+        }
+
+        // 차명 유효성 검사
+        if (!formData.carName) {
+            errors.carName = '차명을 입력해주세요.';
+        }
+
+        // 오류가 있으면 폼 제출 중단하고 오류 모달 표시
+        if (Object.keys(errors).length > 0) {
+            setFormErrors(errors);
+            setIsFailureModalOpen(true);
+            return;
+        }
+
+        // 오류가 없으면 폼 제출 진행
         console.log('개별 등록 데이터:', formData);
 
-        setFormData(INITIAL_FORM_STATE);
-        setSelectedPlate(null);
-        setIsSuccessModalOpen(true);
-        setRegisteredCount(1);
+        // TODO 차량 등록 API 호출
+        try {
+            // API 호출용 데이터 준비
+            const requestData = {
+                data: {
+                    managementCorpNumber: '0000000000',
+                    AgencyCorpNumber: 'Carbang',
+                    businessType: formData.businessType,
+                    plateNumber: selectedPlate?.number || '',
+                    price: formData.price,
+                    vinNumber: formData.vinNumber,
+                    carName: formData.carName,
+                    companyLocation: formData.location || '',
+                    ownerName: 'BMW파이낸셜서비스코리아(주)',
+                    corpNumber: '0000000000',
+                    bondDiscount: '',
+                    plateLength: '필름',
+                    corpPlateYN: '1',
+                    plateId: selectedPlate?.id || '',
+                    username: user?.username || ''
+                }
+            };
 
-        // 폼 리셋 직접 DOM 조작 대신 상태 초기화 권장
+            console.log('API 요청 데이터:', requestData);
+
+            // API 호출
+            const response = await fetch('https://autodev.gtinc.co.kr/Interface/NewCarApi.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`API 오류: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('API 응답 결과:', result);
+
+            // 응답 처리
+            if (result.success) {
+                // 성공 시 폼 초기화
+                setFormData(INITIAL_FORM_STATE);
+                setSelectedPlate(null);
+                setFormErrors({});
+                setIsSuccessModalOpen(true);
+                setRegisteredCount(1);
+            } else {
+                // API에서 오류 반환 시
+                setFormErrors({
+                    apiError: result.message || '차량 등록 중 오류가 발생했습니다.'
+                });
+                setIsFailureModalOpen(true);
+            }
+        } catch (error) {
+            console.error('차량 등록 API 오류:', error);
+            setFormErrors({
+                apiError: '서버 연결 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+            });
+            setIsFailureModalOpen(true);
+        } finally {
+            // 로딩 상태 해제 (필요시)
+            // setIsLoading(false);
+        }
     };
 
     // 개별 등록 폼 입력값 변경
@@ -194,8 +295,6 @@ export default function CarRegisterPage() {
         <div className="wrap">
             <div className="register_box">
                 <h1 className="title">자동차 신규 등록</h1>
-
-                {/* 탭 버튼 */}
                 <div className="register-tabs">
                     <button
                         className={`tab-button ${activeTab === 'single' ? 'active' : ''}`}
@@ -226,7 +325,7 @@ export default function CarRegisterPage() {
                                 readOnly
                                 placeholder="차량번호를 선택하세요"
                                 value={selectedPlate ? selectedPlate.number : ''}
-                                className="plate-input"
+                                className={`plate-input ${formErrors.plateId ? 'input-error' : ''}`}
                             />
                         </div>
 
@@ -275,6 +374,7 @@ export default function CarRegisterPage() {
                             value={formData.vinNumber}
                             onChange={handleChange}
                             required
+                            className={formErrors.vinNumber ? 'input-error' : ''}
                         />
 
                         <input
@@ -477,6 +577,12 @@ export default function CarRegisterPage() {
                 isOpen={isErrorModalOpen}
                 onClose={() => setIsErrorModalOpen(false)}
                 errors={validationErrors}
+            />
+
+            <CarRegisterFailureModal
+                isOpen={isFailureModalOpen}
+                onClose={() => setIsFailureModalOpen(false)}
+                errors={formErrors}
             />
 
             <RegisterSuccessModal
