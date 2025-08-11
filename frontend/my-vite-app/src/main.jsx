@@ -3,7 +3,7 @@ import {createRoot} from 'react-dom/client'
 import App from './App.jsx'
 import VhclNoListPage from "./pages/autoplus/VhclNoListPage.jsx";
 import {HashRouter, Route, Routes, useLocation} from "react-router-dom";
-import CarNumberRegisterPage from "./pages/autoplus/CarNumberRegisterPage.jsx";
+import VhclNoRegisterPage from "./pages/autoplus/VhclNoRegisterPage.jsx";
 import LoginPage from "./pages/common/LoginPage.jsx";
 import CarRegisterPage from "./pages/customer/CarRegisterPage.jsx";
 import RegisterStatusPage from "./pages/customer/CarRegisterStatuesPage.jsx";
@@ -28,7 +28,7 @@ function MainLayout() {
                 <Routes>
                     <Route path="/" element={<App />} />
                     <Route path="/login" element={<LoginPage />} />
-                    <Route path="/autoplus/CarNumberRegister" element={<CarNumberRegisterPage />} />
+                    <Route path="/autoplus/CarNumberRegister" element={<VhclNoRegisterPage />} />
                     <Route path="/autoplus/VhclNoList" element={<VhclNoListPage />} />
                     <Route path="/autoplus/CarNumberRegisterStatus" element={<CarNumberRegisterStatusPage />} />
                     <Route path="/customer/CarRegister" element={<CarRegisterPage />} />

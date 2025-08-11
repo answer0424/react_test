@@ -8,11 +8,34 @@ import ExcelValidationErrorModal from '../../components/ExcelValidationErrorModa
 import '../../assets/css/customer.css';
 
 // 엑셀 테이블 컬럼 정의
-const PLATE_EXCEL_COLUMNS = [
+const VHCLNO_EXCEL_COLUMNS = [
     {key: 'index', name: '번호'},
     {key: '차량번호', name: '차량번호'},
     {key: '고객사', name: '고객사'},
 ];
+
+// 차량번호 유효성 검사 함수
+const validateVhclNo = (vhclNo) => {
+    const pattern = /^[가-힣]{0,2}\d{2,3}[가-힣]{1}\d{4}$/;
+    return pattern.test(vhclNo.replace(/\s+/g, ''));
+};
+
+// 대량 데이터 유효성 검사 함수
+const validateBulkData = (data) => {
+    const errors = [];
+    data.forEach((row, index) => {
+        if (!row['차량번호']) {
+            errors.push(`${index + 1}번: 차량번호가 누락되었습니다.`);
+        }else if (!validateVhclNo(row['차량번호'])) {
+            errors.push(`${index + 1}번: 올바른 차량번호 형식이 아닙니다. (예: 12가1234, 123가1234)`);
+        }
+
+        if (!row['고객사']) {
+            errors.push(`${index + 1}번: 고객사가 누락되었습니다.`);
+        }
+    });
+    return errors;
+};
 
 // 엑셀 템플릿 생성 함수
 const createExcelTemplate = async () => {
@@ -24,19 +47,6 @@ const createExcelTemplate = async () => {
     XLSX.writeFile(wb, '차량번호_등록_양식.xlsx');
 };
 
-// 대량 데이터 유효성 검사 함수
-const validateBulkData = (data) => {
-    const errors = [];
-    data.forEach((row, index) => {
-        if (!row['차량번호']) {
-            errors.push(`${index + 1}번: 차량번호가 누락되었습니다.`);
-        }
-        if (!row['고객사']) {
-            errors.push(`${index + 1}번: 고객사가 누락되었습니다.`);
-        }
-    });
-    return errors;
-};
 
 /**
  * 차량번호 개별, 일괄 등록 페이지 컴포넌트
@@ -45,11 +55,11 @@ const validateBulkData = (data) => {
  * @returns {JSX.Element}
  * @constructor
  */
-export default function CarNumberRegisterPage() {
+export default function VhclNoRegisterPage() {
     // --- 상태 선언 (State) ---
     const [isMultiple, setIsMultiple] = useState(false);                       // 등록 모드: 개별 or 일괄
-    const [plateNumber, setPlateNumber] = useState('');                         // 차량번호 입력
-    const [selectedCustomer, setSelectedCustomer] = useState('');               // 고객사 선택
+    const [vhclNo, setVhclNo] = useState('');                                   // 차량번호 입력
+    const [selectedCoOwnrNm, setSelectedCoOwnrNm] = useState('');               // 고객사 선택
     const [bulkFile, setBulkFile] = useState(null);                                    // 엑셀 파일 업로드
     const [rows, setRows] = useState([]);                                       // 조회된 데이터 세팅
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);      // 등록 성공 시 모달
@@ -106,12 +116,22 @@ export default function CarNumberRegisterPage() {
     const handleSingleSubmit = (e) => {
         e.preventDefault();
         // TODO 차량 등록 API 호출
-        if (!plateNumber || !selectedCustomer) return;
+        if (!vhclNo || !selectedCoOwnrNm) {
+            setValidationErrors(['차량번호와 고객사를 모두 입력해주세요.']);
+            setIsErrorModalOpen(true);
+            return;
+        }
+
+        if (!validateVhclNo(vhclNo)) {
+            setValidationErrors(['올바른 차량번호 형식이 아닙니다. (예: 12가1234, 123가1234)']);
+            setIsErrorModalOpen(true);
+            return;
+        }
 
         setRegisteredCount(1);
         setIsSuccessModalOpen(true);
-        setPlateNumber('');
-        setSelectedCustomer('');
+        setVhclNo('');
+        setSelectedCoOwnrNm('');
     };
 
     // 개별 셀 변경 핸들러 (테이블 내)
@@ -143,6 +163,9 @@ export default function CarNumberRegisterPage() {
         setRegisteredCount(rows.length);
         setRows([]);
         setBulkFile(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
         setIsSuccessModalOpen(true);
     };
 
@@ -154,7 +177,6 @@ export default function CarNumberRegisterPage() {
             fileInputRef.current.value = '';
         }
     };
-
 
     // --- JSX 렌더링 ---
     return (
@@ -185,28 +207,26 @@ export default function CarNumberRegisterPage() {
                     >
                         <div className="input-group-vertical">
                             <div className="input-field">
-                                <label htmlFor="plateNumber">차량번호</label>
+                                <label htmlFor="vhclNo">차량번호</label>
                                 <input
-                                    id="plateNumber"
+                                    id="vhclNo"
                                     type="text"
                                     placeholder="차량번호 입력"
-                                    value={plateNumber}
-                                    onChange={(e) => setPlateNumber(e.target.value)}
-                                    required
+                                    value={vhclNo}
+                                    onChange={(e) => setVhclNo(e.target.value)}
                                 />
                             </div>
                             <div className="input-field">
-                                <label htmlFor="customer">고객사</label>
+                                <label htmlFor="coOwnrNm">고객사</label>
                                 <select
-                                    id="customer"
-                                    value={selectedCustomer}
-                                    onChange={(e) => setSelectedCustomer(e.target.value)}
-                                    required
+                                    id="coOwnrNm"
+                                    value={selectedCoOwnrNm}
+                                    onChange={(e) => setSelectedCoOwnrNm(e.target.value)}
                                 >
                                     <option value="">선택하세요</option>
-                                    {dummyCompanyList.map((customer) => (
-                                        <option key={customer.id} value={customer.name}>
-                                            {customer.name}
+                                    {dummyCompanyList.map((co) => (
+                                        <option key={co.id} value={co.name}>
+                                            {co.name}
                                         </option>
                                     ))}
                                 </select>
@@ -254,7 +274,7 @@ export default function CarNumberRegisterPage() {
                             <table>
                                 <thead>
                                 <tr>
-                                    {PLATE_EXCEL_COLUMNS.map((col) => (
+                                    {VHCLNO_EXCEL_COLUMNS.map((col) => (
                                         <th key={col.key}>{col.name}</th>
                                     ))}
                                 </tr>
@@ -264,7 +284,7 @@ export default function CarNumberRegisterPage() {
                                 {rows.length === 0 ? (
                                     <tr>
                                         <td
-                                            colSpan={PLATE_EXCEL_COLUMNS.length}
+                                            colSpan={VHCLNO_EXCEL_COLUMNS.length}
                                             className="customer-no-data"
                                         >
                                             업로드된 데이터가 없습니다.
@@ -273,7 +293,7 @@ export default function CarNumberRegisterPage() {
                                 ) : (
                                     rows.map((row, rowIdx) => (
                                         <tr key={row.index}>
-                                            {PLATE_EXCEL_COLUMNS.map((col) => (
+                                            {VHCLNO_EXCEL_COLUMNS.map((col) => (
                                                 <td key={col.key}>
                                                     {col.key === 'index' ? (
                                                         row.index

@@ -137,7 +137,7 @@ export default function ExcelEditorModal({
     const handlePlateSelect = useCallback((plate) => {
         setTableData(prev =>
             prev.map((row, idx) =>
-                idx === selectedRow ? { ...row, 차량번호: plate.number } : row
+                idx === selectedRow ? { ...row, vhclNo: plate.number } : row
             )
         );
         closePlateSearchModal();
