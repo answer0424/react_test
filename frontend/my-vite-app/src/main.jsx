@@ -9,7 +9,7 @@ import CarRegisterPage from "./pages/customer/CarRegisterPage.jsx";
 import RegisterStatusPage from "./pages/customer/CarRegisterStatuesPage.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import {UserProvider} from "./contexts/UserProvider.jsx";
-import CarNumberRegisterStatusPage from "./pages/autoplus/CarNumberRegisterStatusPage.jsx";
+import VhclNoRegisterStatusPage from "./pages/autoplus/VhclNoRegisterStatusPage.jsx";
 import './index.css';
 
 function MainLayout() {
@@ -30,7 +30,7 @@ function MainLayout() {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/autoplus/CarNumberRegister" element={<VhclNoRegisterPage />} />
                     <Route path="/autoplus/VhclNoList" element={<VhclNoListPage />} />
-                    <Route path="/autoplus/CarNumberRegisterStatus" element={<CarNumberRegisterStatusPage />} />
+                    <Route path="/autoplus/CarNumberRegisterStatus" element={<VhclNoRegisterStatusPage />} />
                     <Route path="/customer/CarRegister" element={<CarRegisterPage />} />
                     <Route path="/customer/RegisterStatus" element={<RegisterStatusPage />} />
                 </Routes>

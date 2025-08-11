@@ -1,4 +1,4 @@
-// CarNumberRegisterStatusPage.jsx
+// VhclNoRegisterStatusPage.jsx
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserProvider.jsx';
@@ -40,10 +40,10 @@ const QuickDateSelector = ({ onSelect }) => {
  * @returns {JSX.Element}
  * @constructor
  */
-export default function CarNumberRegisterStatusPage() {
+export default function VhclNoRegisterStatusPage() {
     // --- 상태 선언 ---
     const [searchTerm, setSearchTerm] = useState('');                   // 검색된 데이터 상태
-    const [selectedCompany, setSelectedCompany] = useState('');         // 선택된 고객사 상태
+    const [selectedCoOwnrNm, setSelectedCoOwnrNm] = useState('');         // 선택된 고객사 상태
     const [startDate, setStartDate] = useState(new Date());                       // 조회 시작 날짜 상태
     const [endDate, setEndDate] = useState(new Date());                           // 조회 끝 날짜 상태
     const [activeTab, setActiveTab] = useState('all');                  // 활성된 탭 상태
@@ -91,7 +91,7 @@ export default function CarNumberRegisterStatusPage() {
             (activeTab === 'completed' && result.status === '완료');
 
         const companyMatch =
-            !selectedCompany || result.company === selectedCompany;
+            !selectedCoOwnrNm || result.company === selectedCoOwnrNm;
 
         const plateMatch =
             !searchTerm || result.plateNumber.toLowerCase().includes(searchTerm.toLowerCase());
@@ -120,8 +120,8 @@ export default function CarNumberRegisterStatusPage() {
                             className="customer-search-input"
                         />
                         <select
-                            value={selectedCompany}
-                            onChange={(e) => setSelectedCompany(e.target.value)}
+                            value={selectedCoOwnrNm}
+                            onChange={(e) => setSelectedCoOwnrNm(e.target.value)}
                             className="company-select"
                         >
                             <option value="">고객사 선택</option>
@@ -208,8 +208,8 @@ export default function CarNumberRegisterStatusPage() {
                         ) : (
                             filteredResults.map((result, index) => (
                                 <tr key={index}>
-                                    <td>{result.plateNumber}</td>
-                                    <td>{result.company}</td>
+                                    <td>{result.vhclNo}</td>
+                                    <td>{result.coOwnrNm}</td>
                                     <td>{result.status}</td>
                                     <td>{result.expiresAt}</td>
                                     <td>{result.registeredAt}</td>

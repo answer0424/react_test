@@ -1,252 +1,252 @@
 export const dummyPlateData = [
     {
-        plateNumber: '123가4567',
-        company: '현대캐피탈 강남지점',
+        vhclNo: '123가4567',
+        coOwnrNm: '현대캐피탈 강남지점',
         status: '요청',
         registeredAt: '2025-08-06',
         expiresAt: '2025-07-25'
     },
     {
-        plateNumber: '234나5678',
-        company: '현대캐피탈 강북중고지점',
+        vhclNo: '234나5678',
+        coOwnrNm: '현대캐피탈 강북중고지점',
         status: '대기',
         registeredAt: '2025-08-06',
         expiresAt: '2025-04-26'
     },
     {
-        plateNumber: '567다8901',
-        company: '현대캐피탈 강서지점',
+        vhclNo: '567다8901',
+        coOwnrNm: '현대캐피탈 강서지점',
         status: '완료',
         registeredAt: '2025-08-06',
         expiresAt: '2025-04-24'
     },
     {
-        plateNumber: '789라2345',
-        company: '현대캐피탈 광진지점',
+        vhclNo: '789라2345',
+        coOwnrNm: '현대캐피탈 광진지점',
         status: '요청',
         registeredAt: '2025-08-06',
         expiresAt: '2025-04-27'
     },
     {
-        plateNumber: '345마6789',
-        company: '현대캐피탈 마포지점',
+        vhclNo: '345마6789',
+        coOwnrNm: '현대캐피탈 마포지점',
         status: '완료',
         registeredAt: '2025-08-06',
         expiresAt: '2025-04-23'
     },
     {
-        plateNumber: '678바1234',
-        company: 'KB캐피탈 강남지점',
+        vhclNo: '678바1234',
+        coOwnrNm: 'KB캐피탈 강남지점',
         status: '대기',
         registeredAt: '2025-08-06',
         expiresAt: '2025-04-28'
     },
     {
-        plateNumber: '901사3456',
-        company: 'KB캐피탈 강북지점',
+        vhclNo: '901사3456',
+        coOwnrNm: 'KB캐피탈 강북지점',
         status: '대기',
         registeredAt: '2025-08-06',
         expiresAt: '2025-04-29'
     },
     {
-        plateNumber: '234아5678',
-        company: 'KB캐피탈 강서지점',
+        vhclNo: '234아5678',
+        coOwnrNm: 'KB캐피탈 강서지점',
         status: '요청',
         registeredAt: '2025-08-06',
         expiresAt: '2025-04-30'
     },
     {
-        plateNumber: '567자8901',
-        company: 'KB캐피탈 서울지점',
+        vhclNo: '567자8901',
+        coOwnrNm: 'KB캐피탈 서울지점',
         status: '완료',
         registeredAt: '2025-08-06',
         expiresAt: '2025-04-22'
     },
     {
-        plateNumber: '890차2345',
-        company: 'KB캐피탈 생활금융부 집중화팀',
+        vhclNo: '890차2345',
+        coOwnrNm: 'KB캐피탈 생활금융부 집중화팀',
         status: '요청',
         registeredAt: '2025-08-06',
         expiresAt: '2025-04-31'
     },
     {
-        plateNumber: '123카6789',
-        company: '메리츠캐피탈 본점',
+        vhclNo: '123카6789',
+        coOwnrNm: '메리츠캐피탈 본점',
         status: '대기',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-01'
     },
     {
-        plateNumber: '456타1234',
-        company: '메리츠캐피탈 강남신차지점',
+        vhclNo: '456타1234',
+        coOwnrNm: '메리츠캐피탈 강남신차지점',
         status: '완료',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-02'
     },
     {
-        plateNumber: '789파3456',
-        company: '메리츠캐피탈 서울지점',
+        vhclNo: '789파3456',
+        coOwnrNm: '메리츠캐피탈 서울지점',
         status: '요청',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-03'
     },
     {
-        plateNumber: '012하5678',
-        company: '현대캐피탈 강남지점',
+        vhclNo: '012하5678',
+        coOwnrNm: '현대캐피탈 강남지점',
         status: '대기',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-04'
     },
     {
-        plateNumber: '345호8901',
-        company: '현대캐피탈 강북중고지점',
+        vhclNo: '345호8901',
+        coOwnrNm: '현대캐피탈 강북중고지점',
         status: '완료',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-05'
     },
     {
-        plateNumber: '678주2345',
-        company: '현대캐피탈 강서지점',
+        vhclNo: '678주2345',
+        coOwnrNm: '현대캐피탈 강서지점',
         status: '요청',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-06'
     },
     {
-        plateNumber: '901유6789',
-        company: '현대캐피탈 광진지점',
+        vhclNo: '901유6789',
+        coOwnrNm: '현대캐피탈 광진지점',
         status: '대기',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-07'
     },
     {
-        plateNumber: '234이1234',
-        company: '현대캐피탈 마포지점',
+        vhclNo: '234이1234',
+        coOwnrNm: '현대캐피탈 마포지점',
         status: '완료',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-08'
     },
     {
-        plateNumber: '567진3456',
-        company: 'KB캐피탈 강남지점',
+        vhclNo: '567진3456',
+        coOwnrNm: 'KB캐피탈 강남지점',
         status: '요청',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-09'
     },
     {
-        plateNumber: '890김6789',
-        company: 'KB캐피탈 강북지점',
+        vhclNo: '890김6789',
+        coOwnrNm: 'KB캐피탈 강북지점',
         status: '대기',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-10'
     },
     {
-        plateNumber: '123박1234',
-        company: 'KB캐피탈 강서지점',
+        vhclNo: '123박1234',
+        coOwnrNm: 'KB캐피탈 강서지점',
         status: '완료',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-11'
     },
     {
-        plateNumber: '456최3456',
-        company: 'KB캐피탈 서울지점',
+        vhclNo: '456최3456',
+        coOwnrNm: 'KB캐피탈 서울지점',
         status: '요청',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-12'
     },
     {
-        plateNumber: '789이6789',
-        company: 'KB캐피탈 생활금융부 집중화팀',
+        vhclNo: '789이6789',
+        coOwnrNm: 'KB캐피탈 생활금융부 집중화팀',
         status: '대기',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-13'
     },
     {
-        plateNumber: '012김1234',
-        company: '메리츠캐피탈 본점',
+        vhclNo: '012김1234',
+        coOwnrNm: '메리츠캐피탈 본점',
         status: '완료',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-14'
     },
     {
-        plateNumber: '345박3456',
-        company: '메리츠캐피탈 강남신차지점',
+        vhclNo: '345박3456',
+        coOwnrNm: '메리츠캐피탈 강남신차지점',
         status: '요청',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-15'
     },
     {
-        plateNumber: '678최6789',
-        company: '메리츠캐피탈 서울지점',
+        vhclNo: '678최6789',
+        coOwnrNm: '메리츠캐피탈 서울지점',
         status: '대기',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-16'
     },
     {
-        plateNumber: '901이1234',
-        company: '현대캐피탈 강남지점',
+        vhclNo: '901이1234',
+        coOwnrNm: '현대캐피탈 강남지점',
         status: '완료',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-17'
     },
     {
-        plateNumber: '234김3456',
-        company: '현대캐피탈 강북중고지점',
+        vhclNo: '234김3456',
+        coOwnrNm: '현대캐피탈 강북중고지점',
         status: '요청',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-18'
     },
     {
-        plateNumber: '567박6789',
-        company: '현대캐피탈 강서지점',
+        vhclNo: '567박6789',
+        coOwnrNm: '현대캐피탈 강서지점',
         status: '대기',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-19'
     },
     {
-        plateNumber: '890최1234',
-        company: '현대캐피탈 광진지점',
+        vhclNo: '890최1234',
+        coOwnrNm: '현대캐피탈 광진지점',
         status: '완료',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-20'
     },
     {
-        plateNumber: '123이3456',
-        company: '현대캐피탈 마포지점',
+        vhclNo: '123이3456',
+        coOwnrNm: '현대캐피탈 마포지점',
         status: '요청',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-21'
     },
     {
-        plateNumber: '456김6789',
-        company: 'KB캐피탈 강남지점',
+        vhclNo: '456김6789',
+        coOwnrNm: 'KB캐피탈 강남지점',
         status: '대기',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-22'
     },
     {
-        plateNumber: '789박1234',
-        company: 'KB캐피탈 강북지점',
+        vhclNo: '789박1234',
+        coOwnrNm: 'KB캐피탈 강북지점',
         status: '완료',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-23'
     },
     {
-        plateNumber: '012최3456',
-        company: 'KB캐피탈 강서지점',
+        vhclNo: '012최3456',
+        coOwnrNm: 'KB캐피탈 강서지점',
         status: '요청',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-24'
     },
     {
-        plateNumber: '345이6789',
-        company: 'KB캐피탈 서울지점',
+        vhclNo: '345이6789',
+        coOwnrNm: 'KB캐피탈 서울지점',
         status: '대기',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-25'
     },
     {
-        plateNumber: '678김1234',
-        company: 'KB캐피탈 생활금융부 집중화팀',
+        vhclNo: '678김1234',
+        coOwnrNm: 'KB캐피탈 생활금융부 집중화팀',
         status: '완료',
         registeredAt: '2025-08-06',
         expiresAt: '2025-05-26'
