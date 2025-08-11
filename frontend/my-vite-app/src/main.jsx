@@ -3,7 +3,7 @@ import {createRoot} from 'react-dom/client'
 import App from './App.jsx'
 import CarNumberListPage from "./pages/autoplus/CarNumberListPage.jsx";
 import {HashRouter, Route, Routes, useLocation} from "react-router-dom";
-import PlateRegisterPage from "./pages/autoplus/PlateRegisterPage.jsx";
+import CarNumberRegisterPage from "./pages/autoplus/CarNumberRegisterPage.jsx";
 import LoginPage from "./pages/common/LoginPage.jsx";
 import CarRegisterPage from "./pages/customer/CarRegisterPage.jsx";
 import RegisterStatusPage from "./pages/customer/CarRegisterStatuesPage.jsx";
@@ -28,11 +28,11 @@ function MainLayout() {
                 <Routes>
                     <Route path="/" element={<App />} />
                     <Route path="/login" element={<LoginPage />} />
-                    <Route path="/autoplus/plates" element={<CarNumberListPage />} />
-                    <Route path="/autoplus/plate/add" element={<PlateRegisterPage />} />
-                    <Route path="/autoplus/plate/status" element={<CarNumberRegisterStatusPage />} />
-                    <Route path="/customer/plate/register" element={<CarRegisterPage />} />
-                    <Route path="/customer/plate/status" element={<RegisterStatusPage />} />
+                    <Route path="/autoplus/CarNumberRegister" element={<CarNumberRegisterPage />} />
+                    <Route path="/autoplus/CarNumberList" element={<CarNumberListPage />} />
+                    <Route path="/autoplus/CarNumberRegisterStatus" element={<CarNumberRegisterStatusPage />} />
+                    <Route path="/customer/CarRegister" element={<CarRegisterPage />} />
+                    <Route path="/customer/RegisterStatus" element={<RegisterStatusPage />} />
                 </Routes>
             </div>
         </>

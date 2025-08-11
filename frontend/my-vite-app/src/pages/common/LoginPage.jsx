@@ -58,13 +58,13 @@ export default function LoginPage() {
             // 회사별 리다이렉션 경로 설정
             switch (found.company) {
                 case 'CARBANG':
-                    navigate('/customer/plate/status');
+                    navigate('/customer/CarRegister');
                     break;
                 case 'AUTOPLUS':
-                    navigate('/autoplus/plate/add');
+                    navigate('/autoplus/CarNumberRegister');
                     break;
                 default:
-                    navigate('/customer/plate/register');
+                    navigate('/customer/RegisterStatus');
                     break;
             }
         } else {

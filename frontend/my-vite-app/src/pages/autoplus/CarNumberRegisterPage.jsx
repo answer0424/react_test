@@ -1,4 +1,4 @@
-// PlateRegisterPage.jsx
+// CarNumberRegisterPage.jsx
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../assets/css/customer.css';
@@ -52,7 +52,7 @@ const plateExcelColumns = [
     { key: '고객사', name: '고객사' }
 ];
 
-export default function PlateRegisterPage() {
+export default function CarNumberRegisterPage() {
     const [isMultiple, setIsMultiple] = useState(false);
     const [plateNumber, setPlateNumber] = useState('');
     const [bulkFile, setBulkFile] = useState(null);

@@ -5,18 +5,18 @@ import {useUser} from "../contexts/UserProvider.jsx";
 import {useNavigate} from "react-router-dom";
 
 const autoplusMenus = [
-    { path: '/autoplus/plate/add', label: '차량번호 등록' },
-    { path: '/autoplus/plates', label: '차량번호 목록' },
-    { path: '/autoplus/plate/status', label: '차량번호 신규 등록 상태' },
+    { path: '/autoplus/CarNumberRegister', label: '차량번호 등록' },
+    { path: '/autoplus/CarNumberList', label: '차량번호 목록' },
+    { path: '/autoplus/CarNumberRegisterStatus', label: '차량번호 신규 등록 상태' },
 ];
 
 const customerMenus = [
-    { path: '/customer/plate/register', label: '자동차 신규 등록' },
-    { path: '/customer/plate/status', label: '자동차 신규 등록 상태' },
+    { path: '/customer/CarRegister', label: '자동차 신규 등록' },
+    { path: '/customer/RegisterStatus', label: '자동차 신규 등록 상태' },
 ];
 
 const carbangMenus = [
-    { path: '/customer/plate/status', label: '차량 등록 상태' },
+    { path: '/customer/RegisterStatus', label: '차량 등록 상태' },
 ];
 
 export default function Sidebar() {
