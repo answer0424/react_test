@@ -14,7 +14,6 @@ export default function CarRegisterFailureModal({ isOpen, onClose, errors }) {
                 </div>
                 <div className="modal-body">
                     <div className="error-container">
-                        <p className="error-title">다음 오류를 확인해주세요:</p>
                         <ul className="error-list">
                             {Object.values(errors).map((error, index) => (
                                 <li key={index} className="error-item">{error}</li>

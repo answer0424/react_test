@@ -20,7 +20,17 @@ const INITIAL_FORM_STATE = {
     ownerName: '',
     idType: 'business',
     idNumber: '',
+    plateType: '',
 };
+
+// 번호판 종류
+const PLATE_TYPES = [
+    { id: '01', name: '필름' },
+    { id: '02', name: '대형' },
+    { id: '03', name: '중형' },
+    { id: '04', name: '혼합' },
+    { id: '05', name: '장형' },
+];
 
 // 엑셀 파일 생성 header 항목
 const CAR_REGISTER_EXCEL_COLUMNS = [
@@ -31,6 +41,7 @@ const CAR_REGISTER_EXCEL_COLUMNS = [
     { key: '차대번호', name: '차대번호' },
     { key: '차명', name: '차명' },
     { key: '사용본거지', name: '사용본거지' },
+    { key: '번호판종류', name: '번호판종류'}
 ];
 
 // 그리드 생성 시 업무구분 선택항목
@@ -115,6 +126,14 @@ export default function CarRegisterPage() {
             errors.carName = '차명을 입력해주세요.';
         }
 
+        if(!formData.location) {
+            errors.location = '사용본거지를 선택해주세요.';
+        }
+
+        if(!formData.plateType) {
+            errors.plateType = '번호판 종류를 선택해주세요.';
+        }
+
         // 오류가 있으면 폼 제출 중단하고 오류 모달 표시
         if (Object.keys(errors).length > 0) {
             setFormErrors(errors);
@@ -142,7 +161,7 @@ export default function CarRegisterPage() {
                     ownrCrpnNo: formData.idNumber || '0000000000',                  // 법인번호
                     ownrAddress: formData.location || '',                           // 사용본거지
                     bondDcDv: '',                                                   // 채권할인구분
-                    nopltKind: '필름',                                               // 번호판종류
+                    nopltKind: PLATE_TYPES.find(type => type.id === formData.plateType)?.name, // 번호판종류
                     crpnNopltYn: parseInt(formData.price) > 80000000 ? '1' : '',    // 법인번호판(연두)여부
                     rduDav: '',                                                     // 감면구분
                 }
@@ -300,16 +319,19 @@ export default function CarRegisterPage() {
     // 일괄 등록 제출
     const handleBulkSubmit = async (e) => {
         e.preventDefault();
+
+        // 1. 업로드된 데이터 확인
         if (rows.length === 0) {
             setValidationErrors(['업로드된 데이터가 없습니다.']);
             setIsErrorModalOpen(true);
             return;
         }
 
-        // 유효성 검사
+        // 2. 유효성 검사 수행
         const errors = [];
         const validRows = [];
 
+        // 각 행 검사
         for (let i = 0; i < rows.length; i++) {
             const row = rows[i];
             const rowErrors = [];
@@ -323,7 +345,11 @@ export default function CarRegisterPage() {
                 rowErrors.push(`${i+1}번 행: 유효한 차대번호 형식이 아닙니다. (17자리 영숫자)`);
             }
             if (!row['차명']) rowErrors.push(`${i+1}번 행: 차명을 입력해주세요.`);
+            if (!row['사용본거지']) rowErrors.push(`${i+1}번 행: 사용본거지를 선택해주세요.`);
+            if (!row['번호판종류']) rowErrors.push(`${i+1}번 행: 번호판 종류를 선택해주세요.`);
 
+
+            // 오류가 있으면 오류 배열에 추가, 없으면 유효한 행으로 추가
             if (rowErrors.length > 0) {
                 errors.push(...rowErrors);
             } else {
@@ -331,13 +357,17 @@ export default function CarRegisterPage() {
             }
         }
 
+        // 3. 오류가 있으면 오류 모달 표시 후 함수 종료
         if (errors.length > 0) {
             setValidationErrors(errors);
             setIsErrorModalOpen(true);
-            return;
+            return; // 여기서 함수 실행 중단 확인
         }
 
+        // 4. 유효성 검사 통과 시에만 API 호출 시도
         try {
+            console.log('유효한 데이터로 API 호출 시작');
+
             // API 호출용 데이터 준비
             const requestData = {
                 data: validRows.map(row => {
@@ -346,7 +376,19 @@ export default function CarRegisterPage() {
                     // 사용본거지로 회사 정보 찾기
                     const companyInfo = dummyCompanyList.find(company => company.name === row['사용본거지']);
                     // 공급가액 숫자 변환
-                    const priceValue = row['공급가액'].replace(/,/g, '');
+                    let priceValue;
+
+                    if (row['공급가액'] === undefined || row['공급가액'] === null) {
+                        priceValue = ''; // 값이 없는 경우 빈 문자열로 처리
+                        console.warn(`행 ${row.index}: 공급가액이 없습니다`);
+                    } else if (typeof row['공급가액'] === 'number') {
+                        priceValue = String(row['공급가액']); // 숫자인 경우 문자열로 변환
+                    } else if (typeof row['공급가액'] === 'string') {
+                        priceValue = row['공급가액'].replace(/,/g, ''); // 문자열인 경우 콤마 제거
+                    } else {
+                        priceValue = ''; // 예상치 못한 타입인 경우 빈 문자열로 처리
+                        console.warn(`행 ${row.index}: 공급가액 타입 오류 (${typeof row['공급가액']})`);
+                    }
 
                     return {
                         vcexSvcMgntNo: '00000001',
@@ -354,11 +396,11 @@ export default function CarRegisterPage() {
                         vcexCrpnNo: 'Carbang',
                         bizDv: row['업무구분'],
                         vhclNo: row['차량번호'],
-                        splyAmt: row['공급가액'].replace(/,/g, ''),
+                        splyAmt: priceValue,
                         vhidNo: row['차대번호'],
                         vhclNm: row['차명'],
-                        ownrNm: row['_ownerName'] || companyInfo?.ownerName || 'BMW파이낸셜서비스코리아(주)',
-                        ownrCrpnNo: row['_corpNumber'] || companyInfo?.coNo || '0000000000',
+                        ownrNm: row['_ownerName'] || companyInfo?.ownerName,
+                        ownrCrpnNo: row['_corpNumber'] || companyInfo?.coNo,
                         ownrAddress: row['사용본거지'] || '',
                         bondDcDv: '',
                         nopltKind: '필름',
@@ -379,11 +421,17 @@ export default function CarRegisterPage() {
                 body: JSON.stringify(requestData)
             });
 
-            if (!response.ok) {
-                throw new Error(`API 오류: ${response.status}`);
+            const text = await response.text();
+            console.log('서버 원본 응답:', text);
+
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (e) {
+                console.error('JSON 파싱 실패:', e);
+                throw new Error('서버 응답을 처리할 수 없습니다.');
             }
 
-            const result = await response.json();
             console.log('일괄 등록 API 응답 결과:', result);
 
             // 응답 처리
@@ -403,7 +451,7 @@ export default function CarRegisterPage() {
             }
         } catch (error) {
             console.error('일괄 등록 API 오류:', error);
-            setValidationErrors(['서버 연결 오류가 발생했습니다. 잠시 후 다시 시도해주세요.']);
+            setValidationErrors([`서버 연결 오류가 발생했습니다: ${error.message}`]);
             setIsErrorModalOpen(true);
         }
     };
@@ -517,7 +565,6 @@ export default function CarRegisterPage() {
                             name="location"
                             value={formData.location || ''}
                             onChange={handleChange}
-                            required
                             className="cell-select"
                         >
                             <option value="">사용본거지 선택</option>
@@ -527,6 +574,22 @@ export default function CarRegisterPage() {
                                 </option>
                             ))}
                         </select>
+                        <div className="form-group">
+                            <select
+                                id="plateType"
+                                name="plateType"
+                                value={formData.plateType}
+                                onChange={handleChange}
+                                className="form-control"
+                            >
+                                <option value="">번호판 종류 선택</option>
+                                {PLATE_TYPES.map((type) => (
+                                    <option key={type.id} value={type.id}>
+                                        {type.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
                         <button type="submit">등록</button>
                     </form>
@@ -591,65 +654,28 @@ export default function CarRegisterPage() {
                                                     {col.key === 'index' ? (
                                                         row.index
                                                     ) : col.key === '차량번호' ? (
-                                                        <div
-                                                            className="cell-plate"
-                                                            style={{ cursor: 'pointer' }}
-                                                            onClick={() => handlePlateCellClick(rowIdx)}
-                                                        >
-                                                            {row['차량번호'] || (
-                                                                <span style={{ color: '#bbb' }}>선택</span>
-                                                            )}
+                                                        <div className="cell-plate" style={{ cursor: 'pointer' }} onClick={() => handlePlateCellClick(rowIdx)}>
+                                                            {row['차량번호'] || (<span style={{ color: '#bbb' }}>선택</span>)}
                                                         </div>
                                                     ) : col.key === '업무구분' ? (
-                                                        <select
-                                                            value={row['업무구분'] || ''}
-                                                            onChange={(e) =>
-                                                                handleCellChange(rowIdx, '업무구분', e.target.value)
-                                                            }
-                                                            className="cell-select"
-                                                        >
+                                                        <select value={row['업무구분'] || ''} onChange={(e) => handleCellChange(rowIdx, '업무구분', e.target.value)} className="cell-select">
                                                             <option value="">선택</option>
-                                                            {BUSINESS_TYPES.map((type) => (
-                                                                <option key={type.code} value={type.code}>
-                                                                    {type.name}
-                                                                </option>
-                                                            ))}
+                                                            {BUSINESS_TYPES.map((type) => (<option key={type.code} value={type.code}>{type.name}</option>))}
                                                         </select>
                                                     ) : col.key === '사용본거지' ? (
-                                                        <select
-                                                            value={row['사용본거지'] || ''}
-                                                            onChange={(e) => handleLocationChange(rowIdx, e.target.value)}
-                                                            className="cell-select"
-                                                        >
+                                                        <select value={row['사용본거지'] || ''} onChange={(e) => handleLocationChange(rowIdx, e.target.value)} className="cell-select">
                                                             <option value="">선택</option>
-                                                            {dummyCompanyList.map((loc) => (
-                                                                <option key={loc.id} value={loc.name}>
-                                                                    {loc.name}
-                                                                </option>
-                                                            ))}
+                                                            {dummyCompanyList.map((loc) => (<option key={loc.id} value={loc.name}>{loc.name}</option>))}
                                                         </select>
                                                     ) : col.key === '공급가액' ? (
-                                                        <input
-                                                            type="text"
-                                                            value={
-                                                                row['공급가액']
-                                                                    ? Number(row['공급가액']).toLocaleString()
-                                                                    : ''
-                                                            }
-                                                            onChange={(e) =>
-                                                                handleBulkPriceChange(rowIdx, e.target.value)
-                                                            }
-                                                            className="cell-input"
-                                                        />
+                                                        <input type="text" value={row['공급가액'] ? Number(row['공급가액']).toLocaleString() : ''} onChange={(e) => handleBulkPriceChange(rowIdx, e.target.value)} className="cell-input" />
+                                                    ) : col.key === '번호판종류' ? (
+                                                        <select value={row['번호판종류'] || ''} onChange={(e) => handleCellChange(rowIdx, '번호판종류', e.target.value)} className="cell-select">
+                                                            <option value="">번호판 종류</option>
+                                                            {PLATE_TYPES.map((type) => (<option key={type.id} value={type.id}>{type.name}</option>))}
+                                                        </select>
                                                     ) : (
-                                                        <input
-                                                            type="text"
-                                                            value={row[col.key] || ''}
-                                                            onChange={(e) =>
-                                                                handleCellChange(rowIdx, col.key, e.target.value)
-                                                            }
-                                                            className="cell-input"
-                                                        />
+                                                        <input type="text" value={row[col.key] || ''} onChange={(e) => handleCellChange(rowIdx, col.key, e.target.value)} className="cell-input" />
                                                     )}
                                                 </td>
                                             ))}
