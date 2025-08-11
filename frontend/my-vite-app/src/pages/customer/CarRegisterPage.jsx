@@ -55,8 +55,21 @@ const businessTypes = [
 ];
 
 const locations = [
-    '서울', '경기', '인천', '부산', '대구', '광주', '대전', '울산', '세종', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주'
+    '현대캐피탈 강남지점',
+    '현대캐피탈 강북중고지점',
+    '현대캐피탈 강서지점',
+    '현대캐피탈 광진지점',
+    '현대캐피탈 마포지점',
+    'KB캐피탈 강남지점',
+    'KB캐피탈 강북지점',
+    'KB캐피탈 강서지점',
+    'KB캐피탈 서울지점',
+    'KB캐피탈 생활금융부 집중화팀',
+    '메리츠캐피탈 본점',
+    '메리츠캐피탈 강남신차지점',
+    '메리츠캐피탈 서울지점'
 ];
+
 
 export default function CarRegisterPage() {
     const [activeTab, setActiveTab] = useState('single');
@@ -183,6 +196,19 @@ export default function CarRegisterPage() {
         setIsPlateModalOpen(null);
     };
 
+    const handlePriceChange = (e) => {
+        const raw = e.target.value.replace(/[^0-9]/g, '');
+        setFormData(prev => ({
+            ...prev,
+            price: raw
+        }));
+    };
+
+    const handleBulkPriceChange = (rowIdx, value) => {
+        const raw = value.replace(/[^0-9]/g, '');
+        handleCellChange(rowIdx, '공급가액', raw);
+    };
+
     return (
         <div className="wrap">
             <div className="register_box">
@@ -245,11 +271,11 @@ export default function CarRegisterPage() {
                     </select>
 
                     <input
-                        type="number"
+                        type="text"
                         name="price"
                         placeholder="공급가액"
-                        value={formData.price}
-                        onChange={handleChange}
+                        value={formData.price ? Number(formData.price).toLocaleString() : ''}
+                        onChange={handlePriceChange}
                         required
                     />
 
@@ -271,56 +297,23 @@ export default function CarRegisterPage() {
                         required
                     />
 
-                    <input
-                        type="text"
-                        name="ownerName"
-                        placeholder="소유자명"
-                        value={formData.ownerName}
+                    <select
+                        name="location"
+                        value={formData.location || ''}
                         onChange={handleChange}
                         required
-                    />
-
-                    <div className="id-type-selector">
-                        <label>
-                            <input
-                                type="radio"
-                                name="idType"
-                                value="business"
-                                checked={formData.idType === 'business'}
-                                onChange={handleChange}
-                            /> 법인번호
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="idType"
-                                value="personal"
-                                checked={formData.idType === 'personal'}
-                                onChange={handleChange}
-                            /> 주민번호
-                        </label>
-                    </div>
-
-                    <input
-                        type="text"
-                        name="idNumber"
-                        placeholder={formData.idType === 'personal' ? "주민번호 입력" : "법인번호 입력"}
-                        value={formData.idNumber}
-                        onChange={handleChange}
-                        required
-                    />
+                        className="cell-select"
+                    >
+                        <option value="">사용본거지 선택</option>
+                        {locations.map(loc => (
+                            <option key={loc} value={loc}>{loc}</option>
+                        ))}
+                    </select>
                     <button type="submit">등록</button>
                 </form>
                 ) : (
                     <div className="bulk-register">
-                        <div className="file-upload-container">
-                            <input
-                                type="file"
-                                accept=".xlsx,.xls"
-                                onChange={handleFileUpload}
-                                required
-                                ref={fileInputRef}
-                            />
+                        <div className="button-group-right file-upload-group">
                             <button
                                 onClick={handleTemplateDownload}
                                 className="template-download"
@@ -328,17 +321,25 @@ export default function CarRegisterPage() {
                             >
                                 양식 다운로드
                             </button>
+                            <input
+                                type="file"
+                                accept=".xlsx,.xls"
+                                onChange={handleFileUpload}
+                                required
+                                ref={fileInputRef}
+                                style={{ display: bulkFile ? 'none' : 'block' }}
+                            />
                             {bulkFile && (
-                                <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
-                                    <span className="file-info">{bulkFile.name}</span>
-                                    <button
-                                        type="button"
-                                        className="clear-file-btn"
-                                        onClick={handleClearGrid}
-                                    >
-                                        삭제
-                                    </button>
-                                </div>
+                                <span className="file-info">{bulkFile.name}</span>
+                            )}
+                            {bulkFile && (
+                                <button
+                                    type="button"
+                                    className="clear-file-btn"
+                                    onClick={handleClearGrid}
+                                >
+                                    삭제
+                                </button>
                             )}
                         </div>
                         <div className="customer-results-table" style={{marginTop: 20}}>
@@ -394,11 +395,18 @@ export default function CarRegisterPage() {
                                                                 <option key={loc} value={loc}>{loc}</option>
                                                             ))}
                                                         </select>
+                                                    ) : col.key === '공급가액' ? (
+                                                        <input
+                                                            type="text"
+                                                            value={row['공급가액'] ? Number(row['공급가액']).toLocaleString() : ''}
+                                                            onChange={e => handleBulkPriceChange(rowIdx, e.target.value)}
+                                                            className="cell-input"
+                                                        />
                                                     ) : (
                                                         <input
                                                             type="text"
-                                                            value={row[col.name] || ''}
-                                                            onChange={e => handleCellChange(rowIdx, col.name, e.target.value)}
+                                                            value={row[col.key] || ''}
+                                                            onChange={e => handleCellChange(rowIdx, col.key, e.target.value)}
                                                             className="cell-input"
                                                         />
                                                     )}
@@ -410,19 +418,19 @@ export default function CarRegisterPage() {
                                 </tbody>
                             </table>
                         </div>
-                        <div style={{display: 'flex', gap: 10, marginTop: 24}}>
+                        <div className="button-group-right">
                             <button
                                 type="button"
+                                className="bulk-submit-button"
                                 onClick={handleBulkSubmit}
                                 disabled={rows.length === 0}
-                                style={{flex: 1, padding: '12px', background: '#3498db', color: '#fff', border: 'none', borderRadius: 4, fontSize: 15, cursor: 'pointer'}}
                             >
                                 일괄 등록
                             </button>
                             <button
                                 type="button"
+                                className="bulk-clear-button"
                                 onClick={handleClearGrid}
-                                style={{flex: 1, padding: '12px', background: '#e74c3c', color: '#fff', border: 'none', borderRadius: 4, fontSize: 15, cursor: 'pointer'}}
                             >
                                 초기화
                             </button>
@@ -430,9 +438,13 @@ export default function CarRegisterPage() {
                         <PlateSearchModal
                             isOpen={isPlateModalOpen !== null}
                             onClose={() => setIsPlateModalOpen(null)}
-                            plates={dummyPlates}
+                            plates={dummyPlates.filter(
+                                plate => !rows.some(
+                                    (row, idx) => row['차량번호'] === plate.number && idx !== isPlateModalOpen
+                                )
+                            )}
                             onSelect={handlePlateSelect}
-                            selectedPlateNumbers={[]}
+                            selectedPlateNumbers={rows.map(row => row['차량번호']).filter(Boolean)}
                         />
                     </div>
                 )}

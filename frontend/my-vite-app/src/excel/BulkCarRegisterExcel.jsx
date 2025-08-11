@@ -29,13 +29,13 @@ export const validateBulkData = (data) => {
 export const BulkCarRegisterExcel = () => {
     // 헤더 정보 정의
     const headers = [
-        '차량번호', '업무구분', '공급가액', '차대번호', '차명', '사용본거지'
+        '업무구분', '공급가액', '차대번호', '차명'
     ];
 
     // 샘플 데이터 생성
     const sampleData = [
         [
-            '12가3456', '렌트', '1000000', 'VIN123456789', '소나타', 'CARBANG'
+            '렌트', '1000000', 'VIN123456789', '소나타'
         ]
     ];
 
