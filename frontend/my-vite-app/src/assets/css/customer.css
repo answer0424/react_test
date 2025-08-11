@@ -19,6 +19,7 @@
 .co-owner-section { padding: 16px; margin-bottom: 16px; border: 1px solid #dde2e5; border-radius: 4px; }
 #registerForm button { width: 100%; padding: 12px 0; border-radius: 4px; background: #3498db; color: white; border: none; font-size: 14px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
 #registerForm button:hover { background: #2980b9; }
+
 /* 차량 일괄 등록 */
 .register-tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #e0e0e0; }
 .tab-button { padding: 10px 20px; border: none; background: none; cursor: pointer; font-size: 16px; color: #666; }
@@ -81,21 +82,21 @@
 .customer-clickable:hover { background-color: #f5f5f5; cursor: pointer; }
 .customer-no-data { text-align: center; color: #666; padding: 24px; }
 .customer-results-table th:nth-child(1),
-.customer-results-table td:nth-child(1) { width: 5%; }  /* 번호 */
+.customer-results-table td:nth-child(1) { width: 5%; }
 .customer-results-table th:nth-child(2),
-.customer-results-table td:nth-child(2) { width: 10%; }  /* 차량번호 */
+.customer-results-table td:nth-child(2) { width: 10%; }
 .customer-results-table th:nth-child(3),
-.customer-results-table td:nth-child(3) { width: 8%; }  /* 소유자 */
+.customer-results-table td:nth-child(3) { width: 8%; }
 .customer-results-table th:nth-child(4),
-.customer-results-table td:nth-child(4) { width: 12%; }  /* 차명 */
+.customer-results-table td:nth-child(4) { width: 12%; }
 .customer-results-table th:nth-child(5),
-.customer-results-table td:nth-child(5) { width: 8%; }  /* 업무구분 */
+.customer-results-table td:nth-child(5) { width: 8%; }
 .customer-results-table th:nth-child(6),
-.customer-results-table td:nth-child(6) { width: 13%; }  /* 차대번호 */
+.customer-results-table td:nth-child(6) { width: 13%; }
 .customer-results-table th:nth-child(7),
-.customer-results-table td:nth-child(7) { width: 10%; }  /* 가격 */
+.customer-results-table td:nth-child(7) { width: 10%; }
 .customer-results-table th:nth-child(8),
-.customer-results-table td:nth-child(8) { width: 8%; }  /* 상태 */
+.customer-results-table td:nth-child(8) { width: 8%; }
 .customer-results-table th:nth-child(9),
 .customer-results-table td:nth-child(9) { width: 10%; }  /* 신청일자 */
 .customer-results-table table::-webkit-scrollbar { width: 8px; position: absolute; right: 0; }
