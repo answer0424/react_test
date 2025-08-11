@@ -65,11 +65,12 @@
 #plate-status-content { max-width: 1000px; margin: 0 auto; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; height: calc(90vh - 40px); display: flex; flex-direction: column; overflow: hidden; }
 #plate-status-title { color: #2c3e50; font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid #e9ecef; padding-bottom: 15px; }
 #search-filters { margin-bottom: 24px; }
+.customer-search-row { display: flex; gap: 12px; align-items: center; width: 100%; justify-content: flex-end; /* 오른쪽 정렬 */ }
 .search-row { display: flex; gap: 12px; align-items: center; width: 100%; }
 .search-input { width: 200px; padding: 8px 12px; border: 1px solid #dde2e5; border-radius: 4px; font-size: 14px; }
 .date-picker { padding: 8px 12px; border: 1px solid #dde2e5; border-radius: 4px; font-size: 14px; }
 .search-input { flex: 2; }
-.company-select { width: 150px; padding: 8px 12px; border: 1px solid #dde2e5; border-radius: 4px; font-size: 12px; }
+.company-select { max-width: 350px; padding: 8px 12px; border: 1px solid #dde2e5; border-radius: 4px; font-size: 12px; }
 .date-picker-wrapper { position: relative; display: flex; align-items: center; gap: 8px; }
 .date-select-button { padding: 8px 16px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; white-space: nowrap; margin-left: 8px; height: 36px; }
 .date-picker { width: 120px; padding: 8px 12px; border: 1px solid #dde2e5; border-radius: 4px; font-size: 14px; }

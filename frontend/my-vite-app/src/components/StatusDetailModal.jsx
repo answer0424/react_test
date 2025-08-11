@@ -1,5 +1,5 @@
 // StatusDetailModal.jsx
-import { getBusinessTypeName } from '../pages/customer/RegisterStatuesPage.jsx';
+import { getBusinessTypeName } from '../pages/customer/CarRegisterStatuesPage.jsx';
 import '../assets/css/components.css';
 
 export default function StatusDetailModal({status, onClose}) {
