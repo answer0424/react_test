@@ -32,7 +32,6 @@ export default function LoginPage() {
         }
     }, []);
 
-    // LoginPage.jsx
     const handleLogin = () => {
         const found = dummyUsers.find(
             user => user.username === username &&

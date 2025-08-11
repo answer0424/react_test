@@ -23,7 +23,7 @@ function PlateList({plates}) {
     );
 }
 
-export default function PlateListPage() {
+export default function CarNumberListPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
     const {user} = useUser();
