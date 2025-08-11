@@ -6,7 +6,7 @@ import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx";
 import '../../assets/css/autoplus.css';
 
 // 고객사 목록 세팅
-const getCompanyList = (plates) => Array.from(new Set(plates.map(p => p.companyName)));
+const getCompanyList = (vhclNoList) => Array.from(new Set(vhclNoList.map(p => p.companyName)));
 
 /**
  * 조회된 차량번호 목록 화면 렌더링
@@ -14,8 +14,8 @@ const getCompanyList = (plates) => Array.from(new Set(plates.map(p => p.companyN
  * @returns {JSX.Element}
  * @constructor
  */
-function PlateList({ plates }) {
-    if (plates.length === 0) {
+function PlateList({ vhclNoList }) {
+    if (vhclNoList.length === 0) {
         return <div id="plate-empty-message">등록된 차량번호가 없습니다.</div>;
     }
 
@@ -28,10 +28,10 @@ function PlateList({ plates }) {
             </tr>
             </thead>
             <tbody>
-            {plates.map(plate => (
-                <tr key={plate.id} className="plate-item">
-                    <td>{plate.number}</td>
-                    <td>{plate.companyName}</td>
+            {vhclNoList.map(vhclNo => (
+                <tr key={vhclNo.id} className="plate-item">
+                    <td>{vhclNo.number}</td>
+                    <td>{vhclNo.companyName}</td>
                 </tr>
             ))}
             </tbody>
@@ -45,11 +45,11 @@ function PlateList({ plates }) {
  * @returns {JSX.Element}
  * @constructor
  */
-export default function CarNumberListPage() {
+export default function VhclNoListPage() {
     // State
-    const [plates, setPlates] = useState([]);                           // 호출된 차량번호 상태
+    const [vhclNo, setVhclNo] = useState([]);                           // 호출된 차량번호 상태
     const [searchTerm, setSearchTerm] = useState('');                   // 검색된 차량번호 상태
-    const [selectedCompany, setSelectedCompany] = useState('');         // 선택된 고객사 상태
+    const [selectedCo, setSelectedCo] = useState('');         // 선택된 고객사 상태
     const [isLoading, setIsLoading] = useState(true);                 // 로딩 상태
     const [error, setError] = useState(null);                                  // 에러 상태
 
@@ -73,15 +73,15 @@ export default function CarNumberListPage() {
 
     // Handlers
     const handleSearchChange = (event) => setSearchTerm(event.target.value);
-    const handleCompanyChange = (event) => setSelectedCompany(event.target.value);
+    const handleCompanyChange = (event) => setSelectedCo(event.target.value);
     const handleAddPlate = () => navigate('/autoplus/plate/add');
 
     // 조회된 데이터
-    const companyList = getCompanyList(dummyCarNumberData);
-    const filteredPlates = dummyCarNumberData.filter(
-        plate =>
-            plate.number.includes(searchTerm) &&
-            (selectedCompany === '' || plate.companyName === selectedCompany)
+    const coList = getCompanyList(dummyCarNumberData);
+    const filteredVhclNoList = dummyCarNumberData.filter(
+        vhclNo =>
+            vhclNo.number.includes(searchTerm) &&
+            (selectedCo === '' || vhclNo.companyName === selectedCo)
     );
 
     return (
@@ -97,7 +97,7 @@ export default function CarNumberListPage() {
                         id="plate-search-input"
                     />
                     <select
-                        value={selectedCompany}
+                        value={selectedCo}
                         onChange={handleCompanyChange}
                         id="plate-company-select"
                         style={{
@@ -109,9 +109,9 @@ export default function CarNumberListPage() {
                         }}
                     >
                         <option value="">전체 고객사</option>
-                        {companyList.map(company => (
-                            <option key={company} value={company}>
-                                {company}
+                        {coList.map(co => (
+                            <option key={co} value={co}>
+                                {co}
                             </option>
                         ))}
                     </select>
@@ -120,10 +120,10 @@ export default function CarNumberListPage() {
                     </button>
                 </div>
                 <div className="customer-results-count">
-                    총 {filteredPlates.length}건
+                    총 {filteredVhclNoList.length}건
                 </div>
                 <div id="plate-list-table-wrapper">
-                    <PlateList plates={filteredPlates} />
+                    <PlateList vhclNoList={filteredVhclNoList} />
                 </div>
             </div>
         </div>

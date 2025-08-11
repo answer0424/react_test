@@ -6,7 +6,7 @@ import {useNavigate} from "react-router-dom";
 
 const autoplusMenus = [
     { path: '/autoplus/CarNumberRegister', label: '차량번호 등록' },
-    { path: '/autoplus/CarNumberList', label: '차량번호 목록' },
+    { path: '/autoplus/VhclNoList', label: '차량번호 목록' },
     { path: '/autoplus/CarNumberRegisterStatus', label: '차량번호 신규 등록 상태' },
 ];
 

@@ -1,7 +1,7 @@
 import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
 import App from './App.jsx'
-import CarNumberListPage from "./pages/autoplus/CarNumberListPage.jsx";
+import VhclNoListPage from "./pages/autoplus/VhclNoListPage.jsx";
 import {HashRouter, Route, Routes, useLocation} from "react-router-dom";
 import CarNumberRegisterPage from "./pages/autoplus/CarNumberRegisterPage.jsx";
 import LoginPage from "./pages/common/LoginPage.jsx";
@@ -29,7 +29,7 @@ function MainLayout() {
                     <Route path="/" element={<App />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/autoplus/CarNumberRegister" element={<CarNumberRegisterPage />} />
-                    <Route path="/autoplus/CarNumberList" element={<CarNumberListPage />} />
+                    <Route path="/autoplus/VhclNoList" element={<VhclNoListPage />} />
                     <Route path="/autoplus/CarNumberRegisterStatus" element={<CarNumberRegisterStatusPage />} />
                     <Route path="/customer/CarRegister" element={<CarRegisterPage />} />
                     <Route path="/customer/RegisterStatus" element={<RegisterStatusPage />} />
