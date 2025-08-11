@@ -1,26 +1,29 @@
 // CarNumberRegisterStatusPage.jsx
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../contexts/UserProvider.jsx';
+import { dummyCompanyList, dummyPlateData } from '../../services/CarRegisterDummyData.jsx';
+import LoginRequiredModal from '../../components/UserInfoRequiredModal.jsx';
 import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
 import ko from 'date-fns/locale/ko';
-import { demoPlateData } from "../../services/CarRegisterDummyData.jsx";
-import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx";
-import { useNavigate } from "react-router-dom";
-import { useUser } from "../../contexts/UserProvider.jsx";
+import 'react-datepicker/dist/react-datepicker.css';
 
+// 상태 탭 상수
 const STATUS_TABS = [
     { id: 'all', label: '전체' },
     { id: 'requested', label: '요청' },
     { id: 'pending', label: '대기' },
-    { id: 'completed', label: '완료' }
+    { id: 'completed', label: '완료' },
 ];
 
+// 빠른 날짜 선택 컴포넌트
 const QuickDateSelector = ({ onSelect }) => {
     const getDate = (days) => {
         const date = new Date();
         date.setDate(date.getDate() - days);
         return date;
     };
+
     return (
         <div className="quick-date-selector">
             <button onClick={() => onSelect(new Date(), new Date())}>당일</button>
@@ -32,64 +35,82 @@ const QuickDateSelector = ({ onSelect }) => {
     );
 };
 
+/**
+ * 차량번호 기준 등록 상태 확인 페이지 컴포넌트
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export default function CarNumberRegisterStatusPage() {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCompany, setSelectedCompany] = useState('');
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-    const [activeTab, setActiveTab] = useState('all');
-    const [searchResults, setSearchResults] = useState(demoPlateData);
-    const [showQuickSelect, setShowQuickSelect] = useState(false);
+    // --- 상태 선언 ---
+    const [searchTerm, setSearchTerm] = useState('');                   // 검색된 데이터 상태
+    const [selectedCompany, setSelectedCompany] = useState('');         // 선택된 고객사 상태
+    const [startDate, setStartDate] = useState(new Date());                       // 조회 시작 날짜 상태
+    const [endDate, setEndDate] = useState(new Date());                           // 조회 끝 날짜 상태
+    const [activeTab, setActiveTab] = useState('all');                  // 활성된 탭 상태
+    const [searchResults, setSearchResults] = useState(dummyPlateData);                  // 검색 결과 상태
+    const [showQuickSelect, setShowQuickSelect] = useState(false);    // 날짜 선택 버튼 표시 여부 상태
+
+    // --- hooks ---
     const { user } = useUser();
     const navigate = useNavigate();
     const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
 
+    // --- 유저 인증 확인 ---
     useEffect(() => {
-        if (!user) setUserInfoRequiredModalOpen(true);
+        if (!user) {
+            setUserInfoRequiredModalOpen(true);
+        }
     }, [user, navigate]);
 
     if (!user || !user.username) {
-        return <LoginRequiredModal open={userInfoRequiredModalOpen}/>;
+        return <LoginRequiredModal open={userInfoRequiredModalOpen} />;
     }
 
-    const companies = [
-        { id: 1, name: '현대자동차' },
-        { id: 2, name: '기아자동차' },
-        { id: 3, name: '르노코리아' }
-    ];
+    // --- 이벤트 핸들러 ---
 
+    // 검색 버튼 클릭 시
     const handleSearch = (e) => {
         e.preventDefault();
-        setSearchResults(demoPlateData);
+        // TODO 차량 진행 상태 목록 조회 API 호출
+        setSearchResults(dummyPlateData);
     };
 
-    const filteredResults = searchResults.filter(result => {
-        const statusMatch = activeTab === 'all' ||
-            (activeTab === 'requested' && result.status === '요청') ||
-            (activeTab === 'pending' && result.status === '대기') ||
-            (activeTab === 'completed' && result.status === '완료');
-        const companyMatch = !selectedCompany ||
-            result.company === companies.find(c => c.id === parseInt(selectedCompany))?.name;
-        const plateMatch = !searchTerm ||
-            result.plateNumber.toLowerCase().includes(searchTerm.toLowerCase());
-        const registeredDate = new Date(result.registeredAt);
-        const dateMatch = registeredDate >= startDate.setHours(0, 0, 0, 0) &&
-            registeredDate <= endDate.setHours(23, 59, 59, 999);
-        return statusMatch && companyMatch && plateMatch && dateMatch;
-    });
-
+    // 빠른 날짜 선택 핸들러
     const handleQuickSelect = (start, end) => {
         setStartDate(start);
         setEndDate(end);
         setShowQuickSelect(false);
     };
 
+    // --- 필터링 된 검색 결과 계산 ---
+    const filteredResults = searchResults.filter((result) => {
+        const statusMatch =
+            activeTab === 'all' ||
+            (activeTab === 'requested' && result.status === '요청') ||
+            (activeTab === 'pending' && result.status === '대기') ||
+            (activeTab === 'completed' && result.status === '완료');
+
+        const companyMatch =
+            !selectedCompany || result.company === selectedCompany;
+
+        const plateMatch =
+            !searchTerm || result.plateNumber.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const registeredDate = new Date(result.registeredAt);
+        const dateMatch =
+            registeredDate >= new Date(startDate.setHours(0, 0, 0, 0)) &&
+            registeredDate <= new Date(endDate.setHours(23, 59, 59, 999));
+
+        return statusMatch && companyMatch && plateMatch && dateMatch;
+    });
+
+    // --- JSX ---
     return (
         <div className="customer-container">
             <div className="customer-content">
                 <h1 className="customer-title">차량번호 신규 등록 상태</h1>
 
-                <div className="customer-search-filters">
+                <form className="customer-search-filters" onSubmit={handleSearch}>
                     <div className="customer-search-row">
                         <input
                             type="text"
@@ -104,16 +125,17 @@ export default function CarNumberRegisterStatusPage() {
                             className="company-select"
                         >
                             <option value="">고객사 선택</option>
-                            {companies.map(company => (
-                                <option key={company.id} value={company.id}>
+                            {dummyCompanyList.map((company) => (
+                                <option key={company.id} value={company.name}>
                                     {company.name}
                                 </option>
                             ))}
                         </select>
+
                         <div className="customer-date-picker-wrapper">
                             <DatePicker
                                 selected={startDate}
-                                onChange={date => setStartDate(date)}
+                                onChange={(date) => setStartDate(date)}
                                 selectsStart
                                 startDate={startDate}
                                 endDate={endDate}
@@ -124,7 +146,7 @@ export default function CarNumberRegisterStatusPage() {
                             <span className="customer-date-separator">~</span>
                             <DatePicker
                                 selected={endDate}
-                                onChange={date => setEndDate(date)}
+                                onChange={(date) => setEndDate(date)}
                                 selectsEnd
                                 startDate={startDate}
                                 endDate={endDate}
@@ -134,35 +156,36 @@ export default function CarNumberRegisterStatusPage() {
                                 className="customer-date-picker"
                             />
                             <button
+                                type="button"
                                 className="customer-date-select-button"
-                                onClick={() => setShowQuickSelect(!showQuickSelect)}
+                                onClick={() => setShowQuickSelect((prev) => !prev)}
                             >
                                 날짜선택
                             </button>
-                            {showQuickSelect && (
-                                <QuickDateSelector
-                                    onSelect={handleQuickSelect}
-                                />
-                            )}
+                            {showQuickSelect && <QuickDateSelector onSelect={handleQuickSelect} />}
                         </div>
-                        <button onClick={handleSearch} className="customer-search-button">검색</button>
+
+                        <button type="submit" className="customer-search-button">
+                            검색
+                        </button>
                     </div>
-                </div>
+                </form>
 
                 <div className="customer-status-tabs">
-                    {STATUS_TABS.map(tab => (
+                    {STATUS_TABS.map((tab) => (
                         <button
                             key={tab.id}
                             className={`customer-tab-button ${activeTab === tab.id ? 'active' : ''}`}
                             onClick={() => setActiveTab(tab.id)}
+                            type="button"
                         >
                             {tab.label}
                         </button>
                     ))}
                 </div>
-                <div className="customer-results-count">
-                    총 {filteredResults.length}건
-                </div>
+
+                <div className="customer-results-count">총 {filteredResults.length}건</div>
+
                 <div className="customer-results-table">
                     <table>
                         <thead>
@@ -174,10 +197,13 @@ export default function CarNumberRegisterStatusPage() {
                             <th>등록일시</th>
                         </tr>
                         </thead>
+
                         <tbody>
                         {filteredResults.length === 0 ? (
                             <tr>
-                                <td colSpan="5" className="customer-no-data">검색 결과가 없습니다.</td>
+                                <td colSpan={5} className="customer-no-data">
+                                    검색 결과가 없습니다.
+                                </td>
                             </tr>
                         ) : (
                             filteredResults.map((result, index) => (

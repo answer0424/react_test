@@ -1,11 +1,18 @@
-// CarNumberRegisterPage.jsx
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useState, useEffect, useRef} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {useUser} from '../../contexts/UserProvider.jsx';
+import {dummyCompanyList} from "../../services/CarRegisterDummyData.jsx";
+import LoginRequiredModal from '../../components/UserInfoRequiredModal.jsx';
+import RegisterSuccessModal from '../../components/RegisterSuccessModal.jsx';
+import ExcelValidationErrorModal from '../../components/ExcelValidationErrorModal.jsx';
 import '../../assets/css/customer.css';
-import { useUser } from "../../contexts/UserProvider.jsx";
-import LoginRequiredModal from "../../components/UserInfoRequiredModal.jsx";
-import RegisterSuccessModal from "../../components/RegisterSuccessModal.jsx";
-import ExcelValidationErrorModal from "../../components/ExcelValidationErrorModal.jsx";
+
+// 엑셀 테이블 컬럼 정의
+const PLATE_EXCEL_COLUMNS = [
+    {key: 'index', name: '번호'},
+    {key: '차량번호', name: '차량번호'},
+    {key: '고객사', name: '고객사'},
+];
 
 // 엑셀 템플릿 생성 함수
 const createExcelTemplate = async () => {
@@ -17,6 +24,7 @@ const createExcelTemplate = async () => {
     XLSX.writeFile(wb, '차량번호_등록_양식.xlsx');
 };
 
+// 대량 데이터 유효성 검사 함수
 const validateBulkData = (data) => {
     const errors = [];
     data.forEach((row, index) => {
@@ -30,51 +38,47 @@ const validateBulkData = (data) => {
     return errors;
 };
 
-const CUSTOMER_OPTIONS = [
-    '현대캐피탈 강남지점',
-    '현대캐피탈 강북중고지점',
-    '현대캐피탈 강서지점',
-    '현대캐피탈 광진지점',
-    '현대캐피탈 마포지점',
-    'KB캐피탈 강남지점',
-    'KB캐피탈 강북지점',
-    'KB캐피탈 강서지점',
-    'KB캐피탈 서울지점',
-    'KB캐피탈 생활금융부 집중화팀',
-    '메리츠캐피탈 본점',
-    '메리츠캐피탈 강남신차지점',
-    '메리츠캐피탈 서울지점'
-];
-
-const plateExcelColumns = [
-    { key: 'index', name: '번호' },
-    { key: '차량번호', name: '차량번호' },
-    { key: '고객사', name: '고객사' }
-];
-
+/**
+ * 차량번호 개별, 일괄 등록 페이지 컴포넌트
+ * - 개별 등록: 차량번호와 고객사 선택 후 등록
+ * - 일괄 등록: 엑셀 파일 업로드 후 차량번호와 고객사 일괄 등록
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export default function CarNumberRegisterPage() {
-    const [isMultiple, setIsMultiple] = useState(false);
-    const [plateNumber, setPlateNumber] = useState('');
-    const [bulkFile, setBulkFile] = useState(null);
-    const [rows, setRows] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [registeredCount, setRegisteredCount] = useState(0);
-    const [validationErrors, setValidationErrors] = useState([]);
-    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
-    const navigate = useNavigate();
-    const { user } = useUser();
-    const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
-    const [selectedCustomer, setSelectedCustomer] = useState('');
+    // --- 상태 선언 (State) ---
+    const [isMultiple, setIsMultiple] = useState(false);                       // 등록 모드: 개별 or 일괄
+    const [plateNumber, setPlateNumber] = useState('');                         // 차량번호 입력
+    const [selectedCustomer, setSelectedCustomer] = useState('');               // 고객사 선택
+    const [bulkFile, setBulkFile] = useState(null);                                    // 엑셀 파일 업로드
+    const [rows, setRows] = useState([]);                                       // 조회된 데이터 세팅
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);      // 등록 성공 시 모달
+    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);          // 등록 실패 시 모달
+    const [registeredCount, setRegisteredCount] = useState(0);                // 등록된 차량번호 수
+    const [validationErrors, setValidationErrors] = useState([]);               // 유효성 검사 시 발견된 에러
+
+    // ref
     const fileInputRef = useRef(null);
 
+    // Hooks
+    const navigate = useNavigate();
+    const {user} = useUser();
+    const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
+
+    // useEffect
     useEffect(() => {
-        if (!user) setUserInfoRequiredModalOpen(true);
+        if (!user) {
+            setUserInfoRequiredModalOpen(true);
+        }
     }, [user, navigate]);
 
     if (!user || !user.username) {
         return <LoginRequiredModal open={userInfoRequiredModalOpen}/>;
     }
 
+    // --- 이벤트 핸들러 ---
+
+    // 엑셀 파일 업로드 핸들러
     const handleFileUpload = async (e) => {
         const file = e.target.files[0];
         setBulkFile(file);
@@ -84,47 +88,65 @@ export default function CarNumberRegisterPage() {
 
         reader.onload = (evt) => {
             const bstr = evt.target.result;
-            const wb = XLSX.read(bstr, { type: 'binary' });
+            const wb = XLSX.read(bstr, {type: 'binary'});
             const wsname = wb.SheetNames[0];
             const ws = wb.Sheets[wsname];
-            const data = XLSX.utils.sheet_to_json(ws, { header: 0 });
+            const data = XLSX.utils.sheet_to_json(ws, {header: 0});
 
             const rowsWithIndex = data.map((row, idx) => ({
                 index: idx + 1,
-                ...row
+                ...row,
             }));
             setRows(rowsWithIndex);
         };
         reader.readAsArrayBuffer(file);
     };
 
+    // 단일 등록 제출 핸들러
+    const handleSingleSubmit = (e) => {
+        e.preventDefault();
+        // TODO 차량 등록 API 호출
+        if (!plateNumber || !selectedCustomer) return;
+
+        setRegisteredCount(1);
+        setIsSuccessModalOpen(true);
+        setPlateNumber('');
+        setSelectedCustomer('');
+    };
+
+    // 개별 셀 변경 핸들러 (테이블 내)
     const handleCellChange = (rowIdx, key, value) => {
-        setRows(prev =>
-            prev.map((row, idx) =>
-                idx === rowIdx ? { ...row, [key]: value } : row
-            )
+        setRows((prev) =>
+            prev.map((row, idx) => (idx === rowIdx ? {...row, [key]: value} : row))
         );
     };
 
+    // 일괄 등록 제출 핸들러
     const handleBulkSubmit = (e) => {
         e.preventDefault();
-        if (!rows.length) {
+
+        // TODO 차량 등록 API 호출
+
+        if (rows.length === 0) {
             setValidationErrors(['업로드된 데이터가 없습니다.']);
             setIsErrorModalOpen(true);
             return;
         }
+
         const errors = validateBulkData(rows);
         if (errors.length > 0) {
             setValidationErrors(errors);
             setIsErrorModalOpen(true);
             return;
         }
+
         setRegisteredCount(rows.length);
         setRows([]);
         setBulkFile(null);
-        setIsModalOpen(true);
+        setIsSuccessModalOpen(true);
     };
 
+    // 일괄 등록 그리드 초기화
     const handleClearGrid = () => {
         setRows([]);
         setBulkFile(null);
@@ -133,15 +155,8 @@ export default function CarNumberRegisterPage() {
         }
     };
 
-    const handleSingleRegister = (e) => {
-        e.preventDefault();
-        if (!plateNumber || !selectedCustomer) return;
-        setRegisteredCount(1);
-        setIsModalOpen(true);
-        setPlateNumber('');
-        setSelectedCustomer('');
-    };
 
+    // --- JSX 렌더링 ---
     return (
         <div className="wrap">
             <div className="register_box">
@@ -162,7 +177,12 @@ export default function CarNumberRegisterPage() {
                 </div>
 
                 {!isMultiple ? (
-                    <form id="registerForm" onSubmit={handleSingleRegister} className="single-register-form">
+                    // 개별 등록 폼
+                    <form
+                        id="registerForm"
+                        onSubmit={handleSingleSubmit}
+                        className="single-register-form"
+                    >
                         <div className="input-group-vertical">
                             <div className="input-field">
                                 <label htmlFor="plateNumber">차량번호</label>
@@ -171,7 +191,7 @@ export default function CarNumberRegisterPage() {
                                     type="text"
                                     placeholder="차량번호 입력"
                                     value={plateNumber}
-                                    onChange={e => setPlateNumber(e.target.value)}
+                                    onChange={(e) => setPlateNumber(e.target.value)}
                                     required
                                 />
                             </div>
@@ -180,21 +200,24 @@ export default function CarNumberRegisterPage() {
                                 <select
                                     id="customer"
                                     value={selectedCustomer}
-                                    onChange={e => setSelectedCustomer(e.target.value)}
+                                    onChange={(e) => setSelectedCustomer(e.target.value)}
                                     required
                                 >
                                     <option value="">선택하세요</option>
-                                    {CUSTOMER_OPTIONS.map(customer => (
-                                        <option key={customer} value={customer}>
-                                            {customer}
+                                    {dummyCompanyList.map((customer) => (
+                                        <option key={customer.id} value={customer.name}>
+                                            {customer.name}
                                         </option>
                                     ))}
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" className="register-button">등록</button>
+                        <button type="submit" className="register-button">
+                            등록
+                        </button>
                     </form>
                 ) : (
+                    // 일괄 등록 폼
                     <div className="bulk-register">
                         <div className="button-group-right file-upload-group">
                             <button
@@ -204,17 +227,18 @@ export default function CarNumberRegisterPage() {
                             >
                                 양식 다운로드
                             </button>
+
                             <input
                                 type="file"
                                 accept=".xlsx,.xls"
                                 onChange={handleFileUpload}
                                 required
                                 ref={fileInputRef}
-                                style={{ display: bulkFile ? 'none' : 'block' }}
+                                style={{display: bulkFile ? 'none' : 'block'}}
                             />
-                            {bulkFile && (
-                                <span className="file-info">{bulkFile.name}</span>
-                            )}
+
+                            {bulkFile && <span className="file-info">{bulkFile.name}</span>}
+
                             {bulkFile && (
                                 <button
                                     type="button"
@@ -225,45 +249,56 @@ export default function CarNumberRegisterPage() {
                                 </button>
                             )}
                         </div>
+
                         <div className="customer-results-table" style={{marginTop: 20}}>
                             <table>
                                 <thead>
                                 <tr>
-                                    {plateExcelColumns.map(col => (
+                                    {PLATE_EXCEL_COLUMNS.map((col) => (
                                         <th key={col.key}>{col.name}</th>
                                     ))}
                                 </tr>
                                 </thead>
+
                                 <tbody>
                                 {rows.length === 0 ? (
                                     <tr>
-                                        <td colSpan={plateExcelColumns.length} className="customer-no-data">
+                                        <td
+                                            colSpan={PLATE_EXCEL_COLUMNS.length}
+                                            className="customer-no-data"
+                                        >
                                             업로드된 데이터가 없습니다.
                                         </td>
                                     </tr>
                                 ) : (
                                     rows.map((row, rowIdx) => (
                                         <tr key={row.index}>
-                                            {plateExcelColumns.map(col => (
+                                            {PLATE_EXCEL_COLUMNS.map((col) => (
                                                 <td key={col.key}>
                                                     {col.key === 'index' ? (
                                                         row.index
                                                     ) : col.key === '고객사' ? (
                                                         <select
                                                             value={row['고객사'] || ''}
-                                                            onChange={e => handleCellChange(rowIdx, '고객사', e.target.value)}
+                                                            onChange={(e) =>
+                                                                handleCellChange(rowIdx, '고객사', e.target.value)
+                                                            }
                                                             className="cell-select"
                                                         >
                                                             <option value="">선택</option>
-                                                            {CUSTOMER_OPTIONS.map(opt => (
-                                                                <option key={opt} value={opt}>{opt}</option>
+                                                            {dummyCompanyList.map((opt) => (
+                                                                <option key={opt.id} value={opt.name}>
+                                                                    {opt.name}
+                                                                </option>
                                                             ))}
                                                         </select>
                                                     ) : (
                                                         <input
                                                             type="text"
                                                             value={row[col.key] || ''}
-                                                            onChange={e => handleCellChange(rowIdx, col.key, e.target.value)}
+                                                            onChange={(e) =>
+                                                                handleCellChange(rowIdx, col.key, e.target.value)
+                                                            }
                                                             className="cell-input"
                                                         />
                                                     )}
@@ -275,6 +310,7 @@ export default function CarNumberRegisterPage() {
                                 </tbody>
                             </table>
                         </div>
+
                         <div className="button-group-right">
                             <button
                                 type="button"
@@ -295,20 +331,26 @@ export default function CarNumberRegisterPage() {
                     </div>
                 )}
             </div>
+
             <ExcelValidationErrorModal
                 isOpen={isErrorModalOpen}
                 onClose={() => setIsErrorModalOpen(false)}
                 errors={validationErrors}
             />
+
             <RegisterSuccessModal
-                isOpen={isModalOpen}
+                isOpen={isSuccessModalOpen}
                 onClose={() => {
-                    setIsModalOpen(false);
+                    setIsSuccessModalOpen(false);
                     setRegisteredCount(0);
                 }}
             >
                 <h2>요청 완료</h2>
-                <p>{!isMultiple ? '차량번호가' : `${registeredCount}개의 차량번호가`} 성공적으로 등록되었습니다.</p>
+                <p>
+                    {!isMultiple
+                        ? '차량번호가'
+                        : `${registeredCount}개의 차량번호가`} 성공적으로 등록되었습니다.
+                </p>
             </RegisterSuccessModal>
         </div>
     );
