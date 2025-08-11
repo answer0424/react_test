@@ -61,6 +61,8 @@ export default function RegisterStatusPage() {
     const {user} = useUser();
     const [userInfoRequiredModalOpen, setUserInfoRequiredModalOpen] = useState(false);
     const navigate = useNavigate();
+    const [dateRange, setDateRange] = useState([new Date(), new Date()]);
+    const [startDate, endDate] = dateRange;
 
     useEffect(() => {
         if (!user) {
@@ -169,7 +171,9 @@ export default function RegisterStatusPage() {
                         </button>
                     ))}
                 </div>
-
+                <div className="customer-results-count">
+                    총 {filteredStatus.length}건
+                </div>
                 <div className="customer-results-table">
                     <table>
                         <thead>

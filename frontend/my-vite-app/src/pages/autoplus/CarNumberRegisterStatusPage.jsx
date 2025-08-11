@@ -160,7 +160,9 @@ export default function CarNumberRegisterStatusPage() {
                         </button>
                     ))}
                 </div>
-
+                <div className="customer-results-count">
+                    총 {filteredResults.length}건
+                </div>
                 <div className="customer-results-table">
                     <table>
                         <thead>

@@ -60,7 +60,7 @@
 .edit-excel-btn:hover:not(:disabled) { background-color: #45a049; }
 .file-input-group { display: flex; align-items: center; margin-bottom: 10px; }
 
-/* 번호판 기준 신차 등록 상태 */
+/* 차량번호 기준 신차 등록 상태 */
 #plate-status-container { background: #f5f6f8; height: 100vh; padding: 20px; box-sizing: border-box; }
 #plate-status-content { max-width: 1000px; margin: 0 auto; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; height: calc(90vh - 40px); display: flex; flex-direction: column; overflow: hidden; }
 #plate-status-title { color: #2c3e50; font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid #e9ecef; padding-bottom: 15px; }
@@ -101,6 +101,10 @@
 #results-table tbody::-webkit-scrollbar-thumb { background: #3498db; border-radius: 4px; }
 #results-table tbody::-webkit-scrollbar-thumb:hover { background: #2980b9; }
 #results-table tbody { scrollbar-width: thin; scrollbar-color: #3498db #f1f1f1; }
+.customer-search-row { display: flex; align-items: center; width: 100%; }
+.customer-results-count { font-size: 1rem; color: #333; font-weight: 500; font-size: 13px; }
+.customer-results-table { margin-top: 8px; }
+.customer-no-data { text-align: center; color: #999; padding: 32px 0; }
 
 /* 테이블 컬럼 너비 조정 */
 #results-table th:nth-child(1),
