@@ -17,7 +17,7 @@ const BUSINESS_TYPES = {
 };
 
 // 업무구분 코드 → 이름 변환 함수
-const getBusinessTypeName = (code) => BUSINESS_TYPES[code] || '';
+export const getBusinessTypeName = (code) => BUSINESS_TYPES[code] || '';
 
 // 등록 상태 탭 메뉴
 const STATUS_TABS = [

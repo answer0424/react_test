@@ -172,7 +172,7 @@ export default function CarRegisterPage() {
             return;
         }
 
-        // TODO: 유효성 검사 및 API 호출
+        // TODO: 일괄 등록 API 호출
 
         setRegisteredCount(rows.length);
         setRows([]);
