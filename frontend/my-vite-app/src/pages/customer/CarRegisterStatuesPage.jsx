@@ -53,8 +53,8 @@ const QuickDateSelector = ({ onSelect, onClose }) => {
  */
 export default function RegisterStatusPage() {
     const [searchParams, setSearchParams] = useState({                  // 검색 항목 설정 상태
-        ownerName: '',
-        plateNumber: '',
+        ownrNm: '',
+        vhclNo: '',
         startDate: new Date(),
         endDate: new Date(),
         statusTab: 'all',
@@ -97,8 +97,8 @@ export default function RegisterStatusPage() {
 
     // 검색 필터 조건에 따른 상태 필터링
     const filteredStatus = dummyStatusData.filter((status) => {
-        const matchesOwnerName = status.ownerName.includes(searchParams.ownerName);
-        const matchesPlateNumber = status.plateNumber.includes(searchParams.plateNumber);
+        const matchesOwnerName = status.ownrNm.includes(searchParams.ownrNm);
+        const matchesPlateNumber = status.vhclNo.includes(searchParams.vhclNo);
         const matchesStatusTab =
             searchParams.statusTab === 'all' || status.status.includes(searchParams.statusTab);
 
@@ -123,18 +123,18 @@ export default function RegisterStatusPage() {
                         <input
                             type="text"
                             placeholder="소유자명"
-                            value={searchParams.ownerName}
+                            value={searchParams.ownrNm}
                             onChange={(e) =>
-                                setSearchParams((prev) => ({ ...prev, ownerName: e.target.value }))
+                                setSearchParams((prev) => ({ ...prev, ownrNm: e.target.value }))
                             }
                             className="customer-search-input"
                         />
                         <input
                             type="text"
                             placeholder="차량번호"
-                            value={searchParams.plateNumber}
+                            value={searchParams.vhclNo}
                             onChange={(e) =>
-                                setSearchParams((prev) => ({ ...prev, plateNumber: e.target.value }))
+                                setSearchParams((prev) => ({ ...prev, vhclNo: e.target.value }))
                             }
                             className="customer-search-input"
                         />
@@ -241,12 +241,12 @@ export default function RegisterStatusPage() {
                                     className="customer-clickable"
                                 >
                                     <td>{idx + 1}</td>
-                                    <td>{status.plateNumber}</td>
-                                    <td>{status.ownerName}</td>
-                                    <td>{status.carName}</td>
-                                    <td>{getBusinessTypeName(status.businessType)}</td>
-                                    <td>{status.vinNumber}</td>
-                                    <td>{Number(status.price).toLocaleString()}</td>
+                                    <td>{status.vhclNo}</td>
+                                    <td>{status.ownrNm}</td>
+                                    <td>{status.vhclNm}</td>
+                                    <td>{getBusinessTypeName(status.bizDv)}</td>
+                                    <td>{status.vhidNo}</td>
+                                    <td>{Number(status.splyAmt).toLocaleString()}</td>
                                     <td>{status.status}</td>
                                     <td>{status.requestDate}</td>
                                 </tr>

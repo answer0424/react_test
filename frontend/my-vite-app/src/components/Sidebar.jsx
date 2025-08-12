@@ -5,13 +5,13 @@ import {useUser} from "../contexts/UserProvider.jsx";
 import {useNavigate} from "react-router-dom";
 
 const autoplusMenus = [
-    { path: '/autoplus/CarNumberRegister', label: '차량번호 등록' },
+    { path: '/autoplus/VhclNoRegister', label: '차량번호 등록' },
     { path: '/autoplus/VhclNoList', label: '차량번호 목록' },
-    { path: '/autoplus/CarNumberRegisterStatus', label: '차량번호 신규 등록 상태' },
+    { path: '/autoplus/VhclNoRegisterStatus', label: '차량번호 신규 등록 상태' },
 ];
 
 const customerMenus = [
-    { path: '/customer/CarRegister', label: '자동차 신규 등록' },
+    { path: '/customer/VhclRegister', label: '자동차 신규 등록' },
     { path: '/customer/RegisterStatus', label: '자동차 신규 등록 상태' },
 ];
 

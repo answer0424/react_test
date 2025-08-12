@@ -5,7 +5,7 @@ import VhclNoListPage from "./pages/autoplus/VhclNoListPage.jsx";
 import {HashRouter, Route, Routes, useLocation} from "react-router-dom";
 import VhclNoRegisterPage from "./pages/autoplus/VhclNoRegisterPage.jsx";
 import LoginPage from "./pages/common/LoginPage.jsx";
-import CarRegisterPage from "./pages/customer/CarRegisterPage.jsx";
+import VhclRegisterPage from "./pages/customer/VhclRegisterPage.jsx";
 import RegisterStatusPage from "./pages/customer/CarRegisterStatuesPage.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import {UserProvider} from "./contexts/UserProvider.jsx";
@@ -28,10 +28,10 @@ function MainLayout() {
                 <Routes>
                     <Route path="/" element={<App />} />
                     <Route path="/login" element={<LoginPage />} />
-                    <Route path="/autoplus/CarNumberRegister" element={<VhclNoRegisterPage />} />
+                    <Route path="/autoplus/VhclNoRegister" element={<VhclNoRegisterPage />} />
                     <Route path="/autoplus/VhclNoList" element={<VhclNoListPage />} />
-                    <Route path="/autoplus/CarNumberRegisterStatus" element={<VhclNoRegisterStatusPage />} />
-                    <Route path="/customer/CarRegister" element={<CarRegisterPage />} />
+                    <Route path="/autoplus/VhclNoRegisterStatus" element={<VhclNoRegisterStatusPage />} />
+                    <Route path="/customer/VhclRegister" element={<VhclRegisterPage />} />
                     <Route path="/customer/RegisterStatus" element={<RegisterStatusPage />} />
                 </Routes>
             </div>

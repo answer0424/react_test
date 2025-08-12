@@ -12,19 +12,20 @@ import CarRegisterFailureModal from '../../components/CarRegisterFailureModal.js
 import '../../assets/css/customer.css';
 
 const INITIAL_FORM_STATE = {
-    plateId: '',
-    businessType: '',
-    price: '',
-    vinNumber: '',
-    carName: '',
-    ownerName: '',
-    idType: 'business',
+    vhclNo: '',
+    bizDv: '',
+    splyAmt: '',
+    vhidNo: '',
+    vhclNm: '',
+    coOwnrNm: '',
+    ownrCrpnNo: 'business',
     idNumber: '',
-    plateType: '',
+    nopltKind: '',
+    ownrAddress: '',
 };
 
 // 번호판 종류
-const PLATE_TYPES = [
+const NO_PLT_KIND = [
     { id: '01', name: '필름' },
     { id: '02', name: '대형' },
     { id: '03', name: '중형' },
@@ -33,15 +34,15 @@ const PLATE_TYPES = [
 ];
 
 // 엑셀 파일 생성 header 항목
-const CAR_REGISTER_EXCEL_COLUMNS = [
+const VHCL_REGISTER_EXCEL_COLUMNS = [
     { key: 'index', name: '번호' },
-    { key: '차량번호', name: '차량번호' },
-    { key: '업무구분', name: '업무구분' },
-    { key: '공급가액', name: '공급가액' },
-    { key: '차대번호', name: '차대번호' },
-    { key: '차명', name: '차명' },
-    { key: '사용본거지', name: '사용본거지' },
-    { key: '번호판종류', name: '번호판종류'}
+    { key: 'vhclNo', name: '차량번호' },
+    { key: 'bizDv', name: '업무구분' },
+    { key: 'splyAmt', name: '공급가액' },
+    { key: 'vhidNo', name: '차대번호' },
+    { key: 'vhclNm', name: '차명' },
+    { key: 'ownrAddress', name: '사용본거지' },
+    { key: 'nopltKind', name: '번호판종류'}
 ];
 
 // 그리드 생성 시 업무구분 선택항목
@@ -56,12 +57,12 @@ const BUSINESS_TYPES = [
  * @returns {JSX.Element}
  * @constructor
  */
-export default function CarRegisterPage() {
+export default function VhclRegisterPage() {
     // 상태 선언
     const [activeTab, setActiveTab] = useState('single');                   // 활성 탭 상태
     const [formData, setFormData] = useState(INITIAL_FORM_STATE);                      // 폼 상태
-    const [selectedPlate, setSelectedPlate] = useState(null);                      // 선택된 차량번호 상태
-    const [isPlateModalOpen, setIsPlateModalOpen] = useState(null);                // 차량번호 선택 팝업 상태
+    const [selectedVhclNo, setSelectedVhclNo] = useState(null);                      // 선택된 차량번호 상태
+    const [isVhclNoModalOpen, setIsVhclNoModalOpen] = useState(null);                // 차량번호 선택 팝업 상태
     const [bulkFile, setBulkFile] = useState(null);                                // 업로드된 엑셀 파일 상태
     const [rows, setRows] = useState([]);                                   // 행 상태
     const [bulkData, setBulkData] = useState([]);                           // 업로드된 엑셀 내부 데이터 상태
@@ -100,38 +101,38 @@ export default function CarRegisterPage() {
         const errors = {};
 
         // 차량번호 유효성 검사
-        if (!selectedPlate) {
-            errors.plateId = '차량번호를 선택해주세요.';
+        if (!selectedVhclNo) {
+            errors.vhclNo = '차량번호를 선택해주세요.';
         }
 
         // 차대번호 유효성 검사
-        if (!formData.vinNumber) {
-            errors.vinNumber = '차대번호를 입력해주세요.';
-        } else if (!/^[A-HJ-NPR-Z0-9]{17}$/i.test(formData.vinNumber)) {
-            errors.vinNumber = '유효한 차대번호 형식이 아닙니다. (17자리 영숫자)';
+        if (!formData.vhidNo) {
+            errors.vhidNo = '차대번호를 입력해주세요.';
+        } else if (!/^[A-HJ-NPR-Z0-9]{17}$/i.test(formData.vhidNo)) {
+            errors.vhidNo = '유효한 차대번호 형식이 아닙니다. (17자리 영숫자)';
         }
 
         // 업무구분 유효성 검사
-        if (!formData.businessType) {
-            errors.businessType = '업무구분을 선택해주세요.';
+        if (!formData.bizDv) {
+            errors.bizDv = '업무구분을 선택해주세요.';
         }
 
         // 공급가액 유효성 검사
-        if (!formData.price) {
-            errors.price = '공급가액을 입력해주세요.';
+        if (!formData.splyAmt) {
+            errors.splyAmt = '공급가액을 입력해주세요.';
         }
 
         // 차명 유효성 검사
-        if (!formData.carName) {
-            errors.carName = '차명을 입력해주세요.';
+        if (!formData.vhclNm) {
+            errors.vhclNm = '차명을 입력해주세요.';
         }
 
-        if(!formData.location) {
-            errors.location = '사용본거지를 선택해주세요.';
+        if(!formData.ownrAddress) {
+            errors.ownrAddress = '사용본거지를 선택해주세요.';
         }
 
-        if(!formData.plateType) {
-            errors.plateType = '번호판 종류를 선택해주세요.';
+        if(!formData.nopltKind) {
+            errors.nopltKind = '번호판 종류를 선택해주세요.';
         }
 
         // 오류가 있으면 폼 제출 중단하고 오류 모달 표시
@@ -149,21 +150,21 @@ export default function CarRegisterPage() {
             // API 호출용 데이터 준비
             const requestData = {
                 data: {
-                    vcexSvcMgntNo:'00000001',                                       // 대행서비스관리번호
-                    mgntCrpnNo: '0000000000',                                       // 관리법인번호
-                    vcexCrpnNo: 'Carbang',                                          // 대행법인번호
-                    bizDv: formData.businessType,                                   // 업무구분
-                    vhclNo: selectedPlate?.number || '',                            // 차량번호
-                    splyAmt: formData.price,                                        // 공급가액
-                    vhidNo: formData.vinNumber,                                     // 차대번호
-                    vhclNm: formData.carName,                                       // 차명
-                    ownrNm: formData.ownerName || 'BMW파이낸셜서비스코리아(주)',       // 소유자명
-                    ownrCrpnNo: formData.idNumber || '0000000000',                  // 법인번호
-                    ownrAddress: formData.location || '',                           // 사용본거지
-                    bondDcDv: '',                                                   // 채권할인구분
-                    nopltKind: PLATE_TYPES.find(type => type.id === formData.plateType)?.name, // 번호판종류
-                    crpnNopltYn: parseInt(formData.price) > 80000000 ? '1' : '',    // 법인번호판(연두)여부
-                    rduDav: '',                                                     // 감면구분
+                    vcexSvcMgntNo:'00000001',                                           // 대행서비스관리번호
+                    mgntCrpnNo: '0000000000',                                           // 관리법인번호
+                    vcexCrpnNo: 'Carbang',                                              // 대행법인번호
+                    bizDv: formData.bizDv,                                              // 업무구분
+                    vhclNo: selectedVhclNo?.number || '',                               // 차량번호
+                    splyAmt: formData.splyAmt,                                          // 공급가액
+                    vhidNo: formData.vhidNo,                                            // 차대번호
+                    vhclNm: formData.vhclNm,                                            // 차명
+                    ownrNm: formData.ownrNm,                                            // 소유자명
+                    ownrCrpnNo: formData.ownrCrpnNo,                                    // 주민/법인번호
+                    ownrAddress: formData.ownrAddress || '',                            // 사용본거지
+                    bondDcDv: '',                                                       // 채권할인구분
+                    nopltKind: NO_PLT_KIND.find(type => type.id === formData.nopltKind)?.name, // 번호판종류
+                    crpnNopltYn: parseInt(formData.splyAmt) > 80000000 ? '1' : '',      // 법인번호판여부
+                    rduDv: '',                                                          // 감면구분
                 }
             };
 
@@ -196,7 +197,7 @@ export default function CarRegisterPage() {
             if (result.success) {
                 // 성공 시 폼 초기화
                 setFormData(INITIAL_FORM_STATE);
-                setSelectedPlate(null);
+                setSelectedVhclNo(null);
                 setFormErrors({});
                 setIsSuccessModalOpen(true);
                 setRegisteredCount(1);
@@ -229,32 +230,33 @@ export default function CarRegisterPage() {
             [name]: type === 'checkbox' ? checked : value,
         }));
 
-        // 사용본거지(location) 선택 시 해당하는 회사 정보를 찾아서 소유자명과 법인번호 자동 설정
-        if (name === 'location' && value) {
-            const selectedCompany = dummyCompanyList.find(company => company.name === value);
-            if (selectedCompany) {
+        // 사용본거지(ownrAddress) 선택 시 해당하는 회사 정보를 찾아서 소유자명과 법인번호 자동 설정
+        if (name === 'ownrAddress' && value) {
+            const selectedCo = dummyCompanyList.find(co => co.name === value);
+            if (selectedCo) {
                 setFormData(prev => ({
                     ...prev,
-                    ownerName: selectedCompany.ownerName || '',
-                    idNumber: selectedCompany.coNo || ''
+                    ownrNm: selectedCo.ownrNm || '',
+                    idNumber: selectedCo.ownrCrpnNo || ''
                 }));
             }
         }
     };
 
-    const handleLocationChange = (rowIdx, value) => {
-        handleCellChange(rowIdx, '사용본거지', value);
+    const handleOwnrAddressChange = (rowIdx, value) => {
+        handleCellChange(rowIdx, 'ownrAddress', value);
 
         // 선택한 회사 정보 찾기
-        const selectedCompany = dummyCompanyList.find(company => company.name === value);
-        if (selectedCompany) {
+        const selectedCo = dummyCompanyList.find(co => co.name === value);
+        if (selectedCo) {
             // 회사 정보를 행 데이터에 추가 (화면에는 보이지 않지만 API 요청 시 사용)
-            handleCellChange(rowIdx, '_ownerName', selectedCompany.ownerName);
-            handleCellChange(rowIdx, '_corpNumber', selectedCompany.coNo);
+            handleCellChange(rowIdx, '_ownrNm', selectedCo.ownrNm);
+            handleCellChange(rowIdx, '_ownrCrpnNo', selectedCo.ownrCrpnNo);
         }
     };
 
     // 엑셀 파일 업로드
+// 엑셀 파일 업로드
     const handleFileUpload = async (e) => {
         const file = e.target.files[0];
         setBulkFile(file);
@@ -269,10 +271,30 @@ export default function CarRegisterPage() {
             const ws = wb.Sheets[wsname];
             const data = XLSX.utils.sheet_to_json(ws, { header: 0 });
 
-            // index 부여
-            const indexedRows = data.map((row, idx) => ({ index: idx + 1, ...row }));
-            setRows(indexedRows);
-            setBulkData(indexedRows.map(({ index, ...rest }) => rest));
+            // 엑셀 데이터 매핑
+            const mappedData = data.map((row, idx) => {
+                // 초기 행 데이터 (기본값 설정)
+                const mappedRow = {
+                    index: idx + 1,
+                    vhclNo: '',
+                    bizDv: '',
+                    splyAmt: '',
+                    vhidNo: '',
+                    vhclNm: '',
+                    ownrAddress: '',
+                    nopltKind: ''
+                };
+
+                // 엑셀에서 가져온 컬럼은 한글 헤더 → 내부 키로 매핑
+                if (row['공급가액'] !== undefined) mappedRow.splyAmt = row['공급가액'];
+                if (row['차대번호'] !== undefined) mappedRow.vhidNo = row['차대번호'];
+                if (row['차명'] !== undefined) mappedRow.vhclNm = row['차명'];
+
+                return mappedRow;
+            });
+
+            setRows(mappedData);
+            setBulkData(mappedData.map(({ index, ...rest }) => rest));
         };
 
         reader.readAsArrayBuffer(file);
@@ -281,7 +303,7 @@ export default function CarRegisterPage() {
     // 양식 다운로드
     const handleTemplateDownload = (e) => {
         e.preventDefault();
-        BulkCarRegisterExcel(CAR_REGISTER_EXCEL_COLUMNS.map((col) => col.name));
+        BulkCarRegisterExcel(); // 인자 없이 호출 - 기본 컬럼만 사용
     };
 
     // 엑셀 셀 변경 처리 (일괄 등록)
@@ -294,25 +316,25 @@ export default function CarRegisterPage() {
     // 공급가액 개별 입력 시 숫자만 필터링
     const handlePriceChange = (e) => {
         const rawValue = e.target.value.replace(/[^0-9]/g, '');
-        setFormData((prev) => ({ ...prev, price: rawValue }));
+        setFormData((prev) => ({ ...prev, splyAmt: rawValue }));
     };
 
     // 공급가액 일괄 입력 시 숫자만 필터링
     const handleBulkPriceChange = (rowIdx, value) => {
         const rawValue = value.replace(/[^0-9]/g, '');
-        handleCellChange(rowIdx, '공급가액', rawValue);
+        handleCellChange(rowIdx, 'splyAmt', rawValue);
     };
 
     // 차량번호 셀 클릭 → 모달 열기
     const handlePlateCellClick = (rowIdx) => {
-        setIsPlateModalOpen(rowIdx);
+        setIsVhclNoModalOpen(rowIdx);
     };
 
     // 차량번호 선택 후 처리
-    const handlePlateSelect = (plate) => {
-        if (isPlateModalOpen !== null) {
-            handleCellChange(isPlateModalOpen, '차량번호', plate.number);
-            setIsPlateModalOpen(null);
+    const handlePlateSelect = (vhclNo) => {
+        if (isVhclNoModalOpen !== null) {
+            handleCellChange(isVhclNoModalOpen, 'vhclNo', vhclNo.number);
+            setIsVhclNoModalOpen(null);
         }
     };
 
@@ -337,16 +359,16 @@ export default function CarRegisterPage() {
             const rowErrors = [];
 
             // 필수 항목 검사
-            if (!row['차량번호']) rowErrors.push(`${i+1}번 행: 차량번호가 없습니다.`);
-            if (!row['업무구분']) rowErrors.push(`${i+1}번 행: 업무구분을 선택해주세요.`);
-            if (!row['공급가액']) rowErrors.push(`${i+1}번 행: 공급가액을 입력해주세요.`);
-            if (!row['차대번호']) rowErrors.push(`${i+1}번 행: 차대번호를 입력해주세요.`);
-            else if (!/^[A-HJ-NPR-Z0-9]{17}$/i.test(row['차대번호'])) {
+            if (!row['vhclNo']) rowErrors.push(`${i+1}번 행: 차량번호가 없습니다.`);
+            if (!row['bizDv']) rowErrors.push(`${i+1}번 행: 업무구분을 선택해주세요.`);
+            if (!row['splyAmt']) rowErrors.push(`${i+1}번 행: 공급가액을 입력해주세요.`);
+            if (!row['vhidNo']) rowErrors.push(`${i+1}번 행: 차대번호를 입력해주세요.`);
+            else if (!/^[A-HJ-NPR-Z0-9]{17}$/i.test(row['vhidNo'])) {
                 rowErrors.push(`${i+1}번 행: 유효한 차대번호 형식이 아닙니다. (17자리 영숫자)`);
             }
-            if (!row['차명']) rowErrors.push(`${i+1}번 행: 차명을 입력해주세요.`);
-            if (!row['사용본거지']) rowErrors.push(`${i+1}번 행: 사용본거지를 선택해주세요.`);
-            if (!row['번호판종류']) rowErrors.push(`${i+1}번 행: 번호판 종류를 선택해주세요.`);
+            if (!row['vhclNm']) rowErrors.push(`${i+1}번 행: 차명을 입력해주세요.`);
+            if (!row['ownrAddress']) rowErrors.push(`${i+1}번 행: 사용본거지를 선택해주세요.`);
+            if (!row['nopltKind']) rowErrors.push(`${i+1}번 행: 번호판 종류를 선택해주세요.`);
 
 
             // 오류가 있으면 오류 배열에 추가, 없으면 유효한 행으로 추가
@@ -372,40 +394,40 @@ export default function CarRegisterPage() {
             const requestData = {
                 data: validRows.map(row => {
                     // 차량번호로 플레이트 ID 찾기
-                    const plateInfo = dummyRegistableCarNumber.find(plate => plate.number === row['차량번호']);
+                    const plateInfo = dummyRegistableCarNumber.find(vhclNo => vhclNo.number === row['vhclNo']);
                     // 사용본거지로 회사 정보 찾기
-                    const companyInfo = dummyCompanyList.find(company => company.name === row['사용본거지']);
+                    const companyInfo = dummyCompanyList.find(co => co.name === row['ownrAddress']);
                     // 공급가액 숫자 변환
-                    let priceValue;
+                    let splyAmtValue;
 
-                    if (row['공급가액'] === undefined || row['공급가액'] === null) {
-                        priceValue = ''; // 값이 없는 경우 빈 문자열로 처리
+                    if (row['splyAmt'] === undefined || row['splyAmt'] === null) {
+                        splyAmtValue = ''; // 값이 없는 경우 빈 문자열로 처리
                         console.warn(`행 ${row.index}: 공급가액이 없습니다`);
-                    } else if (typeof row['공급가액'] === 'number') {
-                        priceValue = String(row['공급가액']); // 숫자인 경우 문자열로 변환
-                    } else if (typeof row['공급가액'] === 'string') {
-                        priceValue = row['공급가액'].replace(/,/g, ''); // 문자열인 경우 콤마 제거
+                    } else if (typeof row['splyAmt'] === 'number') {
+                        splyAmtValue = String(row['splyAmt']); // 숫자인 경우 문자열로 변환
+                    } else if (typeof row['splyAmt'] === 'string') {
+                        splyAmtValue = row['splyAmt'].replace(/,/g, ''); // 문자열인 경우 콤마 제거
                     } else {
-                        priceValue = ''; // 예상치 못한 타입인 경우 빈 문자열로 처리
-                        console.warn(`행 ${row.index}: 공급가액 타입 오류 (${typeof row['공급가액']})`);
+                        splyAmtValue = ''; // 예상치 못한 타입인 경우 빈 문자열로 처리
+                        console.warn(`행 ${row.index}: 공급가액 타입 오류 (${typeof row['splyAmt']})`);
                     }
 
                     return {
-                        vcexSvcMgntNo: '00000001',
-                        mgntCrpnNo: '0000000000',
-                        vcexCrpnNo: 'Carbang',
-                        bizDv: row['업무구분'],
-                        vhclNo: row['차량번호'],
-                        splyAmt: priceValue,
-                        vhidNo: row['차대번호'],
-                        vhclNm: row['차명'],
-                        ownrNm: row['_ownerName'] || companyInfo?.ownerName,
-                        ownrCrpnNo: row['_corpNumber'] || companyInfo?.coNo,
-                        ownrAddress: row['사용본거지'] || '',
-                        bondDcDv: '',
-                        nopltKind: '필름',
-                        crpnNopltYn: parseInt(priceValue) > 80000000 ? '1' : '',
-                        rduDav: '',
+                        vcexSvcMgntNo: '00000001',                                           // 대행서비스관리번호
+                        mgntCrpnNo: '0000000000',                                           // 관리법인번호
+                        vcexCrpnNo: 'Carbang',                                              // 대행법인번호
+                        bizDv: row['bizDv'],                                               // 업무구분
+                        vhclNo: row['vhclNo'],                                             // 차량번호
+                        splyAmt: splyAmtValue,                                             // 공급가액
+                        vhidNo: row['vhidNo'],                                             // 차대번호
+                        vhclNm: row['vhclNm'],                                             // 차명
+                        ownrNm: row['_ownrNm'] || companyInfo?.ownrNm,                      // 소유자명
+                        ownrCrpnNo: row['_ownrCrpnNo'] || companyInfo?.ownrCrpnNo,          // 주민/법인번호
+                        ownrAddress: row['ownrAddress'] || '',                              // 사용본거지
+                        bondDcDv: '',                                                      // 채권할인구분
+                        nopltKind: row['nopltKind'],                                       // 번호판종류
+                        crpnNopltYn: parseInt(splyAmtValue) > 80000000 ? '1' : '',         // 법인번호판여부
+                        rduDv: '',                                                        // 감면구분
                     };
                 })
             };
@@ -490,38 +512,38 @@ export default function CarRegisterPage() {
                     <form id="registerForm" onSubmit={handleSubmit}>
                         <div
                             className="plate-selector"
-                            onClick={() => setIsPlateModalOpen(true)}
+                            onClick={() => setIsVhclNoModalOpen(true)}
                             role="button"
                             tabIndex={0}
                         >
                             <input
-                                name="plateId"
+                                name="vhclNoId"
                                 type="text"
                                 readOnly
                                 placeholder="차량번호를 선택하세요"
-                                value={selectedPlate ? selectedPlate.number : ''}
-                                className={`plate-input ${formErrors.plateId ? 'input-error' : ''}`}
+                                value={selectedVhclNo ? selectedVhclNo.number : ''}
+                                className={`plate-input ${formErrors.vhclNoId ? 'input-error' : ''}`}
                             />
                         </div>
 
                         <PlateSearchModal
-                            isOpen={!!isPlateModalOpen}
-                            onClose={() => setIsPlateModalOpen(null)}
+                            isOpen={!!isVhclNoModalOpen}
+                            onClose={() => setIsVhclNoModalOpen(null)}
                             plates={dummyRegistableCarNumber}
-                            onSelect={(plate) => {
-                                setSelectedPlate(plate);
+                            onSelect={(vhclNo) => {
+                                setSelectedVhclNo(vhclNo);
                                 setFormData((prev) => ({
                                     ...prev,
-                                    plateId: plate.id,
+                                    vhclNoId: vhclNo.id,
                                 }));
-                                setIsPlateModalOpen(null);
+                                setIsVhclNoModalOpen(null);
                             }}
-                            selectedPlateNumbers={selectedPlate ? [selectedPlate.number] : []}
+                            selectedPlateNumbers={selectedVhclNo ? [selectedVhclNo.number] : []}
                         />
 
                         <select
-                            name="businessType"
-                            value={formData.businessType}
+                            name="bizDv"
+                            value={formData.bizDv}
                             onChange={handleChange}
                             required
                         >
@@ -535,35 +557,35 @@ export default function CarRegisterPage() {
 
                         <input
                             type="text"
-                            name="price"
+                            name="splyAmt"
                             placeholder="공급가액"
-                            value={formData.price ? Number(formData.price).toLocaleString() : ''}
+                            value={formData.splyAmt ? Number(formData.splyAmt).toLocaleString() : ''}
                             onChange={handlePriceChange}
                             required
                         />
 
                         <input
                             type="text"
-                            name="vinNumber"
+                            name="vhidNo"
                             placeholder="차대번호"
-                            value={formData.vinNumber}
+                            value={formData.vhidNo}
                             onChange={handleChange}
                             required
-                            className={formErrors.vinNumber ? 'input-error' : ''}
+                            className={formErrors.vhidNo ? 'input-error' : ''}
                         />
 
                         <input
                             type="text"
-                            name="carName"
+                            name="vhclNm"
                             placeholder="차명"
-                            value={formData.carName}
+                            value={formData.vhclNm}
                             onChange={handleChange}
                             required
                         />
 
                         <select
-                            name="location"
-                            value={formData.location || ''}
+                            name="ownrAddress"
+                            value={formData.ownrAddress || ''}
                             onChange={handleChange}
                             className="cell-select"
                         >
@@ -576,14 +598,14 @@ export default function CarRegisterPage() {
                         </select>
                         <div className="form-group">
                             <select
-                                id="plateType"
-                                name="plateType"
-                                value={formData.plateType}
+                                id="nopltKind"
+                                name="nopltKind"
+                                value={formData.nopltKind}
                                 onChange={handleChange}
                                 className="form-control"
                             >
                                 <option value="">번호판 종류 선택</option>
-                                {PLATE_TYPES.map((type) => (
+                                {NO_PLT_KIND.map((type) => (
                                     <option key={type.id} value={type.id}>
                                         {type.name}
                                     </option>
@@ -631,7 +653,7 @@ export default function CarRegisterPage() {
                             <table>
                                 <thead>
                                 <tr>
-                                    {CAR_REGISTER_EXCEL_COLUMNS.map((col) => (
+                                    {VHCL_REGISTER_EXCEL_COLUMNS.map((col) => (
                                         <th key={col.key}>{col.name}</th>
                                     ))}
                                 </tr>
@@ -640,7 +662,7 @@ export default function CarRegisterPage() {
                                 {rows.length === 0 ? (
                                     <tr>
                                         <td
-                                            colSpan={CAR_REGISTER_EXCEL_COLUMNS.length}
+                                            colSpan={VHCL_REGISTER_EXCEL_COLUMNS.length}
                                             className="customer-no-data"
                                         >
                                             업로드된 데이터가 없습니다.
@@ -649,30 +671,30 @@ export default function CarRegisterPage() {
                                 ) : (
                                     rows.map((row, rowIdx) => (
                                         <tr key={row.index}>
-                                            {CAR_REGISTER_EXCEL_COLUMNS.map((col) => (
+                                            {VHCL_REGISTER_EXCEL_COLUMNS.map((col) => (
                                                 <td key={col.key}>
                                                     {col.key === 'index' ? (
                                                         row.index
-                                                    ) : col.key === '차량번호' ? (
+                                                    ) : col.key === 'vhclNo' ? (
                                                         <div className="cell-plate" style={{ cursor: 'pointer' }} onClick={() => handlePlateCellClick(rowIdx)}>
-                                                            {row['차량번호'] || (<span style={{ color: '#bbb' }}>선택</span>)}
+                                                            {row['vhclNo'] || (<span style={{ color: '#bbb' }}>선택</span>)}
                                                         </div>
-                                                    ) : col.key === '업무구분' ? (
-                                                        <select value={row['업무구분'] || ''} onChange={(e) => handleCellChange(rowIdx, '업무구분', e.target.value)} className="cell-select">
+                                                    ) : col.key === 'bizDv' ? (
+                                                        <select value={row['bizDv'] || ''} onChange={(e) => handleCellChange(rowIdx, 'bizDv', e.target.value)} className="cell-select">
                                                             <option value="">선택</option>
                                                             {BUSINESS_TYPES.map((type) => (<option key={type.code} value={type.code}>{type.name}</option>))}
                                                         </select>
-                                                    ) : col.key === '사용본거지' ? (
-                                                        <select value={row['사용본거지'] || ''} onChange={(e) => handleLocationChange(rowIdx, e.target.value)} className="cell-select">
+                                                    ) : col.key === 'ownrAddress' ? (
+                                                        <select value={row['ownrAddress'] || ''} onChange={(e) => handleOwnrAddressChange(rowIdx, e.target.value)} className="cell-select">
                                                             <option value="">선택</option>
                                                             {dummyCompanyList.map((loc) => (<option key={loc.id} value={loc.name}>{loc.name}</option>))}
                                                         </select>
-                                                    ) : col.key === '공급가액' ? (
-                                                        <input type="text" value={row['공급가액'] ? Number(row['공급가액']).toLocaleString() : ''} onChange={(e) => handleBulkPriceChange(rowIdx, e.target.value)} className="cell-input" />
-                                                    ) : col.key === '번호판종류' ? (
-                                                        <select value={row['번호판종류'] || ''} onChange={(e) => handleCellChange(rowIdx, '번호판종류', e.target.value)} className="cell-select">
+                                                    ) : col.key === 'splyAmt' ? (
+                                                        <input type="text" value={row['splyAmt'] ? Number(row['splyAmt']).toLocaleString() : ''} onChange={(e) => handleBulkPriceChange(rowIdx, e.target.value)} className="cell-input" />
+                                                    ) : col.key === 'nopltKind' ? (
+                                                        <select value={row['nopltKind'] || ''} onChange={(e) => handleCellChange(rowIdx, 'nopltKind', e.target.value)} className="cell-select">
                                                             <option value="">번호판 종류</option>
-                                                            {PLATE_TYPES.map((type) => (<option key={type.id} value={type.id}>{type.name}</option>))}
+                                                            {NO_PLT_KIND.map((type) => (<option key={type.id} value={type.id}>{type.name}</option>))}
                                                         </select>
                                                     ) : (
                                                         <input type="text" value={row[col.key] || ''} onChange={(e) => handleCellChange(rowIdx, col.key, e.target.value)} className="cell-input" />
@@ -706,18 +728,18 @@ export default function CarRegisterPage() {
                         </div>
 
                         <PlateSearchModal
-                            isOpen={isPlateModalOpen !== null}
-                            onClose={() => setIsPlateModalOpen(null)}
+                            isOpen={isVhclNoModalOpen !== null}
+                            onClose={() => setIsVhclNoModalOpen(null)}
                             plates={dummyRegistableCarNumber.filter(
                                 (plate) =>
                                     !rows.some(
                                         (row, idx) =>
-                                            row['차량번호'] === plate.number && idx !== isPlateModalOpen
+                                            row['vhclNo'] === plate.number && idx !== isVhclNoModalOpen
                                     )
                             )}
                             onSelect={handlePlateSelect}
                             selectedPlateNumbers={rows
-                                .map((row) => row['차량번호'])
+                                .map((row) => row['vhclNo'])
                                 .filter(Boolean)}
                         />
                     </div>

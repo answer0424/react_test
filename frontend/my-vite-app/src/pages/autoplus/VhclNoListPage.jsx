@@ -74,7 +74,7 @@ export default function VhclNoListPage() {
     // Handlers
     const handleSearchChange = (event) => setSearchTerm(event.target.value);
     const handleCompanyChange = (event) => setSelectedCo(event.target.value);
-    const handleAddPlate = () => navigate('/autoplus/plate/add');
+    const handleAddPlate = () => navigate('/autoplus/VhclNoRegister');
 
     // 조회된 데이터
     const coList = getCompanyList(dummyCarNumberData);

@@ -29,27 +29,27 @@ export default function StatusDetailModal({status, onClose}) {
                         <tbody>
                         <tr>
                             <th>차량번호</th>
-                            <td>{status.plateNumber}</td>
+                            <td>{status.vhclNo}</td>
                         </tr>
                         <tr>
                             <th>업무구분</th>
-                            <td>{getBusinessTypeName(status.businessType)}</td>
+                            <td>{getBusinessTypeName(status.bizDv)}</td>
                         </tr>
                         <tr>
                             <th>공급가액</th>
-                            <td>{Number(status.price).toLocaleString()}원</td>
+                            <td>{Number(status.splyAmt).toLocaleString()}원</td>
                         </tr>
                         <tr>
                             <th>차대번호</th>
-                            <td>{status.vinNumber}</td>
+                            <td>{status.vhidNo}</td>
                         </tr>
                         <tr>
                             <th>차명</th>
-                            <td>{status.carName}</td>
+                            <td>{status.vhclNm}</td>
                         </tr>
                         <tr>
                             <th>소유자명</th>
-                            <td>{status.ownerName}</td>
+                            <td>{status.ownrNm}</td>
                         </tr>
                         </tbody>
                     </table>

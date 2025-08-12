@@ -61,7 +61,7 @@ export default function LoginPage() {
                     navigate('/customer/CarRegister');
                     break;
                 case 'AUTOPLUS':
-                    navigate('/autoplus/CarNumberRegister');
+                    navigate('/autoplus/VhclNoRegister');
                     break;
                 default:
                     navigate('/customer/RegisterStatus');

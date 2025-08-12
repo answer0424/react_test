@@ -91,10 +91,10 @@ export default function VhclNoRegisterStatusPage() {
             (activeTab === 'completed' && result.status === '완료');
 
         const companyMatch =
-            !selectedCoOwnrNm || result.company === selectedCoOwnrNm;
+            !selectedCoOwnrNm || result.coOwnrNm === selectedCoOwnrNm;
 
         const plateMatch =
-            !searchTerm || result.plateNumber.toLowerCase().includes(searchTerm.toLowerCase());
+            !searchTerm || result.vhclNo.toLowerCase().includes(searchTerm.toLowerCase());
 
         const registeredDate = new Date(result.registeredAt);
         const dateMatch =
