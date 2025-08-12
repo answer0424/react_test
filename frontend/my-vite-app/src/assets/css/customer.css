@@ -50,8 +50,8 @@
 .bulk-clear-button:hover { background-color: #c53030; }
 
 /* 신차 등록 상태 */
-.customer-container { background: #f5f6f8; height: 100vh; padding: 20px; box-sizing: border-box; }
-.customer-content { max-width: 1500px; margin: 0 auto; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; height: calc(93vh - 40px); display: flex; flex-direction: column; overflow: hidden; }
+.customer-container { background: #f5f6f8; height: 100vh; padding: 20px; box-sizing: border-box; margin-top: 40px;}
+.customer-content { max-width: 1500px; margin: 0 auto; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; height: calc(93vh - 50px); display: flex; flex-direction: column; overflow: hidden; }
 .customer-title { color: #2c3e50; font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid #e9ecef; padding-bottom: 15px; }
 .customer-search-filters { margin-bottom: 24px; }
 .customer-search-row { display: flex; gap: 12px; align-items: center; width: 100%; }
@@ -98,18 +98,7 @@
 .customer-results-table th:nth-child(8),
 .customer-results-table td:nth-child(8) { width: 8%; }
 .customer-results-table th:nth-child(9),
-.customer-results-table td:nth-child(9) { width: 10%; }  /* 신청일자 */
+.customer-results-table td:nth-child(9) { width: 10%; }
 .customer-results-table table::-webkit-scrollbar { width: 8px; position: absolute; right: 0; }
 .customer-results-table table::-webkit-scrollbar-track { background: #f1f1f1; }
 .customer-results-table table::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
-
-/* 마이페이지 */
-#mypage-container { background: #f5f6f8; min-height: 100vh; padding: 40px 20px; }
-#mypage-content { max-width: 400px; margin: 0 auto; padding: 32px; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-#profile-section { text-align: center; margin-bottom: 32px; }
-#profile-image { width: 100px; height: 100px; border-radius: 50%; margin-bottom: 20px; border: 3px solid #f5f6f8; }
-#user-info { margin-bottom: 24px; }
-#user-id { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 8px; }
-#user-name { font-size: 16px; color: #606060; }
-#logout-button { width: 100%; padding: 12px 0; background: #e74c3c; color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
-#logout-button:hover { background: #c0392b; }

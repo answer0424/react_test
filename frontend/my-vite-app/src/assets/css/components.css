@@ -1,6 +1,6 @@
 /* 사이드바 */
-.sidebar { z-index: 9999; position: fixed; top: 0; left: 0; height: 100vh; width: 56px; background: #ffffff; transition: width 0.2s; box-shadow: 1px 0 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; border-right: 1px solid #e9ecef; }
-.sidebar.expanded { z-index: 9999; width: 200px; align-items: flex-start; }
+.sidebar { z-index: 999; position: fixed; top: 0; left: 0; height: 100vh; width: 56px; background: #ffffff; transition: width 0.2s; box-shadow: 1px 0 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; border-right: 1px solid #e9ecef; }
+.sidebar.expanded { z-index: 999; width: 200px; align-items: flex-start; }
 .sidebar-header { width: 100%; height: 64px; display: flex; align-items: center; justify-content: center; color: #2c3e50; font-weight: bold; font-size: 22px; border-bottom: 1px solid #e9ecef; background: #34badb; }
 .sidebar.expanded .sidebar-header { padding-left: 18px; justify-content: flex-start; z-index: 9999;}
 .sidebar-nav { margin-top: 24px; width: 100%; }
