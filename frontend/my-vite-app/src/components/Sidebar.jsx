@@ -80,14 +80,6 @@ export default function Sidebar() {
                     </Link>
                 ))}
             </nav>
-            <div className="sidebar-footer">
-                <button
-                    className="logout-btn"
-                    onClick={handleLogout}
-                >
-                    {expanded ? '로그아웃' : '⎋'}
-                </button>
-            </div>
         </div>
     );
 }

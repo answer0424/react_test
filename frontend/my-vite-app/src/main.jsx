@@ -1,20 +1,21 @@
 import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
-import App from './App.jsx'
-import VhclNoListPage from "./pages/autoplus/VhclNoListPage.jsx";
 import {HashRouter, Route, Routes, useLocation} from "react-router-dom";
-import VhclNoRegisterPage from "./pages/autoplus/VhclNoRegisterPage.jsx";
+import App from './App.jsx'
 import LoginPage from "./pages/common/LoginPage.jsx";
+import VhclNoRegisterPage from "./pages/autoplus/VhclNoRegisterPage.jsx";
+import VhclNoListPage from "./pages/autoplus/VhclNoListPage.jsx";
+import VhclNoRegisterStatusPage from "./pages/autoplus/VhclNoRegisterStatusPage.jsx";
 import VhclRegisterPage from "./pages/customer/VhclRegisterPage.jsx";
 import RegisterStatusPage from "./pages/customer/CarRegisterStatuesPage.jsx";
 import Sidebar from "./components/Sidebar.jsx";
+import TopBar from "./components/TopBar.jsx";
 import {UserProvider} from "./contexts/UserProvider.jsx";
-import VhclNoRegisterStatusPage from "./pages/autoplus/VhclNoRegisterStatusPage.jsx";
 import './index.css';
 
 function MainLayout() {
     const location = useLocation();
-    const hideSidebar = [
+    const hideNavigation = [
         '/autoplus/login',
         '/customer/login',
         '/',
@@ -23,8 +24,9 @@ function MainLayout() {
 
     return (
         <>
-            {!hideSidebar && <Sidebar />}
-            <div style={{marginLeft: !hideSidebar ? 180 : 0}}>
+            {!hideNavigation && <TopBar />}
+            {!hideNavigation && <Sidebar />}
+            <div style={{marginLeft: !hideNavigation ? 180 : 0}}>
                 <Routes>
                     <Route path="/" element={<App />} />
                     <Route path="/login" element={<LoginPage />} />
