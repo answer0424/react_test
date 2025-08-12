@@ -24,4 +24,7 @@ dist-ssr
 *.sw?
 
 # github ignore
-.env
+.env.local
+.env.dev
+.env.uat
+.env.op

@@ -8,5 +8,6 @@ export default defineConfig({
         preprocessorOptions: {
             css: {}
         }
-    }
+    },
+    cssCodeSplit: false,    // 모든 css를 하나의 파일로 번들링
 })
