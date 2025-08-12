@@ -4,6 +4,12 @@ import {decrypt, encrypt} from '../utils/LoginCrypto.jsx';
 
 const UserContext = createContext(null);
 
+/**
+ * 사용자 정보를 관리하는 컨텍스트 프로바이더 컴포넌트
+ * @param children
+ * @returns {JSX.Element|null}
+ * @constructor
+ */
 export function UserProvider({ children }) {
     const [isInitialized, setIsInitialized] = useState(false);
     const [user, setUser] = useState(null);
@@ -20,9 +26,8 @@ export function UserProvider({ children }) {
         if (sessionUser) {
             try {
                 const decryptedUser = decrypt(sessionUser);
-                console.log(decryptedUser); // ← 문자열 출력해보기
 
-                const parsed = JSON.parse(decryptedUser); // ← 여기에 에러 나면 문자열 자체 문제
+                const parsed = JSON.parse(decryptedUser);
                 setUser(parsed);
             } catch (e) {
                 console.error('Failed to decode user data:', e);

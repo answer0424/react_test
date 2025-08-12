@@ -19,12 +19,19 @@ const carbangMenus = [
     { path: '/customer/RegisterStatus', label: '차량 등록 상태' },
 ];
 
+/**
+ * 내비게이션 메뉴를 나타내는 사이드바 컴포넌트
+ *
+ * @return {JSX.Element}
+ */
 export default function Sidebar() {
-    const [expanded, setExpanded] = useState(true); // 기본값 true로 항상 보이게
+    const [expanded, setExpanded] = useState(true); // 사이드바 확장 상태
+
     const location = useLocation();
     const navigate = useNavigate();
     const { user, logout } = useUser();
 
+    // 회사명에 따라 메뉴를 반환하는 함수
     const getMenusByCompany = () => {
         switch (user?.company) {
             case 'AUTOPLUS':

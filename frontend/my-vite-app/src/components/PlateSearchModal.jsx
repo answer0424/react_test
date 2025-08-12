@@ -3,6 +3,17 @@ import { useState, useEffect } from 'react';
 import Modal from '../utils/Modal';
 import '../assets/css/components.css';
 
+/**
+ * 번호판 검색 및 선택 모달 컴포넌트
+ *
+ * @param {Object} props                                    - 컴포넌트 속성들
+ * @param {boolean} props.isOpen                            - 모달 표시 여부
+ * @param {Function} props.onClose                          - 모달이 닫힐 때 트리거되는 콜백 함수
+ * @param {Function} props.onSelect                         - 번호판이 선택되었을 때의 콜백 함수
+ * @param {Array<Object>} props.plates                      - 선택 가능한 번호판 객체 배열(id`와 `number` 속성)
+ * @param {Array<string>} [props.selectedPlateNumbers=[]]   - 선택된 차량 번호 제거 배열
+ * @return {JSX.Element}
+ */
 export default function PlateSearchModal({ isOpen, onClose, onSelect, plates, selectedPlateNumbers = [] }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredPlates, setFilteredPlates] = useState([]);

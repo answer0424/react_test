@@ -18,9 +18,21 @@ export const EXCEL_DOWNLOAD_COLUMNS = [
     { label: '차명', required: true, key: 'vhclNm' }
 ];
 
-export const VALID_BUSINESS_TYPES = ['렌트', '리스', '개인'];
-
-// Validation 함수는 이미 올바르게 구현됨
+/**
+ * 자동차 신규 등록 엑셀 업로드 시 데이터 유효성 검사 함수
+ *
+ * @param {Array<Object>} data
+ * @returns {Array<String>}
+ *
+ * Required fields for each row:
+ * - `vhclNo`: 차량 번호
+ * - `bizDv`: 업무구분
+ * - `splyAmt`: 공급가액
+ * - `vhidNo`: 차대번호
+ * - `vhclNm`: 차명
+ * - `ownrAddress`: 사용본거지
+ * - `nopltKind`: 번호판종류
+ */
 export const validateBulkData = (data) => {
     const errors = [];
     data.forEach((row, index) => {
@@ -35,7 +47,10 @@ export const validateBulkData = (data) => {
     return errors;
 };
 
-// 함수를 수정하여 인자를 받거나 기본값을 사용하도록 함
+/**
+ * 일괄 자동차 신규등록을 위한 엑셀 파일을 생성하는 함수
+ * @param {Array<string>|null} headerNames
+ */
 export const BulkCarRegisterExcel = (headerNames = null) => {
     // 다운로드할 컬럼만 사용
     const downloadColumns = EXCEL_DOWNLOAD_COLUMNS;
@@ -60,8 +75,8 @@ export const BulkCarRegisterExcel = (headerNames = null) => {
     ws['!cols'] = headers.map(() => ({wch: 15}));
 
     // 워크북에 워크시트 추가
-    XLSX.utils.book_append_sheet(wb, ws, '차량등록양식');
+    XLSX.utils.book_append_sheet(wb, ws, '자동차신규등록양식');
 
     // 엑셀 파일 생성 및 다운로드
-    XLSX.writeFile(wb, '차량등록양식.xlsx');
+    XLSX.writeFile(wb, '자동차신규등록양식.xlsx');
 };

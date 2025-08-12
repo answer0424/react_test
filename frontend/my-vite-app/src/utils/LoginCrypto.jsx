@@ -3,7 +3,13 @@ const CRYPTO_KEY = import.meta.env.VITE_CRYPTO_KEY || 'fallback-key';
 const textToBytes = (text) => new TextEncoder().encode(text);
 const bytesToText = (bytes) => new TextDecoder().decode(bytes);
 
-// 암호화 (XOR + Base64)
+/**
+ * 주어진 평문 문자열을 XOR 기반 암호화 방식으로 암호화, Base64 형식으로 인코딩
+ * 미리 정의된 암호화 키를 사용하여 XOR 암호화를 적용
+ *
+ * @param {string} text - 암호화할 평문 문자열
+ * @returns {string}    암호화된 입력 텍스트의 Base64 인코딩 문자열
+ */
 export const encrypt = (text) => {
     try {
         const textBytes = textToBytes(text);

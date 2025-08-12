@@ -1,7 +1,13 @@
 import React from "react";
 import {useNavigate, useLocation} from "react-router-dom";
 
-
+/**
+ * 페이지 접근에 로그인이 필요할 때 메시지를 표시하는 모달 컴포넌트
+ *
+ * @param {object} props
+ * @param {boolean} props.open
+ * @return {JSX.Element|null}
+ */
 export default function LoginRequiredModal({open}) {
     if (!open) return null;
 
