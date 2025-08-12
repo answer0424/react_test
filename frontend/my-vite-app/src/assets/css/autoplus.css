@@ -16,8 +16,8 @@
 .remember-me input[type="checkbox"] { width: 16px; height: 16px; margin: 0; }
 
 /* 차량번호 목록 */
-#plate-list-container { background: #f5f6f8; min-height: 100vh; padding: 20px; }
-#plate-list-content { max-width: 1400px; margin: 0 auto; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; }
+#plate-list-container { background: #f5f6f8; min-height: 100vh; padding: 20px; margin-top: 50px }
+#plate-list-content {min-height: 80vh; max-width: 1400px; margin: 0 auto; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; }
 #plate-list-title { color: #2c3e50; font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid #e9ecef; padding-bottom: 15px; }
 #plate-list-actions { display: flex; gap: 12px; margin-bottom: 20px; }
 #plate-search-input { flex: 1; padding: 8px 12px; border: 1px solid #dde2e5; border-radius: 4px; font-size: 14px; }
