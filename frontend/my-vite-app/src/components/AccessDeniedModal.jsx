@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../assets/css/components.css';
+import styles from '../assets/css/components.module.css';
 
 /**
  * "접근 거부" 메시지 표시 모달 컴포넌트
