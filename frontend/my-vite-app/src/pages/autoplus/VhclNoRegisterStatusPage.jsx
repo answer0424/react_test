@@ -1,4 +1,3 @@
-// VhclNoRegisterStatusPage.jsx
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserProvider.jsx';
@@ -49,6 +48,11 @@ export default function VhclNoRegisterStatusPage() {
     const [activeTab, setActiveTab] = useState('all');                  // 활성된 탭 상태
     const [searchResults, setSearchResults] = useState(dummyPlateData);                  // 검색 결과 상태
     const [showQuickSelect, setShowQuickSelect] = useState(false);    // 날짜 선택 버튼 표시 여부 상태
+    const [apiState, setApiState] = useState({                           // API 호출 상태
+        data: [],
+        isLoading: true,
+        error: null
+    });
 
     // --- hooks ---
     const { user } = useUser();

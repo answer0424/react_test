@@ -49,9 +49,14 @@ export default function VhclNoListPage() {
     // State
     const [vhclNo, setVhclNo] = useState([]);                           // 호출된 차량번호 상태
     const [searchTerm, setSearchTerm] = useState('');                   // 검색된 차량번호 상태
-    const [selectedCo, setSelectedCo] = useState('');         // 선택된 고객사 상태
+    const [selectedCo, setSelectedCo] = useState('');                   // 선택된 고객사 상태
     const [isLoading, setIsLoading] = useState(true);                 // 로딩 상태
     const [error, setError] = useState(null);                                  // 에러 상태
+    const [apiState, setApiState] = useState({                           // API 호출 상태
+        data: [],
+        isLoading: true,
+        error: null
+    });
 
     // Hooks
     const navigate = useNavigate();

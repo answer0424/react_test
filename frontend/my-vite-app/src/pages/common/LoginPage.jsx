@@ -14,12 +14,23 @@ const dummyUsers = [
 
 const companies = ['CARBANG', 'AUTOPLUS', 'HYUNDAI', 'KIA', 'GENESIS'];
 
+/**
+ * 사용자의 인증을 처리하는 로그인 컴포넌트
+ *
+ * @return {JSX.Element}
+ */
 export default function LoginPage() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [company, setCompany] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
-    const [modalOpen, setModalOpen] = useState(false);
+    const [username, setUsername] = useState('');                     // 아이디 입력 상태
+    const [password, setPassword] = useState('');                     // 비밀번호 입력 상태
+    const [company, setCompany] = useState('');                       // 접속 회사 상태
+    const [rememberMe, setRememberMe] = useState(false);            // 아이디 저장 상태
+    const [modalOpen, setModalOpen] = useState(false);              // 로그인 관련 모달 상태
+    const [apiState, setApiState] = useState({                         // API 호출 상태
+        data: [],
+        isLoading: true,
+        error: null
+    });
+
     const navigate = useNavigate();
     const { setUser } = useUser();
 
@@ -32,7 +43,9 @@ export default function LoginPage() {
         }
     }, []);
 
+    // 로그인
     const handleLogin = () => {
+        // TODO 유저 정보 관련 API 호출
         const found = dummyUsers.find(
             user => user.username === username &&
                 user.password === password &&
@@ -47,13 +60,12 @@ export default function LoginPage() {
                 localStorage.removeItem('rememberedUsername');
                 localStorage.setItem('rememberMe', 'false');
             }
-            setUser(found);
 
-            // 사용자 정보를 세션에 저장
+            // 유저 정보 저장
             setUser({
-                ...found,
-                company: found.company // company 정보 명시적 포함
+                ...found
             });
+
 
             // 회사별 리다이렉션 경로 설정
             switch (found.company) {

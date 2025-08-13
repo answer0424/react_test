@@ -66,6 +66,11 @@ export default function VhclNoRegisterPage() {
     const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);          // 등록 실패 시 모달
     const [registeredCount, setRegisteredCount] = useState(0);                // 등록된 차량번호 수
     const [validationErrors, setValidationErrors] = useState([]);               // 유효성 검사 시 발견된 에러
+    const [apiState, setApiState] = useState({                           // API 호출 상태
+        data: [],
+        isLoading: true,
+        error: null
+    });
 
     // ref
     const fileInputRef = useRef(null);
