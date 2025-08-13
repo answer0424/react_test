@@ -10,4 +10,7 @@ export default defineConfig({
         }
     },
     cssCodeSplit: false,    // 모든 css를 하나의 파일로 번들링
+    server: {
+        open: '/react_test/#/login', // 개발 서버 시작 시 로그인 페이지로 열기
+    }
 })

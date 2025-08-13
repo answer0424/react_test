@@ -1,37 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '../public/vite.svg'
-import './App.css'
-import {useNavigate} from "react-router-dom";
+import {Routes, Route, useLocation} from "react-router-dom";
+import LoginPage from "./pages/common/LoginPage.jsx";
+import VhclNoRegisterPage from "./pages/autoplus/VhclNoRegisterPage.jsx";
+import VhclNoListPage from "./pages/autoplus/VhclNoListPage.jsx";
+import VhclNoRegisterStatusPage from "./pages/autoplus/VhclNoRegisterStatusPage.jsx";
+import VhclRegisterPage from "./pages/customer/VhclRegisterPage.jsx";
+import RegisterStatusPage from "./pages/customer/CarRegisterStatuesPage.jsx";
+import Sidebar from "./components/Sidebar.jsx";
+import TopBar from "./components/TopBar.jsx";
 
 function App() {
-    const navigate = useNavigate();
-
-    function login() {
-        navigate('/login');
-    }
+    const location = useLocation();
+    const hideNavigation = [
+        '/autoplus/login',
+        '/customer/login',
+        '/',
+        '/login',
+    ].includes(location.pathname);
 
     return (
         <>
-            <div>
-                <a href="https://vite.dev" target="_blank" className="vite">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank" className="react">
-                    <img src={reactLogo} className="logo react" alt="React logo" />
-                </a>
+            {!hideNavigation && <TopBar />}
+            {!hideNavigation && <Sidebar />}
+            <div style={{marginLeft: !hideNavigation ? 180 : 0}}>
+                <Routes>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/autoplus/VhclNoRegister" element={<VhclNoRegisterPage />} />
+                    <Route path="/autoplus/VhclNoList" element={<VhclNoListPage />} />
+                    <Route path="/autoplus/VhclNoRegisterStatus" element={<VhclNoRegisterStatusPage />} />
+                    <Route path="/customer/VhclRegister" element={<VhclRegisterPage />} />
+                    <Route path="/customer/RegisterStatus" element={<RegisterStatusPage />} />
+                </Routes>
             </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => login()} className="viteLogin">
-                    로그인
-                </button>
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
         </>
-    )
+    );
 }
 
-export default App
+export default App;

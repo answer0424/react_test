@@ -40,7 +40,7 @@ const validateBulkData = (data) => {
 // 엑셀 템플릿 생성 함수
 const createExcelTemplate = async () => {
     const XLSX = await import('xlsx');
-    const header = ['차량번호', '고객사'];
+    const header = ['차량번호'];
     const ws = XLSX.utils.aoa_to_sheet([header]);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, '차량번호등록');
