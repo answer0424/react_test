@@ -6,20 +6,20 @@ import VhclNoRegisterStatusPage from "./pages/autoplus/VhclNoRegisterStatusPage.
 import VhclRegisterPage from "./pages/customer/VhclRegisterPage.jsx";
 import RegisterStatusPage from "./pages/customer/CarRegisterStatuesPage.jsx";
 import Sidebar from "./components/Sidebar.jsx";
-import TopBar from "./components/TopBar.jsx";
+import Topbar from "./components/Topbar.jsx";
 
 function App() {
     const location = useLocation();
     const hideNavigation = [
+        '/login',
         '/autoplus/login',
         '/customer/login',
         '/',
-        '/login',
     ].includes(location.pathname);
 
     return (
         <>
-            {!hideNavigation && <TopBar />}
+            {!hideNavigation && <Topbar />}
             {!hideNavigation && <Sidebar />}
             <div style={{marginLeft: !hideNavigation ? 180 : 0}}>
                 <Routes>
